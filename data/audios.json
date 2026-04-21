@@ -1,0 +1,16 @@
+[
+  {
+    "slug": "podcasts/ep1",
+    "title": "第一期：寻找心流",
+    "description": "探讨如何在日常碎片化时间中进入专注状态。",
+    "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    "cover": "https://picsum.photos/seed/audio1/400/400"
+  },
+  {
+    "slug": "music/ambient",
+    "title": "环境音：雨后清晨",
+    "description": "适合阅读与冥想的白噪音。",
+    "src": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+    "cover": "https://picsum.photos/seed/audio2/400/400"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "visual/color-study",
+    "title": "配色与光感",
+    "description": "深色背景下的霓虹与细线网格，用于个人站风格探索。图片为演示占位，可替换为你的作品文件。",
+    "cover": "https://picsum.photos/seed/color1/1200/800",
+    "images": [
+      {
+        "src": "https://picsum.photos/seed/color1/1600/1000",
+        "alt": "配色样本 1"
+      },
+      {
+        "src": "https://picsum.photos/seed/color2/1600/1000",
+        "alt": "配色样本 2"
+      },
+      {
+        "src": "https://picsum.photos/seed/color3/1200/1200",
+        "alt": "配色样本 3"
+      }
+    ]
+  },
+  {
+    "slug": "visual/spatial",
+    "title": "空间构成",
+    "description": "构图与留白练习。将 `data/galleries.json` 中的图片 URL 改为本地 `/galleries/...` 路径即可完全离线托管。",
+    "cover": "https://picsum.photos/seed/space1/1200/800",
+    "images": [
+      {
+        "src": "https://picsum.photos/seed/space1/1400/900",
+        "alt": "空间 1"
+      },
+      {
+        "src": "https://picsum.photos/seed/space2/1400/900",
+        "alt": "空间 2"
+      }
+    ]
+  }
+]

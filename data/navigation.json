@@ -1,0 +1,133 @@
+{
+  "site": {
+    "title": "拾光共长",
+    "tagline": "认知 · 陪伴 · 记录美好"
+  },
+  "trees": {
+    "articles": {
+      "label": "文章",
+      "nodes": [
+        {
+          "id": "grp-cognition",
+          "title": "认知与成长",
+          "children": [
+            {
+              "id": "grp-reading",
+              "title": "阅读与思考",
+              "children": [
+                {
+                  "id": "leaf-arch",
+                  "title": "架构随笔",
+                  "slug": "tech/arch-notes"
+                },
+                {
+                  "id": "leaf-hello",
+                  "title": "你好，世界",
+                  "slug": "notes/hello-world"
+                }
+              ]
+            },
+            {
+              "id": "grp-parenting",
+              "title": "亲子与教育",
+              "children": [
+                {
+                  "id": "leaf-first",
+                  "title": "静态站点起步",
+                  "slug": "tech/first-steps"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "images": {
+      "label": "图片",
+      "nodes": [
+        {
+          "id": "grp-life",
+          "title": "家庭与日常",
+          "children": [
+            {
+              "id": "grp-season",
+              "title": "光影与季节",
+              "children": [
+                {
+                  "id": "leaf-color",
+                  "title": "配色与光感",
+                  "slug": "visual/color-study"
+                },
+                {
+                  "id": "leaf-space",
+                  "title": "空间构成",
+                  "slug": "visual/spatial"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "videos": {
+      "label": "视频",
+      "nodes": [
+        {
+          "id": "grp-archive",
+          "title": "归档",
+          "children": [
+            {
+              "id": "grp-show",
+              "title": "作品集",
+              "children": [
+                {
+                  "id": "leaf-reel",
+                  "title": "2024 Showreel",
+                  "slug": "showreel/2024"
+                }
+              ]
+            },
+            {
+              "id": "grp-share",
+              "title": "分享与演讲",
+              "children": [
+                {
+                  "id": "leaf-intro",
+                  "title": "频道介绍（嵌入）",
+                  "slug": "talks/intro"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "audios": {
+      "label": "音频",
+      "nodes": [
+        {
+          "id": "grp-podcasts",
+          "title": "播客",
+          "children": [
+            {
+              "id": "leaf-ep1",
+              "title": "第一期：寻找心流",
+              "slug": "podcasts/ep1"
+            }
+          ]
+        },
+        {
+          "id": "grp-music",
+          "title": "环境音",
+          "children": [
+            {
+              "id": "leaf-ambient",
+              "title": "雨后清晨",
+              "slug": "music/ambient"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,69 @@
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
+export function ArticleBody({ content }: { content: string }) {
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        h1: (props) => (
+          <h1 className="mt-10 text-3xl font-semibold tracking-tight text-foreground first:mt-0" {...props} />
+        ),
+        h2: (props) => (
+          <h2
+            className="mt-10 border-b border-border pb-2 text-xl font-semibold text-foreground/95"
+            {...props}
+          />
+        ),
+        h3: (props) => <h3 className="mt-8 text-lg font-semibold text-foreground" {...props} />,
+        p: (props) => <p className="mt-4 leading-relaxed text-muted-foreground" {...props} />,
+        a: (props) => (
+          <a
+            className="font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:opacity-80"
+            {...props}
+          />
+        ),
+        ul: (props) => <ul className="mt-4 list-disc space-y-2 pl-6 text-muted-foreground" {...props} />,
+        ol: (props) => <ol className="mt-4 list-decimal space-y-2 pl-6 text-muted-foreground" {...props} />,
+        li: (props) => <li className="leading-relaxed" {...props} />,
+        code: (props) => {
+          const { className, children, ...rest } = props;
+          const isBlock = Boolean(className);
+          if (isBlock) {
+            return (
+              <code
+                className={`font-mono text-[0.9em] text-foreground/95 ${className ?? ""}`}
+                {...rest}
+              >
+                {children}
+              </code>
+            );
+          }
+          return (
+            <code
+              className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[0.9em] text-primary"
+              {...rest}
+            >
+              {children}
+            </code>
+          );
+        },
+        pre: (props) => (
+          <pre
+            className="mt-4 overflow-x-auto rounded-lg border border-border bg-muted/80 p-4 text-sm leading-relaxed"
+            {...props}
+          />
+        ),
+        blockquote: (props) => (
+          <blockquote
+            className="mt-4 border-l-2 border-primary/40 bg-primary/5 py-1 pl-4 text-muted-foreground italic"
+            {...props}
+          />
+        ),
+        hr: () => <hr className="my-10 border-border" />,
+      }}
+    >
+      {content}
+    </ReactMarkdown>
+  );
+}

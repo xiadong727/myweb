@@ -1,0 +1,350 @@
+/* Cache buster to force HMR: 4 */
+@import "tailwindcss";
+
+/* —— 暖光亲子 —— */
+:root,
+[data-theme="warm"] {
+  --background: #faf7f2;
+  --foreground: #1c1917;
+  --muted: #f5f0e8;
+  --muted-foreground: #78716c;
+  --card: #ffffff;
+  --border: rgba(120, 113, 108, 0.2);
+  --primary: #c2410c;
+  --primary-foreground: #fffbeb;
+  --aside: #fff7ed;
+  --header: rgba(255, 251, 235, 0.92);
+  --overlay: rgba(28, 25, 23, 0.45);
+  --hero-blob-a: rgba(251, 146, 60, 0.22);
+  --hero-blob-b: rgba(244, 114, 182, 0.14);
+  --hero-border: rgba(234, 88, 12, 0.18);
+  --dot: rgba(120, 113, 108, 0.09);
+  --glow-hero: rgba(251, 146, 60, 0.12);
+  --mesh: transparent;
+  --mesh-2: transparent;
+  --selection-bg: rgba(234, 88, 12, 0.18);
+  --selection-fg: #1c1917;
+  --nav-active-bg: rgba(234, 88, 12, 0.12);
+  --nav-active-ring: rgba(234, 88, 12, 0.35);
+  --nav-muted: #a8a29e;
+  --nav-line: rgba(194, 65, 12, 0.2);
+  --search-popover: #fffefb;
+  --search-hit: rgba(234, 88, 12, 0.08);
+  --header-shadow: 0 1px 0 rgba(120, 113, 108, 0.06);
+  --aside-glow: transparent;
+}
+
+[data-theme="wisdom"] {
+  --background: #f4f6f9;
+  --foreground: #1e293b;
+  --muted: #eceff4;
+  --muted-foreground: #64748b;
+  --card: #ffffff;
+  --border: rgba(71, 85, 105, 0.18);
+  --primary: #4338ca;
+  --primary-foreground: #eef2ff;
+  --aside: #e8eaf6;
+  --header: rgba(241, 245, 249, 0.94);
+  --overlay: rgba(15, 23, 42, 0.5);
+  --hero-blob-a: rgba(99, 102, 241, 0.16);
+  --hero-blob-b: rgba(56, 189, 248, 0.12);
+  --hero-border: rgba(67, 56, 202, 0.2);
+  --dot: rgba(71, 85, 105, 0.08);
+  --glow-hero: rgba(99, 102, 241, 0.1);
+  --mesh: transparent;
+  --mesh-2: transparent;
+  --selection-bg: rgba(67, 56, 202, 0.2);
+  --selection-fg: #1e293b;
+  --nav-active-bg: rgba(67, 56, 202, 0.1);
+  --nav-active-ring: rgba(67, 56, 202, 0.35);
+  --nav-muted: #94a3b8;
+  --nav-line: rgba(67, 56, 202, 0.22);
+  --search-popover: #ffffff;
+  --search-hit: rgba(67, 56, 202, 0.08);
+  --header-shadow: 0 1px 0 rgba(71, 85, 105, 0.08);
+  --aside-glow: transparent;
+}
+
+[data-theme="moments"] {
+  --background: #f0faf6;
+  --foreground: #14532d;
+  --muted: #e6f5ed;
+  --muted-foreground: #3f6212;
+  --card: #ffffff;
+  --border: rgba(20, 83, 45, 0.15);
+  --primary: #15803d;
+  --primary-foreground: #ecfdf5;
+  --aside: #e8f5e9;
+  --header: rgba(236, 253, 245, 0.94);
+  --overlay: rgba(20, 83, 45, 0.45);
+  --hero-blob-a: rgba(52, 211, 153, 0.2);
+  --hero-blob-b: rgba(45, 212, 191, 0.15);
+  --hero-border: rgba(21, 128, 61, 0.2);
+  --dot: rgba(20, 83, 45, 0.07);
+  --glow-hero: rgba(52, 211, 153, 0.12);
+  --mesh: transparent;
+  --mesh-2: transparent;
+  --selection-bg: rgba(21, 128, 61, 0.18);
+  --selection-fg: #14532d;
+  --nav-active-bg: rgba(21, 128, 61, 0.1);
+  --nav-active-ring: rgba(21, 128, 61, 0.35);
+  --nav-muted: #65a30d;
+  --nav-line: rgba(21, 128, 61, 0.22);
+  --search-popover: #ffffff;
+  --search-hit: rgba(21, 128, 61, 0.08);
+  --header-shadow: 0 1px 0 rgba(20, 83, 45, 0.06);
+  --aside-glow: transparent;
+}
+
+/* —— 极夜星轨：深空科技 —— */
+[data-theme="stellar"] {
+  --background: #030712;
+  --foreground: #e2e8f0;
+  --muted: #0f172a;
+  --muted-foreground: #94a3b8;
+  --card: rgba(15, 23, 42, 0.65);
+  --border: rgba(56, 189, 248, 0.12);
+  --primary: #22d3ee;
+  --primary-foreground: #042f2e;
+  --aside: rgba(8, 12, 24, 0.92);
+  --header: rgba(3, 7, 18, 0.75);
+  --overlay: rgba(2, 6, 23, 0.72);
+  --hero-blob-a: rgba(34, 211, 238, 0.15);
+  --hero-blob-b: rgba(139, 92, 246, 0.12);
+  --hero-border: rgba(34, 211, 238, 0.22);
+  --dot: rgba(34, 211, 238, 0.04);
+  --glow-hero: rgba(56, 189, 248, 0.08);
+  --mesh: rgba(34, 211, 238, 0.03);
+  --mesh-2: rgba(139, 92, 246, 0.04);
+  --selection-bg: rgba(34, 211, 238, 0.25);
+  --selection-fg: #f8fafc;
+  --nav-active-bg: rgba(34, 211, 238, 0.12);
+  --nav-active-ring: rgba(34, 211, 238, 0.45);
+  --nav-muted: #64748b;
+  --nav-line: rgba(34, 211, 238, 0.18);
+  --search-popover: #0f172a;
+  --search-hit: rgba(34, 211, 238, 0.1);
+  --header-shadow: 0 0 0 1px rgba(34, 211, 238, 0.08), 0 12px 40px rgba(0, 0, 0, 0.45);
+  --aside-glow: 0 0 80px rgba(34, 211, 238, 0.06);
+}
+
+/* —— 锻界深灰：工业级简约 —— */
+[data-theme="forge"] {
+  --background: #0c0a09;
+  --foreground: #e7e5e4;
+  --muted: #1c1917;
+  --muted-foreground: #a8a29e;
+  --card: rgba(28, 25, 23, 0.75);
+  --border: rgba(245, 158, 11, 0.1);
+  --primary: #fbbf24;
+  --primary-foreground: #1c1917;
+  --aside: rgba(12, 10, 9, 0.95);
+  --header: rgba(12, 10, 9, 0.82);
+  --overlay: rgba(0, 0, 0, 0.65);
+  --hero-blob-a: rgba(251, 191, 36, 0.08);
+  --hero-blob-b: rgba(245, 158, 11, 0.05);
+  --hero-border: rgba(251, 191, 36, 0.15);
+  --dot: rgba(251, 191, 36, 0.035);
+  --glow-hero: rgba(251, 191, 36, 0.06);
+  --mesh: rgba(251, 191, 36, 0.02);
+  --mesh-2: rgba(120, 113, 108, 0.03);
+  --selection-bg: rgba(251, 191, 36, 0.22);
+  --selection-fg: #fafaf9;
+  --nav-active-bg: rgba(251, 191, 36, 0.1);
+  --nav-active-ring: rgba(251, 191, 36, 0.35);
+  --nav-muted: #78716c;
+  --nav-line: rgba(251, 191, 36, 0.15);
+  --search-popover: #1c1917;
+  --search-hit: rgba(251, 191, 36, 0.08);
+  --header-shadow: 0 0 0 1px rgba(251, 191, 36, 0.06), 0 8px 32px rgba(0, 0, 0, 0.5);
+  --aside-glow: 0 0 60px rgba(251, 191, 36, 0.04);
+}
+
+/* —— 春之复苏 —— */
+[data-theme="spring"] {
+  --background: #fdfbf7;
+  --foreground: #143322;
+  --muted: #f0fdf4;
+  --muted-foreground: #4ade80;
+  --card: rgba(255, 255, 255, 0.85);
+  --border: rgba(74, 222, 128, 0.25);
+  --primary: #10b981;
+  --primary-foreground: #ffffff;
+  --aside: rgba(253, 251, 247, 0.95);
+  --header: rgba(253, 251, 247, 0.85);
+  --overlay: rgba(20, 51, 34, 0.4);
+  --hero-blob-a: rgba(16, 185, 129, 0.15);
+  --hero-blob-b: rgba(244, 114, 182, 0.12);
+  --hero-border: rgba(16, 185, 129, 0.25);
+  --dot: rgba(16, 185, 129, 0.08);
+  --glow-hero: rgba(16, 185, 129, 0.1);
+  --mesh: transparent;
+  --mesh-2: transparent;
+  --selection-bg: rgba(16, 185, 129, 0.2);
+  --selection-fg: #143322;
+  --nav-active-bg: rgba(16, 185, 129, 0.12);
+  --nav-active-ring: rgba(16, 185, 129, 0.35);
+  --nav-muted: #6ee7b7;
+  --nav-line: rgba(16, 185, 129, 0.25);
+  --search-popover: #ffffff;
+  --search-hit: rgba(16, 185, 129, 0.08);
+  --header-shadow: 0 1px 0 rgba(16, 185, 129, 0.08);
+  --aside-glow: transparent;
+}
+
+/* —— 夏之繁星 —— */
+[data-theme="summer"] {
+  --background: #f0f9ff;
+  --foreground: #0c4a6e;
+  --muted: #e0f2fe;
+  --muted-foreground: #38bdf8;
+  --card: rgba(255, 255, 255, 0.85);
+  --border: rgba(56, 189, 248, 0.25);
+  --primary: #0ea5e9;
+  --primary-foreground: #ffffff;
+  --aside: rgba(240, 249, 255, 0.95);
+  --header: rgba(240, 249, 255, 0.85);
+  --overlay: rgba(12, 74, 110, 0.4);
+  --hero-blob-a: rgba(14, 165, 233, 0.15);
+  --hero-blob-b: rgba(250, 204, 21, 0.15);
+  --hero-border: rgba(14, 165, 233, 0.25);
+  --dot: rgba(14, 165, 233, 0.08);
+  --glow-hero: rgba(14, 165, 233, 0.1);
+  --mesh: transparent;
+  --mesh-2: transparent;
+  --selection-bg: rgba(14, 165, 233, 0.2);
+  --selection-fg: #0c4a6e;
+  --nav-active-bg: rgba(14, 165, 233, 0.12);
+  --nav-active-ring: rgba(14, 165, 233, 0.35);
+  --nav-muted: #7dd3fc;
+  --nav-line: rgba(14, 165, 233, 0.25);
+  --search-popover: #ffffff;
+  --search-hit: rgba(14, 165, 233, 0.08);
+  --header-shadow: 0 1px 0 rgba(14, 165, 233, 0.08);
+  --aside-glow: transparent;
+}
+
+/* —— 秋之丰野 —— */
+[data-theme="autumn"] {
+  --background: #fffbeb;
+  --foreground: #78350f;
+  --muted: #fef3c7;
+  --muted-foreground: #fbbf24;
+  --card: rgba(255, 255, 255, 0.85);
+  --border: rgba(245, 158, 11, 0.25);
+  --primary: #d97706;
+  --primary-foreground: #ffffff;
+  --aside: rgba(255, 251, 235, 0.95);
+  --header: rgba(255, 251, 235, 0.85);
+  --overlay: rgba(120, 53, 15, 0.4);
+  --hero-blob-a: rgba(217, 119, 6, 0.15);
+  --hero-blob-b: rgba(239, 68, 68, 0.12);
+  --hero-border: rgba(217, 119, 6, 0.25);
+  --dot: rgba(217, 119, 6, 0.08);
+  --glow-hero: rgba(217, 119, 6, 0.1);
+  --mesh: transparent;
+  --mesh-2: transparent;
+  --selection-bg: rgba(217, 119, 6, 0.2);
+  --selection-fg: #78350f;
+  --nav-active-bg: rgba(217, 119, 6, 0.12);
+  --nav-active-ring: rgba(217, 119, 6, 0.35);
+  --nav-muted: #fcd34d;
+  --nav-line: rgba(217, 119, 6, 0.25);
+  --search-popover: #ffffff;
+  --search-hit: rgba(217, 119, 6, 0.08);
+  --header-shadow: 0 1px 0 rgba(217, 119, 6, 0.08);
+  --aside-glow: transparent;
+}
+
+/* —— 冬之初雪 —— */
+[data-theme="winter"] {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #94a3b8;
+  --card: rgba(255, 255, 255, 0.9);
+  --border: rgba(59, 130, 246, 0.2);
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --aside: rgba(248, 250, 252, 0.95);
+  --header: rgba(248, 250, 252, 0.85);
+  --overlay: rgba(15, 23, 42, 0.4);
+  --hero-blob-a: rgba(59, 130, 246, 0.12);
+  --hero-blob-b: rgba(168, 85, 247, 0.1);
+  --hero-border: rgba(59, 130, 246, 0.2);
+  --dot: rgba(59, 130, 246, 0.06);
+  --glow-hero: rgba(59, 130, 246, 0.08);
+  --mesh: transparent;
+  --mesh-2: transparent;
+  --selection-bg: rgba(59, 130, 246, 0.2);
+  --selection-fg: #0f172a;
+  --nav-active-bg: rgba(59, 130, 246, 0.1);
+  --nav-active-ring: rgba(59, 130, 246, 0.3);
+  --nav-muted: #cbd5e1;
+  --nav-line: rgba(59, 130, 246, 0.2);
+  --search-popover: #ffffff;
+  --search-hit: rgba(59, 130, 246, 0.08);
+  --header-shadow: 0 1px 0 rgba(59, 130, 246, 0.06);
+  --aside-glow: transparent;
+}
+
+@theme inline {
+  --font-sans: var(--font-noto), "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+}
+
+@keyframes star-twinkle {
+  0% { opacity: 0; transform: scale(0.2) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(45deg); }
+  100% { opacity: 0; transform: scale(0.2) rotate(90deg); }
+}
+
+@keyframes meteor-swipe {
+  0% { opacity: 0; transform: translateX(100px) scale(0.2); }
+  20% { opacity: 1; transform: translateX(0) scale(1); }
+  80% { opacity: 0; transform: translateX(-500px) scale(0.2); }
+  100% { opacity: 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.05); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  background-image:
+    radial-gradient(ellipse 120% 80% at 50% -40%, var(--mesh), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 100% 0%, var(--mesh-2), transparent 45%),
+    radial-gradient(var(--dot) 1px, transparent 1px),
+    radial-gradient(ellipse 100% 80% at 50% -30%, var(--glow-hero), transparent);
+  background-size:
+    100% 100%,
+    100% 100%,
+    24px 24px,
+    100% 100%;
+  background-attachment: fixed;
+}
+
+::selection {
+  background: var(--selection-bg);
+  color: var(--selection-fg);
+}
