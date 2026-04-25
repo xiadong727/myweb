@@ -139,7 +139,7 @@ export default function HomePage() {
       </div>
 
       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {cards.map((c, i) => (
+        {cards.map((c) => (
           <Link
             key={c.href}
             href={c.href}

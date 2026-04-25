@@ -1,13 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Menu, X, Mail } from "lucide-react";
 import { TreeNav } from "@/components/tree-nav";
 import { GlobalSearch } from "@/components/global-search";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import type { SiteNavigation, SectionKey } from "@/lib/types";
-import { SIDEBAR_COLLAPSED_KEY } from "@/lib/sidebar";
+import {
+  SIDEBAR_COLLAPSED_KEY,
+  clampSidebarWidthPx,
+  SIDEBAR_WIDTH_DEFAULT,
+  SIDEBAR_WIDTH_KEY,
+} from "@/lib/sidebar";
 
 const order: SectionKey[] = ["articles", "images", "videos", "audios"];
 
@@ -18,6 +23,19 @@ function readSidebarCollapsed(): boolean {
     return localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "1";
   } catch {
     return false;
+  }
+}
+
+function readSidebarWidthPx(): number {
+  if (typeof window === "undefined") return SIDEBAR_WIDTH_DEFAULT;
+  try {
+    const raw = localStorage.getItem(SIDEBAR_WIDTH_KEY);
+    if (!raw) return clampSidebarWidthPx(SIDEBAR_WIDTH_DEFAULT, window.innerWidth);
+    const n = Number.parseInt(raw, 10);
+    if (!Number.isFinite(n)) return clampSidebarWidthPx(SIDEBAR_WIDTH_DEFAULT, window.innerWidth);
+    return clampSidebarWidthPx(n, window.innerWidth);
+  } catch {
+    return clampSidebarWidthPx(SIDEBAR_WIDTH_DEFAULT, window.innerWidth);
   }
 }
 
@@ -74,11 +92,18 @@ export function SiteChrome({
 }) {
   const [drawer, setDrawer] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarWidthPx, setSidebarWidthPx] = useState(SIDEBAR_WIDTH_DEFAULT);
+  const [resizing, setResizing] = useState(false);
+  const dragStartX = useRef(0);
+  const dragStartWidth = useRef(SIDEBAR_WIDTH_DEFAULT);
+  const dragging = useRef(false);
 
   /* Hydration 后与 localStorage / data-sidebar 对齐（服务端无法读取） */
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- 仅从外部存储同步初始折叠态
+    /* eslint-disable react-hooks/set-state-in-effect -- 仅从外部存储同步初始折叠态与侧栏宽度 */
     setSidebarCollapsed(readSidebarCollapsed());
+    setSidebarWidthPx(readSidebarWidthPx());
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   const setCollapsed = useCallback((collapsed: boolean) => {
@@ -92,15 +117,84 @@ export function SiteChrome({
     else document.documentElement.removeAttribute("data-sidebar");
   }, []);
 
+  const persistWidth = useCallback((w: number) => {
+    const vw = typeof window !== "undefined" ? window.innerWidth : 1920;
+    const clamped = clampSidebarWidthPx(w, vw);
+    setSidebarWidthPx(clamped);
+    try {
+      localStorage.setItem(SIDEBAR_WIDTH_KEY, String(clamped));
+    } catch {
+      /* ignore */
+    }
+    return clamped;
+  }, []);
+
+  const onResizePointerDown = useCallback(
+    (e: React.PointerEvent<HTMLButtonElement>) => {
+      if (sidebarCollapsed) return;
+      e.preventDefault();
+      dragging.current = true;
+      setResizing(true);
+      dragStartX.current = e.clientX;
+      dragStartWidth.current = sidebarWidthPx;
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+    },
+    [sidebarCollapsed, sidebarWidthPx],
+  );
+
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      if (!dragging.current) return;
+      const delta = e.clientX - dragStartX.current;
+      persistWidth(dragStartWidth.current + delta);
+    };
+    const endDrag = () => {
+      if (!dragging.current) return;
+      dragging.current = false;
+      setResizing(false);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", endDrag);
+    window.addEventListener("pointercancel", endDrag);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", endDrag);
+      window.removeEventListener("pointercancel", endDrag);
+    };
+  }, [persistWidth]);
+
+  useEffect(() => {
+    const onResize = () => {
+      if (typeof window === "undefined") return;
+      setSidebarWidthPx((prev) => {
+        const next = clampSidebarWidthPx(prev, window.innerWidth);
+        try {
+          localStorage.setItem(SIDEBAR_WIDTH_KEY, String(next));
+        } catch {
+          /* ignore */
+        }
+        return next;
+      });
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   return (
     <div className="flex min-h-screen">
       <aside
-        className={`relative hidden shrink-0 overflow-hidden transition-[width] duration-300 ease-out lg:block ${
-          sidebarCollapsed ? "w-0" : "w-[min(100%,17.5rem)]"
+        className={`relative hidden shrink-0 overflow-hidden lg:block ${
+          resizing ? "" : "transition-[width] duration-300 ease-out"
         }`}
-        style={{ boxShadow: sidebarCollapsed ? undefined : "var(--aside-glow)" }}
+        style={{
+          width: sidebarCollapsed ? 0 : sidebarWidthPx,
+          boxShadow: sidebarCollapsed ? undefined : "var(--aside-glow)",
+        }}
       >
-        <div className="flex h-screen w-[min(100%,17.5rem)] flex-col gap-5 overflow-y-auto border-r border-border bg-[var(--aside)] px-3 py-6">
+        <div className="flex h-screen w-full min-w-0 flex-col gap-5 overflow-y-auto border-r border-border bg-[var(--aside)] px-3 py-6">
           <div className="flex items-start justify-between gap-2 px-1">
             <Link href="/" className="group min-w-0 flex-1">
               <div className="text-xl font-bold tracking-widest text-foreground transition-colors duration-300 group-hover:text-primary">
@@ -120,6 +214,18 @@ export function SiteChrome({
           </div>
           <NavigationBlock nav={nav} />
         </div>
+        {!sidebarCollapsed ? (
+          <button
+            type="button"
+            aria-label="拖动调整侧栏宽度"
+            title="拖动调整侧栏宽度"
+            onPointerDown={onResizePointerDown}
+            className="group absolute right-0 top-0 z-10 hidden h-full w-3 translate-x-1/2 cursor-col-resize touch-none select-none lg:block"
+          >
+            <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-border transition-colors group-hover:bg-primary/50" />
+            <span className="absolute inset-y-24 left-1/2 w-1 -translate-x-1/2 rounded-full bg-border/90 opacity-80 transition-colors group-hover:bg-primary/35" />
+          </button>
+        ) : null}
       </aside>
 
       {sidebarCollapsed ? (

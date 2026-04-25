@@ -1,7 +1,16 @@
+import type { ImgHTMLAttributes } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { resolveArticleMarkdownAssetUrl } from "@/lib/article-assets";
 
-export function ArticleBody({ content }: { content: string }) {
+export function ArticleBody({
+  content,
+  articleSlug,
+}: {
+  content: string;
+  /** 如 `cogrow/10years02`，用于把 `![](images/a.png)` 解析到 content/articles 下 */
+  articleSlug?: string;
+}) {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -10,10 +19,7 @@ export function ArticleBody({ content }: { content: string }) {
           <h1 className="mt-10 text-3xl font-semibold tracking-tight text-foreground first:mt-0" {...props} />
         ),
         h2: (props) => (
-          <h2
-            className="mt-10 border-b border-border pb-2 text-xl font-semibold text-foreground/95"
-            {...props}
-          />
+          <h2 className="mt-10 text-xl font-semibold text-foreground/95" {...props} />
         ),
         h3: (props) => <h3 className="mt-8 text-lg font-semibold text-foreground" {...props} />,
         p: (props) => <p className="mt-4 leading-relaxed text-muted-foreground" {...props} />,
@@ -61,6 +67,23 @@ export function ArticleBody({ content }: { content: string }) {
           />
         ),
         hr: () => <hr className="my-10 border-border" />,
+        img: ({ src, alt, ...rest }: ImgHTMLAttributes<HTMLImageElement>) => {
+          const resolved =
+            articleSlug && typeof src === "string"
+              ? resolveArticleMarkdownAssetUrl(src, articleSlug)
+              : src;
+          return (
+            // eslint-disable-next-line @next/next/no-img-element -- 正文内用户任意相对路径，用原生 img + /media 路由
+            <img
+              {...rest}
+              src={resolved}
+              alt={alt ?? ""}
+              className="mt-4 max-h-[min(70vh,720px)] w-auto max-w-full rounded-lg border border-border object-contain shadow-sm"
+              loading="lazy"
+              decoding="async"
+            />
+          );
+        },
       }}
     >
       {content}

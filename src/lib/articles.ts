@@ -5,6 +5,44 @@ import type { ArticleMeta } from "./types";
 
 const ARTICLES_DIR = path.join(process.cwd(), "content/articles");
 
+/** 解析正文开头的一级 ATX 标题（# 标题），用于与 frontmatter 标题去重 */
+export function takeLeadingAtxH1(content: string): { heading: string | null; rest: string } {
+  const normalized = content.replace(/^\uFEFF/, "");
+  const lines = normalized.split("\n");
+  let i = 0;
+  while (i < lines.length && lines[i].trim() === "") i += 1;
+  if (i >= lines.length) return { heading: null, rest: content };
+  const m = /^#\s+(.+)$/.exec(lines[i].trim());
+  if (!m) return { heading: null, rest: content };
+  const heading = m[1]
+    .trim()
+    .replace(/#+\s*$/, "")
+    .trim();
+  const rest = [...lines.slice(0, i), ...lines.slice(i + 1)].join("\n").replace(/^\n+/, "");
+  return { heading, rest };
+}
+
+function normTitle(s: string): string {
+  return s.replace(/\s+/g, " ").trim();
+}
+
+/** 页面展示用标题 + 去重后的正文（避免 frontmatter 标题与 md 首行 # 重复时出现双线与大标题重复） */
+export function resolveArticleDisplay(article: { meta: ArticleMeta; content: string }): {
+  title: string;
+  content: string;
+} {
+  const { heading, rest } = takeLeadingAtxH1(article.content);
+  const metaTitle = typeof article.meta.title === "string" ? article.meta.title.trim() : "";
+  const title = metaTitle || heading || "未命名";
+  const shouldStrip = Boolean(
+    heading && (!metaTitle || normTitle(heading) === normTitle(metaTitle)),
+  );
+  return {
+    title,
+    content: shouldStrip ? rest : article.content,
+  };
+}
+
 export function getArticleSlugs(): string[] {
   const results: string[] = [];
 

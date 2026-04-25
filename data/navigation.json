@@ -13,17 +13,45 @@
           "children": [
             {
               "id": "grp-reading",
-              "title": "阅读与思考",
+              "title": "拾光共长",
               "children": [
                 {
                   "id": "leaf-arch",
-                  "title": "架构随笔",
-                  "slug": "tech/arch-notes"
+                  "title": "我想用10年时间，做一件“笨”事",
+                  "slug": "cogrow/10years02"
                 },
                 {
                   "id": "leaf-hello",
                   "title": "你好，世界",
                   "slug": "notes/hello-world"
+                }
+              ]
+            },
+            {
+              "id": "grp-parenting",
+              "title": "亲子与教育",
+              "children": [
+                {
+                  "id": "leaf-first",
+                  "title": "静态站点起步",
+                  "slug": "tech/first-steps"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "grp-cognition",
+          "title": "工具与方法",
+          "children": [
+            {
+              "id": "grp-reading",
+              "title": "AI工具",
+              "children": [
+                {
+                  "id": "leaf-arch",
+                  "title": "架构随笔",
+                  "slug": "tech/arch-notes"
                 }
               ]
             },

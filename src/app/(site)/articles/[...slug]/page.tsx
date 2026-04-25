@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getArticleBySlug, getArticleSlugs } from "@/lib/articles";
+import { getArticleBySlug, getArticleSlugs, resolveArticleDisplay } from "@/lib/articles";
 import { ArticleBody } from "@/components/article-body";
 
 type Props = { params: Promise<{ slug: string[] }> };
@@ -13,7 +13,8 @@ export async function generateMetadata({ params }: Props) {
   const path = slug.join("/");
   const article = getArticleBySlug(path);
   if (!article) return { title: "未找到" };
-  return { title: article.meta.title };
+  const { title } = resolveArticleDisplay(article);
+  return { title };
 }
 
 export default async function ArticlePage({ params }: Props) {
@@ -22,10 +23,12 @@ export default async function ArticlePage({ params }: Props) {
   const article = getArticleBySlug(path);
   if (!article) notFound();
 
+  const { title, content } = resolveArticleDisplay(article);
+
   return (
     <article className="mx-auto max-w-4xl px-4 pb-16 sm:px-8 lg:px-12">
-      <header className="border-b border-border pb-8">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">{article.meta.title}</h1>
+      <header className="pb-8">
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">{title}</h1>
         {article.meta.date ? (
           <p className="mt-3 font-mono text-sm text-muted-foreground">{article.meta.date}</p>
         ) : null}
@@ -42,7 +45,7 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         ) : null}
       </header>
-      <ArticleBody content={article.content} />
+      <ArticleBody content={content} articleSlug={path} />
     </article>
   );
 }
