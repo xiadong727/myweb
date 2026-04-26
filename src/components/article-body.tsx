@@ -16,22 +16,29 @@ export function ArticleBody({
       remarkPlugins={[remarkGfm]}
       components={{
         h1: (props) => (
-          <h1 className="mt-10 text-3xl font-semibold tracking-tight text-foreground first:mt-0" {...props} />
+          <h1 className="mt-12 text-[2.25rem] font-bold leading-[1.3] tracking-tight text-foreground first:mt-0" {...props} />
         ),
         h2: (props) => (
-          <h2 className="mt-10 text-xl font-semibold text-foreground/95" {...props} />
+          <h2 className="mt-10 text-[1.75rem] font-semibold leading-[1.4] text-foreground/95" {...props} />
         ),
-        h3: (props) => <h3 className="mt-8 text-lg font-semibold text-foreground" {...props} />,
-        p: (props) => <p className="mt-4 leading-relaxed text-muted-foreground" {...props} />,
+        h3: (props) => <h3 className="mt-8 text-[1.35rem] font-semibold leading-[1.5] text-foreground" {...props} />,
+        h4: (props) => <h4 className="mt-6 text-[1.15rem] font-semibold leading-[1.5] text-foreground" {...props} />,
+        p: (props) => (
+          <p
+            className="mt-5 text-justify text-[1.05rem] leading-[1.8] tracking-[0.02em] text-muted-foreground"
+            style={{ textIndent: "2em" }}
+            {...props}
+          />
+        ),
         a: (props) => (
           <a
             className="font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:opacity-80"
             {...props}
           />
         ),
-        ul: (props) => <ul className="mt-4 list-disc space-y-2 pl-6 text-muted-foreground" {...props} />,
-        ol: (props) => <ol className="mt-4 list-decimal space-y-2 pl-6 text-muted-foreground" {...props} />,
-        li: (props) => <li className="leading-relaxed" {...props} />,
+        ul: (props) => <ul className="mt-5 list-disc space-y-3 pl-[3.5em] text-[1.05rem] leading-[1.8] tracking-[0.02em] text-muted-foreground" {...props} />,
+        ol: (props) => <ol className="mt-5 list-decimal space-y-3 pl-[3.5em] text-[1.05rem] leading-[1.8] tracking-[0.02em] text-muted-foreground" {...props} />,
+        li: (props) => <li className="leading-[1.8]" {...props} />,
         code: (props) => {
           const { className, children, ...rest } = props;
           const isBlock = Boolean(className);
@@ -62,7 +69,7 @@ export function ArticleBody({
         ),
         blockquote: (props) => (
           <blockquote
-            className="mt-4 border-l-2 border-primary/40 bg-primary/5 py-1 pl-4 text-muted-foreground italic"
+            className="mt-6 border-l-4 border-primary/40 bg-primary/5 py-3 pl-5 pr-4 text-[1.05rem] leading-[1.8] text-muted-foreground italic"
             {...props}
           />
         ),
