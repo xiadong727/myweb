@@ -80,7 +80,8 @@ export function getArticleSummaries() {
     .map((slug) => {
       const a = getArticleBySlug(slug);
       if (!a) return null;
-      return { slug, ...a.meta };
+      const { title } = resolveArticleDisplay(a);
+      return { slug, ...a.meta, title };
     })
     .filter((x): x is { slug: string } & ArticleMeta => x !== null);
 }

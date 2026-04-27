@@ -8,15 +8,15 @@
       "label": "文章",
       "nodes": [
         {
-          "id": "grp-cognition",
-          "title": "认知与成长",
+          "id": "renzhichengzhang",
+          "title": "认知·成长",
           "children": [
             {
-              "id": "grp-reading",
+              "id": "shiguanggongzhang",
               "title": "拾光共长",
               "children": [
                 {
-                  "id": "leaf-arch",
+                  "id": "xiangyong10nianshijianzuoyijian",
                   "title": "我想用10年时间，做一件“笨”事",
                   "slug": "cogrow/10years02"
                 },
@@ -28,8 +28,8 @@
               ]
             },
             {
-              "id": "grp-parenting",
-              "title": "亲子与教育",
+              "id": "dushuji",
+              "title": "读书笔记",
               "children": [
                 {
                   "id": "leaf-first",
@@ -41,11 +41,55 @@
           ]
         },
         {
-          "id": "grp-cognition",
-          "title": "工具与方法",
+          "id": "qinzijiaoyu",
+          "title": "亲子·教育",
           "children": [
             {
-              "id": "grp-reading",
+              "id": "leaf-first",
+              "title": "静态站点起步",
+              "slug": "tech/first-steps"
+            }
+          ]
+        },
+        {
+          "id": "chuangyegaojianqian",
+          "title": "创业·搞钱",
+          "children": [
+            {
+              "id": "gerenchuangye",
+              "title": "个人创业",
+              "children": [
+                {
+                  "id": "xiangyong10nianshijianzuoyijian",
+                  "title": "我想用10年时间，做一件“笨”事",
+                  "slug": "cogrow/10years02"
+                },
+                {
+                  "id": "leaf-hello",
+                  "title": "你好，世界",
+                  "slug": "notes/hello-world"
+                }
+              ]
+            },
+            {
+              "id": "qinzijiaoyu",
+              "title": "经济与商业",
+              "children": [
+                {
+                  "id": "leaf-first",
+                  "title": "静态站点起步",
+                  "slug": "tech/first-steps"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "gongjufangfa",
+          "title": "工具·方法",
+          "children": [
+            {
+              "id": "aigongju",
               "title": "AI工具",
               "children": [
                 {
@@ -56,8 +100,8 @@
               ]
             },
             {
-              "id": "grp-parenting",
-              "title": "亲子与教育",
+              "id": "sheyingxiangji",
+              "title": "摄影摄像",
               "children": [
                 {
                   "id": "leaf-first",
@@ -74,8 +118,8 @@
       "label": "图片",
       "nodes": [
         {
-          "id": "grp-life",
-          "title": "家庭与日常",
+          "id": "meihaoshunjian",
+          "title": "美好瞬间",
           "children": [
             {
               "id": "grp-season",
@@ -101,8 +145,36 @@
       "label": "视频",
       "nodes": [
         {
-          "id": "grp-archive",
-          "title": "归档",
+          "id": "meihaogushijian",
+          "title": "美好时光",
+          "children": [
+            {
+              "id": "grp-show",
+              "title": "作品集",
+              "children": [
+                {
+                  "id": "leaf-reel",
+                  "title": "2024 Showreel",
+                  "slug": "showreel/2024"
+                }
+              ]
+            },
+            {
+              "id": "grp-share",
+              "title": "分享与演讲",
+              "children": [
+                {
+                  "id": "leaf-intro",
+                  "title": "频道介绍（嵌入）",
+                  "slug": "talks/intro"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "chuangyitupian",
+          "title": "创意图片",
           "children": [
             {
               "id": "grp-show",
@@ -128,6 +200,8 @@
             }
           ]
         }
+
+
       ]
     },
     "audios": {

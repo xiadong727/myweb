@@ -16,6 +16,8 @@ function sectionBase(key: SectionKey) {
 
 function collectExpandedForPath(nodes: NavNode[], pathname: string, base: string): Set<string> {
   const expanded = new Set<string>();
+
+  // 默认不展开任何目录，只有当前访问的路径对应的父目录才会展开
   function walk(ns: NavNode[], anc: string[]): boolean {
     let matched = false;
     for (const n of ns) {
