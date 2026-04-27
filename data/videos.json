@@ -4,7 +4,7 @@
     "title": "2024 Showreel",
     "description": "嵌入示例。若改为自托管，请将 kind 设为 file，并提供 src: /videos/your.mp4 与 poster。",
     "kind": "embed",
-    "embedUrl": "https://player.bilibili.com/player.html?isOutside=true&aid=1603126289&bvid=BV1um421j7Bq&cid=1507594963&p=1"
+    "embedUrl": "https://player.bilibili.com/player.html?isOutside=true&aid=1603126289&bvid=BV1um421j7Bq&cid=1507594963&p=1&high_quality=1"
   },
   {
     "slug": "talks/intro",

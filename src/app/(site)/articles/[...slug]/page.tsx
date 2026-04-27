@@ -27,8 +27,8 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <article className="mx-auto max-w-4xl px-4 pb-16 sm:px-8 lg:px-12">
-      <header className="pb-8">
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">{title}</h1>
+      <header className="pb-6 sm:pb-8">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-snug tracking-tight text-foreground">{title}</h1>
         {article.meta.date ? (
           <p className="mt-3 font-mono text-sm text-muted-foreground">{article.meta.date}</p>
         ) : null}
