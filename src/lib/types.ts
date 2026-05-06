@@ -45,6 +45,7 @@ export type VideoItem = {
   embedUrl?: string;
   src?: string;
   poster?: string;
+  originalUrl?: string;
 };
 
 export type AudioItem = {

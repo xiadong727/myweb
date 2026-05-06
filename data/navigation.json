@@ -104,8 +104,80 @@
               "title": "摄影摄像",
               "children": [
                 {
-                  "id": "leaf-first",
-                  "title": "静态站点起步",
+                  "id": "sheyingzhishidagang",
+                  "title": "摄影知识大纲",
+                  "slug": "sheying/zhishidagang"
+                },
+                {
+                  "id": "sheyingjichuzhishi",
+                  "title": "摄影基础知识",
+                  "children": [
+                {
+                  "id": "baoguang3yaosu",
+                  "title": "曝光3要素",
+                  "slug": "tech/first-steps"
+                },
+                {
+                  "id": "jingshenduijiao",
+                  "title": "景深&对焦",
+                  "slug": "tech/first-steps"
+                },
+                {
+                  "id": "jiaojuju",
+                  "title": "焦距",
+                  "slug": "tech/first-steps"
+                },
+                {
+                  "id": "jingbie",
+                  "title": "景别",
+                  "slug": "tech/first-steps"
+                },
+                {
+                  "id": "goutu",
+                  "title": "构图",
+                  "slug": "tech/first-steps"
+                },
+                {
+                  "id": "fenzhen",
+                  "title": "分镜",
+                  "slug": "tech/first-steps"
+                },
+                {
+                  "id": "yunjing",
+                  "title": "运镜",
+                  "slug": "tech/first-steps"
+                },
+                {
+                  "id": "zhuanchang",
+                  "title": "转场",
+                  "slug": "tech/first-steps"
+                },
+                {
+                  "id": "shijiao",
+                  "title": "视角",
+                  "slug": "tech/first-steps"
+                },
+                {
+                  "id": "zhenglv",
+                  "title": "帧率",
+                  "slug": "tech/first-steps"
+                },
+                {
+                  "id": "se",
+                  "title": "色彩",
+                  "slug": "tech/first-steps"
+                }
+              ]
+                }
+              ]
+            },
+            {
+              "id": "zimeiti",
+              "title": "自媒体",
+              "children": [
+                {
+                  "id": "zimeitibuzhe",
+                  "title": "自媒体设备",
                   "slug": "tech/first-steps"
                 }
               ]
@@ -119,7 +191,51 @@
       "nodes": [
         {
           "id": "meihaoshunjian",
-          "title": "美好瞬间",
+          "title": "时光定格",
+          "children": [
+            {
+              "id": "grp-season",
+              "title": "光影与季节",
+              "children": [
+                {
+                  "id": "leaf-color",
+                  "title": "配色与光感",
+                  "slug": "visual/color-study"
+                },
+                {
+                  "id": "leaf-space",
+                  "title": "空间构成",
+                  "slug": "visual/spatial"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "renwendili",
+          "title": "人文地理",
+          "children": [
+            {
+              "id": "grp-season",
+              "title": "光影与季节",
+              "children": [
+                {
+                  "id": "leaf-color",
+                  "title": "配色与光感",
+                  "slug": "visual/color-study"
+                },
+                {
+                  "id": "leaf-space",
+                  "title": "空间构成",
+                  "slug": "visual/spatial"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sucaiziliao",
+          "title": "素材",
           "children": [
             {
               "id": "grp-season",
@@ -146,7 +262,63 @@
       "nodes": [
         {
           "id": "meihaogushijian",
-          "title": "美好时光",
+          "title": "记忆盒子",
+          "children": [
+            {
+              "id": "grp-show",
+              "title": "2026",
+              "children": [
+                {
+                  "id": "leaf-reel",
+                  "title": "39种常见乐器",
+                  "slug": "videos/39zhongchangjianyueqi"
+                }
+              ]
+            },
+            {
+              "id": "grp-share",
+              "title": "2025",
+              "children": [
+                {
+                  "id": "leaf-intro",
+                  "title": "频道介绍（嵌入）",
+                  "slug": "talks/intro"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "fenxiangyyanjiang",
+          "title": "分享演讲",
+          "children": [
+            {
+              "id": "grp-show",
+              "title": "作品集",
+              "children": [
+                {
+                  "id": "leaf-reel",
+                  "title": "2024 Showreel",
+                  "slug": "showreel/2024"
+                }
+              ]
+            },
+            {
+              "id": "grp-share",
+              "title": "演讲分享",
+              "children": [
+                {
+                  "id": "leaf-intro",
+                  "title": "频道介绍（嵌入）",
+                  "slug": "talks/intro"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "yingshi",
+          "title": "影视学习",
           "children": [
             {
               "id": "grp-show",
@@ -173,8 +345,8 @@
           ]
         },
         {
-          "id": "chuangyitupian",
-          "title": "创意图片",
+          "id": "jilupian",
+          "title": "纪录片",
           "children": [
             {
               "id": "grp-show",
@@ -186,15 +358,38 @@
                   "slug": "showreel/2024"
                 }
               ]
-            },
+            }
+          ]
+        },
+        {
+          "id": "renwendili",
+          "title": "人文地理",
+          "children": [
             {
-              "id": "grp-share",
-              "title": "分享与演讲",
+              "id": "grp-show",
+              "title": "作品集",
               "children": [
                 {
-                  "id": "leaf-intro",
-                  "title": "频道介绍（嵌入）",
-                  "slug": "talks/intro"
+                  "id": "leaf-reel",
+                  "title": "2024 Showreel",
+                  "slug": "showreel/2024"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "yinyuedance",
+          "title": "音乐与舞蹈",
+          "children": [
+            {
+              "id": "grp-show",
+              "title": "作品集",
+              "children": [
+                {
+                  "id": "leaf-reel",
+                  "title": "39种常见乐器",
+                  "slug": "videos/39zhongchangjianyueqi"
                 }
               ]
             }
@@ -219,8 +414,19 @@
           ]
         },
         {
+          "id": "grp-youshengshu",
+          "title": "有声书",
+          "children": [
+            {
+              "id": "leaf-ambient",
+              "title": "雨后清晨",
+              "slug": "music/ambient"
+            }
+          ]
+        },
+        {
           "id": "grp-music",
-          "title": "环境音",
+          "title": "音乐",
           "children": [
             {
               "id": "leaf-ambient",
