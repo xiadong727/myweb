@@ -258,7 +258,7 @@ export default function HomePage() {
               <ArrowRight className="h-4 w-4 text-primary opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100" />
             </Link>
             <p className="mt-1.5 text-sm text-muted-foreground">
-              用 10 年时间，把人类智慧拆解成 10 个领域慢慢走 · 已更新{" "}
+              把人类智慧拆成一个个领域，一期一期慢慢走 · 已更新{" "}
               <span className="font-semibold text-primary">{totalEpisodes}</span> 期
             </p>
           </div>

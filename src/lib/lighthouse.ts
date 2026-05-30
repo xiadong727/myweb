@@ -1,7 +1,6 @@
 import { getArticleSummaries } from "./articles";
 import {
   LIGHTHOUSE_DOMAINS,
-  LIGHTHOUSE_TARGET_TOTAL,
   type DomainStat,
   type EpisodeEntry,
   type DomainGroup,
@@ -53,7 +52,7 @@ export function getLighthouseOverview(recentLimit = 5): LighthouseOverview {
         date: a.date ?? null,
       }))
       .sort((a, b) => (a.episode ?? 0) - (b.episode ?? 0));
-    return { code: d.code, name: d.name, layer: d.layer, count: episodes.length, episodes };
+    return { code: d.code, name: d.name, count: episodes.length, episodes };
   });
 
   const nameByCode = new Map(LIGHTHOUSE_DOMAINS.map((d) => [d.code, d.name]));
@@ -74,7 +73,6 @@ export function getLighthouseOverview(recentLimit = 5): LighthouseOverview {
     domains,
     recent,
     publishedTotal: articles.length,
-    targetTotal: LIGHTHOUSE_TARGET_TOTAL,
     openedDomains: domains.filter((d) => d.count > 0).length,
   };
 }
