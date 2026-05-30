@@ -220,7 +220,7 @@ export default function HomePage() {
               className="group inline-flex items-center gap-2 text-xl font-bold tracking-tight text-foreground transition hover:text-primary"
             >
               <Compass className="h-5 w-5 text-primary" />
-              与光同行 · 10 领域
+              与光同行 · 10 大领域
               <ArrowRight className="h-4 w-4 text-primary opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100" />
             </Link>
             <p className="mt-1.5 text-sm text-muted-foreground">

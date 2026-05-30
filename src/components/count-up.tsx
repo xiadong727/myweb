@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 /** 数字滚动动画：挂载或 value 变化时，从当前值缓动到目标值（easeOutCubic）。 */
 export function CountUp({
   value,
-  duration = 2200,
+  duration = 1800,
   className,
   style,
 }: {
@@ -26,7 +26,8 @@ export function CountUp({
     const step = (ts: number) => {
       if (!startTs) startTs = ts;
       const t = Math.min(1, (ts - startTs) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
+      // easeOutQuad：减速更平缓，计数在整段时长里均匀推进，避免提前到位后“停顿”
+      const eased = 1 - (1 - t) * (1 - t);
       setDisplay(Math.round(from + (to - from) * eased));
       if (t < 1) {
         raf = requestAnimationFrame(step);
