@@ -18,6 +18,8 @@ import { getLighthouseDomainStats, getLighthouseTotalEpisodes } from "@/lib/ligh
 import { MetricsInline } from "@/components/metrics-inline";
 
 const ABOUT_SLUG = "cogrow/10years02";
+const MISSION =
+  "用十年时间，把人类数千年的智慧结晶，打磨成每个家庭都能读懂、用得上的“思想工具”。";
 
 export default function HomePage() {
   const nav = getNavigation();
@@ -33,6 +35,7 @@ export default function HomePage() {
     .slice(0, 6);
   const domainStats = getLighthouseDomainStats();
   const totalEpisodes = getLighthouseTotalEpisodes();
+  const openedDomains = domainStats.filter((d) => d.count > 0).length;
   const featuredQuote = [...summaries]
     .filter((a) => a.quote)
     .sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? 1 : -1))[0];
@@ -118,10 +121,10 @@ export default function HomePage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
       <div
-        className="relative overflow-hidden rounded-3xl border p-8 shadow-sm sm:p-12"
+        className="relative overflow-hidden rounded-3xl border p-6 shadow-sm sm:p-8 lg:p-10"
         style={{
           borderColor: "var(--hero-border)",
-          background: `linear-gradient(135deg, var(--hero-blob-a) 0%, transparent 45%, var(--hero-blob-b) 100%)`,
+          background: `linear-gradient(135deg, var(--hero-blob-a) 0%, transparent 55%, var(--hero-blob-b) 100%)`,
         }}
       >
         <div
@@ -132,27 +135,56 @@ export default function HomePage() {
           className="pointer-events-none absolute -bottom-20 -left-16 h-56 w-56 rounded-full blur-3xl"
           style={{ background: "var(--hero-blob-b)" }}
         />
-        <p className="relative z-10 text-xs font-bold uppercase tracking-[0.25em] text-primary">记录与分享</p>
-        <h1 className="relative z-10 mt-3 max-w-2xl text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-          {nav.site.title}
-        </h1>
-        <p className="relative z-10 mt-4 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-          {nav.site.tagline}
-        </p>
-        <div className="relative z-10 mt-10 flex flex-wrap gap-3">
+
+        <div className="relative z-10 grid items-center gap-7 lg:grid-cols-5 lg:gap-10">
+          {/* 左栏：品牌 */}
+          <div className="lg:col-span-3">
+            <p className="text-xs font-bold uppercase tracking-[0.25em] text-primary">记录与分享</p>
+            <h1 className="mt-3 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              {nav.site.title}
+            </h1>
+            <p className="mt-3 text-base leading-relaxed text-muted-foreground sm:text-lg">
+              {nav.site.tagline}
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link
+                href="/lighthouse"
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all hover:scale-105 hover:shadow-lg"
+              >
+                <Compass className="h-4 w-4" />
+                走进与光同行
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium text-foreground shadow-sm transition-all hover:scale-105 hover:border-primary/30 hover:bg-muted"
+              >
+                <Mail className="h-4 w-4 text-muted-foreground" />
+                联系我
+              </Link>
+            </div>
+          </div>
+
+          {/* 右栏：与光同行使命卡 */}
           <Link
             href="/lighthouse"
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all hover:scale-105 hover:shadow-lg"
+            className="group block rounded-2xl border border-primary/20 bg-card/60 p-5 backdrop-blur-sm transition hover:border-primary/40 hover:bg-card/80 lg:col-span-2"
           >
-            <Compass className="h-4 w-4" />
-            走进与光同行
-          </Link>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium text-foreground shadow-sm transition-all hover:scale-105 hover:border-primary/30 hover:bg-muted"
-          >
-            <Mail className="h-4 w-4 text-muted-foreground" />
-            联系我
+            <div className="flex items-center gap-2 text-sm font-semibold text-primary">
+              <Compass className="h-4 w-4" />
+              与光同行
+            </div>
+            <p className="mt-3 text-sm leading-relaxed text-foreground/80">{MISSION}</p>
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-border/50 pt-3 text-xs text-muted-foreground">
+              <span>
+                已发布 <span className="font-semibold text-primary">{totalEpisodes}</span> 期
+              </span>
+              <span>
+                已开启 <span className="font-semibold text-primary">{openedDomains}</span> / 10 领域
+              </span>
+              <span className="ml-auto inline-flex items-center gap-1 text-primary opacity-0 transition group-hover:opacity-100">
+                查看 <ArrowRight className="h-3.5 w-3.5" />
+              </span>
+            </div>
           </Link>
         </div>
       </div>
