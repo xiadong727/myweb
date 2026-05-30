@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getAllGalleries, getGalleryBySlug } from "@/lib/galleries";
+import { EpisodeNav } from "@/components/episode-nav";
+import { getRelatedEpisodeLinks } from "@/lib/episode";
 
 type Props = { params: Promise<{ slug: string[] }> };
 
@@ -48,6 +50,10 @@ export default async function GalleryPage({ params }: Props) {
           </div>
         ))}
       </div>
+
+      <EpisodeNav
+        links={getRelatedEpisodeLinks(gallery.episode ?? null, { type: "images", slug: path })}
+      />
     </main>
   );
 }

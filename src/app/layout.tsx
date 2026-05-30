@@ -3,6 +3,7 @@ import { Noto_Sans_SC, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeScript } from "@/components/theme-script";
 import { SidebarScript } from "@/components/sidebar-script";
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
 import "./globals.css";
 
 const notoSans = Noto_Sans_SC({
@@ -17,11 +18,24 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "拾光共长",
-    template: "%s · 拾光共长",
+    default: SITE_NAME,
+    template: `%s · ${SITE_NAME}`,
   },
-  description: "认知、智慧、亲子教育与美好时光 — 文章、影像与记录",
+  description: SITE_DESCRIPTION,
+  alternates: {
+    types: {
+      "application/rss+xml": [{ url: "/feed.xml", title: SITE_NAME }],
+    },
+  },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+  },
 };
 
 export default function RootLayout({

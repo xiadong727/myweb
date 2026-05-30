@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { ExternalLink } from "lucide-react";
 import { getAllVideos, getVideoBySlug } from "@/lib/videos";
+import { EpisodeNav } from "@/components/episode-nav";
+import { getRelatedEpisodeLinks } from "@/lib/episode";
 
 type Props = { params: Promise<{ slug: string[] }> };
 
@@ -68,6 +70,10 @@ export default async function VideoPage({ params }: Props) {
           <div className="p-8 text-center text-sm text-muted-foreground">未配置可用的视频源。</div>
         )}
       </div>
+
+      <EpisodeNav
+        links={getRelatedEpisodeLinks(video.episode ?? null, { type: "videos", slug: path })}
+      />
     </main>
   );
 }

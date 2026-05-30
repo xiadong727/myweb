@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getAllAudios, getAudioBySlug } from "@/lib/audios";
+import { EpisodeNav } from "@/components/episode-nav";
+import { getRelatedEpisodeLinks } from "@/lib/episode";
 
 type Props = { params: Promise<{ slug: string[] }> };
 
@@ -46,6 +48,10 @@ export default async function AudioPage({ params }: Props) {
           您的浏览器不支持 HTML5 音频。
         </audio>
       </div>
+
+      <EpisodeNav
+        links={getRelatedEpisodeLinks(audio.episode ?? null, { type: "audios", slug: path })}
+      />
     </main>
   );
 }

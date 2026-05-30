@@ -50,14 +50,23 @@ function NavTree({
               </button>
               {open ? (
                 <div className="mt-0.5">
-                  <NavTree
-                    nodes={n.children}
-                    base={base}
-                    pathname={pathname}
-                    expanded={expanded}
-                    toggle={toggle}
-                    depth={depth + 1}
-                  />
+                  {n.children.length > 0 ? (
+                    <NavTree
+                      nodes={n.children}
+                      base={base}
+                      pathname={pathname}
+                      expanded={expanded}
+                      toggle={toggle}
+                      depth={depth + 1}
+                    />
+                  ) : (
+                    <p
+                      className="py-1.5 pr-2 text-[12px] italic text-muted-foreground/60"
+                      style={{ paddingLeft: indent + 28 }}
+                    >
+                      敬请期待 · 内容建设中…
+                    </p>
+                  )}
                 </div>
               ) : null}
             </li>

@@ -85,3 +85,45 @@ export function getArticleSummaries() {
     })
     .filter((x): x is { slug: string } & ArticleMeta => x !== null);
 }
+
+export type ArticleNeighbor = { slug: string; title: string };
+
+/**
+ * 取得上一篇/下一篇：
+ * - 灯塔系列（有 domain + episode）：按同领域内的期号排序，prev=上一期、next=下一期
+ * - 其它文章：按日期排序，prev=较新一篇、next=较旧一篇
+ */
+export function getArticleNeighbors(slug: string): {
+  prev: ArticleNeighbor | null;
+  next: ArticleNeighbor | null;
+  isEpisode: boolean;
+} {
+  const all = getArticleSummaries();
+  const current = all.find((a) => a.slug === slug);
+  const pick = (a: ({ slug: string } & ArticleMeta) | undefined): ArticleNeighbor | null =>
+    a ? { slug: a.slug, title: a.title } : null;
+  if (!current) return { prev: null, next: null, isEpisode: false };
+
+  if (current.domain && current.episode != null) {
+    const seq = all
+      .filter((a) => a.domain === current.domain && a.episode != null)
+      .sort((a, b) => (a.episode as number) - (b.episode as number));
+    const i = seq.findIndex((a) => a.slug === slug);
+    return {
+      prev: i > 0 ? pick(seq[i - 1]) : null,
+      next: i >= 0 && i < seq.length - 1 ? pick(seq[i + 1]) : null,
+      isEpisode: true,
+    };
+  }
+
+  const dated = all
+    .filter((a) => a.date)
+    .sort((a, b) => ((a.date as string) < (b.date as string) ? 1 : -1));
+  const i = dated.findIndex((a) => a.slug === slug);
+  if (i === -1) return { prev: null, next: null, isEpisode: false };
+  return {
+    prev: i > 0 ? pick(dated[i - 1]) : null,
+    next: i < dated.length - 1 ? pick(dated[i + 1]) : null,
+    isEpisode: false,
+  };
+}

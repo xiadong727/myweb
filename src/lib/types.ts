@@ -35,6 +35,8 @@ export type GalleryItem = {
   description: string;
   cover: string;
   images: { src: string; alt: string }[];
+  /** 「一鱼三吃」同期关联键，如 "L01-ep001"；填写后会与同键的文章/音频/视频互相链接 */
+  episode?: string;
 };
 
 export type VideoItem = {
@@ -46,6 +48,8 @@ export type VideoItem = {
   src?: string;
   poster?: string;
   originalUrl?: string;
+  /** 「一鱼三吃」同期关联键，如 "L01-ep001" */
+  episode?: string;
 };
 
 export type AudioItem = {
@@ -54,6 +58,8 @@ export type AudioItem = {
   description: string;
   src: string;
   cover?: string;
+  /** 「一鱼三吃」同期关联键，如 "L01-ep001" */
+  episode?: string;
 };
 
 export type ArticleMeta = {
