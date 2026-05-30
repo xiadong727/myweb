@@ -141,32 +141,11 @@ export default function HomePage() {
         </p>
         <div className="relative z-10 mt-10 flex flex-wrap gap-3">
           <Link
-            href="/articles"
-            className={`inline-flex items-center gap-2 rounded-full bg-gradient-to-r ${styles.articles.gradient} px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all hover:scale-105 hover:shadow-lg`}
+            href="/lighthouse"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all hover:scale-105 hover:shadow-lg"
           >
-            <FileText className="h-4 w-4" />
-            读文章
-          </Link>
-          <Link
-            href="/images"
-            className={`inline-flex items-center gap-2 rounded-full bg-gradient-to-r ${styles.images.gradient} px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all hover:scale-105 hover:shadow-lg`}
-          >
-            <ImageIcon className="h-4 w-4" />
-            品图片
-          </Link>
-          <Link
-            href="/videos"
-            className={`inline-flex items-center gap-2 rounded-full bg-gradient-to-r ${styles.videos.gradient} px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all hover:scale-105 hover:shadow-lg`}
-          >
-            <Video className="h-4 w-4" />
-            看视频
-          </Link>
-          <Link
-            href="/audios"
-            className={`inline-flex items-center gap-2 rounded-full bg-gradient-to-r ${styles.audios.gradient} px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all hover:scale-105 hover:shadow-lg`}
-          >
-            <Headphones className="h-4 w-4" />
-            听音频
+            <Compass className="h-4 w-4" />
+            走进与光同行
           </Link>
           <Link
             href="/contact"
@@ -205,49 +184,6 @@ export default function HomePage() {
           </Link>
         ))}
       </div>
-
-      {/* 最新更新 */}
-      {latest.length ? (
-        <section className="mt-14">
-          <div className="flex items-end justify-between gap-3">
-            <h2 className="flex items-center gap-2 text-xl font-bold tracking-tight text-foreground">
-              <Sparkles className="h-5 w-5 text-primary" />
-              最新更新
-            </h2>
-            <Link
-              href="/articles"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:opacity-80"
-            >
-              全部文章
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <ul className="mt-5 divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
-            {latest.map((a) => (
-              <li key={a.slug}>
-                <Link
-                  href={`/articles/${a.slug}`}
-                  className="group flex items-center gap-4 px-4 py-3 transition hover:bg-primary/5 sm:px-5"
-                >
-                  <div className="min-w-0 flex-1">
-                    <h3 className="truncate font-medium text-foreground transition group-hover:text-primary">
-                      {a.title}
-                    </h3>
-                    {a.excerpt ? (
-                      <p className="mt-0.5 line-clamp-1 text-sm text-muted-foreground">{a.excerpt}</p>
-                    ) : null}
-                    <div className="mt-1">
-                      <MetricsInline type="articles" slug={a.slug} />
-                    </div>
-                  </div>
-                  <time className="shrink-0 font-mono text-xs text-muted-foreground">{a.date}</time>
-                  <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground/40 transition group-hover:translate-x-0.5 group-hover:text-primary" />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
 
       {/* 与光同行 · 主线进度墙 */}
       <section className="mt-14">
@@ -333,6 +269,49 @@ export default function HomePage() {
           })}
         </div>
       </section>
+
+      {/* 最新更新 */}
+      {latest.length ? (
+        <section className="mt-14">
+          <div className="flex items-end justify-between gap-3">
+            <h2 className="flex items-center gap-2 text-xl font-bold tracking-tight text-foreground">
+              <Sparkles className="h-5 w-5 text-primary" />
+              最新更新
+            </h2>
+            <Link
+              href="/articles"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:opacity-80"
+            >
+              全部文章
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <ul className="mt-5 divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
+            {latest.map((a) => (
+              <li key={a.slug}>
+                <Link
+                  href={`/articles/${a.slug}`}
+                  className="group flex items-center gap-4 px-4 py-3 transition hover:bg-primary/5 sm:px-5"
+                >
+                  <div className="min-w-0 flex-1">
+                    <h3 className="truncate font-medium text-foreground transition group-hover:text-primary">
+                      {a.title}
+                    </h3>
+                    {a.excerpt ? (
+                      <p className="mt-0.5 line-clamp-1 text-sm text-muted-foreground">{a.excerpt}</p>
+                    ) : null}
+                    <div className="mt-1">
+                      <MetricsInline type="articles" slug={a.slug} />
+                    </div>
+                  </div>
+                  <time className="shrink-0 font-mono text-xs text-muted-foreground">{a.date}</time>
+                  <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground/40 transition group-hover:translate-x-0.5 group-hover:text-primary" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {/* 精选金句 */}
       {featuredQuote?.quote ? (
