@@ -61,4 +61,16 @@ export type ArticleMeta = {
   date?: string;
   excerpt?: string;
   tags?: string[];
+  // —— 智慧灯塔系列专属（均为可选）——
+  series?: string;
+  episode?: number;
+  year?: number;
+  domain?: string;
+  layer?: "道" | "法" | "术" | "器";
+  quote?: string;
+  forKids?: string;
+  books?: string[];
+  score?: number;
+  media?: { audio?: boolean; video?: boolean };
+  access?: "free" | "member";
 };

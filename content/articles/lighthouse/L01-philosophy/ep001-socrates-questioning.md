@@ -1,3 +1,22 @@
+---
+title: "一切始于提问——苏格拉底的追问"
+date: "2026-01-05"
+excerpt: "为什么会提问，比知道答案更重要——苏格拉底用四十年只做了一件事：追问。"
+series: "lighthouse"
+episode: 1
+year: 1
+domain: "L01"
+layer: "道"
+quote: "未经省察的人生，不值得过。"
+forKids: "下次有人说“本来就是这样”，你可以轻轻问一句：“为什么呢？”"
+books: ["《苏格拉底的申辩》", "《理想国》"]
+score: 14
+media:
+  audio: false
+  video: false
+access: "free"
+---
+
 # 一切始于提问——苏格拉底的追问
 
 ![](images/90171a1853664fb281bbef7552282929.png)

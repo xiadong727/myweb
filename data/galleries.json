@@ -18,21 +18,5 @@
         "alt": "配色样本 3"
       }
     ]
-  },
-  {
-    "slug": "visual/spatial",
-    "title": "空间构成",
-    "description": "构图与留白练习。将 `data/galleries.json` 中的图片 URL 改为本地 `/galleries/...` 路径即可完全离线托管。",
-    "cover": "https://picsum.photos/seed/space1/1200/800",
-    "images": [
-      {
-        "src": "https://picsum.photos/seed/space1/1400/900",
-        "alt": "空间 1"
-      },
-      {
-        "src": "https://picsum.photos/seed/space2/1400/900",
-        "alt": "空间 2"
-      }
-    ]
   }
 ]

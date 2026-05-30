@@ -14,34 +14,6 @@ function sectionBase(key: SectionKey) {
   return "/videos";
 }
 
-function collectExpandedForPath(nodes: NavNode[], pathname: string, base: string): Set<string> {
-  const expanded = new Set<string>();
-
-  // 默认不展开任何目录，只有当前访问的路径对应的父目录才会展开
-  function walk(ns: NavNode[], anc: string[]): boolean {
-    let matched = false;
-    for (const n of ns) {
-      if (isNavGroup(n)) {
-        const hit = walk(n.children, [...anc, n.id]);
-        if (hit) {
-          anc.forEach((id) => expanded.add(id));
-          expanded.add(n.id);
-          matched = true;
-        }
-      } else {
-        const href = `${base}/${n.slug}`;
-        if (pathname === href) {
-          anc.forEach((id) => expanded.add(id));
-          matched = true;
-        }
-      }
-    }
-    return matched;
-  }
-  walk(nodes, []);
-  return expanded;
-}
-
 function NavTree({
   nodes,
   base,
@@ -126,9 +98,8 @@ function TreeNavInner({
   pathname: string;
 }) {
   const base = sectionBase(section);
-  const [expanded, setExpanded] = useState(
-    () => new Set(collectExpandedForPath(nodes, pathname, base))
-  );
+  // 进入/刷新时默认只展示第一级目录，所有子目录折叠
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
 
   const toggle = (id: string) => {
     setExpanded((prev) => {
