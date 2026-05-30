@@ -1,9 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CountUp } from "./count-up";
 
-/** 全站作品总浏览量（只读，不自增）。数据来自 /api/metrics?total=1。 */
-export function TotalViews({ className }: { className?: string }) {
+/** 全站作品总浏览量（只读，不自增）。数据来自 /api/metrics?total=1，加载后滚动到位。 */
+export function TotalViews({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   const [n, setN] = useState<number | null>(null);
 
   useEffect(() => {
@@ -14,7 +21,7 @@ export function TotalViews({ className }: { className?: string }) {
         const data = await res.json();
         if (!cancelled) setN(data.views ?? 0);
       } catch {
-        /* 忽略：保持占位 */
+        if (!cancelled) setN(0);
       }
     })();
     return () => {
@@ -22,5 +29,5 @@ export function TotalViews({ className }: { className?: string }) {
     };
   }, []);
 
-  return <span className={className}>{n ?? "—"}</span>;
+  return <CountUp value={n ?? 0} className={className} style={style} />;
 }

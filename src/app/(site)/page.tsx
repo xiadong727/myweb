@@ -17,6 +17,7 @@ import { getAllAudios } from "@/lib/audios";
 import { getLighthouseDomainStats, getLighthouseTotalEpisodes } from "@/lib/lighthouse";
 import { MetricsInline } from "@/components/metrics-inline";
 import { TotalViews } from "@/components/total-views";
+import { CountUp } from "@/components/count-up";
 
 const ABOUT_SLUG = "cogrow/10years02";
 
@@ -132,46 +133,63 @@ export default function HomePage() {
           style={{ background: "var(--hero-blob-b)" }}
         />
 
+        {/* 左上角 logo */}
+        <Image
+          src="/images/logo.jpg"
+          alt={nav.site.title}
+          width={40}
+          height={40}
+          priority
+          className="absolute left-4 top-4 z-20 h-10 w-10 rounded-xl object-cover shadow-md ring-1 ring-white/60"
+        />
+
         <div className="relative z-10 grid items-center gap-7 lg:grid-cols-2 lg:gap-10">
           {/* 左栏：品牌 */}
-          <div>
-            <Image
-              src="/images/logo.jpg"
-              alt={nav.site.title}
-              width={56}
-              height={56}
-              priority
-              className="h-14 w-14 rounded-2xl object-cover shadow-md ring-1 ring-white/50"
-            />
-            <h1 className="mt-4 text-5xl font-bold tracking-tight text-foreground sm:text-6xl">
+          <div className="pt-12 lg:pt-0">
+            <h1
+              className="text-5xl font-extrabold tracking-tight text-foreground sm:text-6xl"
+              style={{
+                textShadow:
+                  "0 1px 0 rgba(255,255,255,0.6), 0 2px 4px rgba(0,0,0,0.08), 0 8px 30px rgba(251,146,60,0.45)",
+              }}
+            >
               {nav.site.title}
             </h1>
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="mt-7 text-base leading-relaxed text-muted-foreground sm:mt-8 sm:text-lg">
               {nav.site.tagline}
             </p>
           </div>
 
-          {/* 右栏：数据面板（暖光立体） */}
+          {/* 右栏：数据面板（暖光立体 + 滚动动画） */}
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
             <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.14] to-primary/[0.03] p-5 text-center shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm">
-              <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-5xl font-extrabold tabular-nums text-transparent drop-shadow-sm sm:text-6xl">
-                {totalWorks}
-              </div>
+              <CountUp
+                value={totalWorks}
+                className="block bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-5xl font-extrabold tabular-nums text-transparent sm:text-6xl"
+                style={{ filter: "drop-shadow(0 3px 6px rgba(249,115,22,0.35))" }}
+              />
               <div className="mt-1.5 text-xs font-medium tracking-wider text-muted-foreground">总作品数</div>
             </div>
             <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.14] to-primary/[0.03] p-5 text-center shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm">
-              <TotalViews className="block bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-5xl font-extrabold tabular-nums text-transparent drop-shadow-sm sm:text-6xl" />
+              <TotalViews
+                className="block bg-gradient-to-br from-rose-500 via-pink-500 to-fuchsia-500 bg-clip-text text-5xl font-extrabold tabular-nums text-transparent sm:text-6xl"
+                style={{ filter: "drop-shadow(0 3px 6px rgba(236,72,153,0.35))" }}
+              />
               <div className="mt-1.5 text-xs font-medium tracking-wider text-muted-foreground">总浏览量</div>
             </div>
             <div className="col-span-2 grid grid-cols-4 divide-x divide-primary/10 overflow-hidden rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/[0.07] to-transparent shadow-md ring-1 ring-inset ring-white/30 backdrop-blur-sm">
               {[
-                { n: articleCount, label: "文章", color: "text-blue-500" },
-                { n: imageCount, label: "图片", color: "text-emerald-500" },
-                { n: videoCount, label: "视频", color: "text-rose-500" },
-                { n: audioCount, label: "音频", color: "text-purple-500" },
+                { n: articleCount, label: "文章", color: "text-blue-500", glow: "rgba(59,130,246,0.4)" },
+                { n: imageCount, label: "图片", color: "text-emerald-500", glow: "rgba(16,185,129,0.4)" },
+                { n: videoCount, label: "视频", color: "text-rose-500", glow: "rgba(244,63,94,0.4)" },
+                { n: audioCount, label: "音频", color: "text-purple-500", glow: "rgba(168,85,247,0.4)" },
               ].map((s) => (
                 <div key={s.label} className="py-3.5 text-center">
-                  <div className={`text-2xl font-bold tabular-nums ${s.color}`}>{s.n}</div>
+                  <CountUp
+                    value={s.n}
+                    className={`block text-2xl font-extrabold tabular-nums ${s.color}`}
+                    style={{ filter: `drop-shadow(0 2px 5px ${s.glow})` }}
+                  />
                   <div className="mt-0.5 text-[11px] text-muted-foreground">{s.label}</div>
                 </div>
               ))}
