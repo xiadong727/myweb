@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   FileText,
@@ -15,7 +16,7 @@ import { getAllVideos } from "@/lib/videos";
 import { getAllAudios } from "@/lib/audios";
 import { getLighthouseDomainStats, getLighthouseTotalEpisodes } from "@/lib/lighthouse";
 import { MetricsInline } from "@/components/metrics-inline";
-import { SiteVisits } from "@/components/site-visits";
+import { TotalViews } from "@/components/total-views";
 
 const ABOUT_SLUG = "cogrow/10years02";
 
@@ -134,8 +135,15 @@ export default function HomePage() {
         <div className="relative z-10 grid items-center gap-7 lg:grid-cols-2 lg:gap-10">
           {/* 左栏：品牌 */}
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-primary">记录与分享</p>
-            <h1 className="mt-3 text-5xl font-bold tracking-tight text-foreground sm:text-6xl">
+            <Image
+              src="/images/logo.jpg"
+              alt={nav.site.title}
+              width={56}
+              height={56}
+              priority
+              className="h-14 w-14 rounded-2xl object-cover shadow-md ring-1 ring-white/50"
+            />
+            <h1 className="mt-4 text-5xl font-bold tracking-tight text-foreground sm:text-6xl">
               {nav.site.title}
             </h1>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -143,19 +151,19 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* 右栏：数据面板 */}
+          {/* 右栏：数据面板（暖光立体） */}
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            <div className="rounded-2xl border border-primary/15 bg-card/60 p-5 text-center backdrop-blur-sm">
-              <div className="text-5xl font-extrabold tabular-nums text-primary sm:text-6xl">
+            <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.14] to-primary/[0.03] p-5 text-center shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm">
+              <div className="bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-5xl font-extrabold tabular-nums text-transparent drop-shadow-sm sm:text-6xl">
                 {totalWorks}
               </div>
-              <div className="mt-1.5 text-xs tracking-wider text-muted-foreground">总作品数</div>
+              <div className="mt-1.5 text-xs font-medium tracking-wider text-muted-foreground">总作品数</div>
             </div>
-            <div className="rounded-2xl border border-primary/15 bg-card/60 p-5 text-center backdrop-blur-sm">
-              <SiteVisits className="text-5xl font-extrabold tabular-nums text-foreground sm:text-6xl" />
-              <div className="mt-1.5 text-xs tracking-wider text-muted-foreground">访问人数</div>
+            <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.14] to-primary/[0.03] p-5 text-center shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm">
+              <TotalViews className="block bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-5xl font-extrabold tabular-nums text-transparent drop-shadow-sm sm:text-6xl" />
+              <div className="mt-1.5 text-xs font-medium tracking-wider text-muted-foreground">总浏览量</div>
             </div>
-            <div className="col-span-2 grid grid-cols-4 divide-x divide-border/40 overflow-hidden rounded-2xl border border-border/50 bg-card/40 backdrop-blur-sm">
+            <div className="col-span-2 grid grid-cols-4 divide-x divide-primary/10 overflow-hidden rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/[0.07] to-transparent shadow-md ring-1 ring-inset ring-white/30 backdrop-blur-sm">
               {[
                 { n: articleCount, label: "文章", color: "text-blue-500" },
                 { n: imageCount, label: "图片", color: "text-emerald-500" },

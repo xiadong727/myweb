@@ -1,11 +1,24 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { readMetrics, incrView, changeLike, parseId, metricsEnabled } from "@/lib/metrics";
+import {
+  readMetrics,
+  readTotalViews,
+  incrView,
+  changeLike,
+  parseId,
+  metricsEnabled,
+} from "@/lib/metrics";
 
 export const dynamic = "force-dynamic";
 
-// 读取某个作品的浏览量与点赞数： GET /api/metrics?id=articles:my-slug
+// 读取作品计数： GET /api/metrics?id=articles:my-slug
+// 读取全站总浏览量： GET /api/metrics?total=1
 export async function GET(request: NextRequest) {
-  const id = parseId(request.nextUrl.searchParams.get("id"));
+  const sp = request.nextUrl.searchParams;
+  if (sp.get("total") === "1") {
+    const views = await readTotalViews();
+    return NextResponse.json({ views, enabled: metricsEnabled });
+  }
+  const id = parseId(sp.get("id"));
   if (!id) return NextResponse.json({ error: "invalid id" }, { status: 400 });
   const m = await readMetrics(id);
   return NextResponse.json({ ...m, enabled: metricsEnabled });

@@ -39,7 +39,10 @@ export const metricsSource = creds?.source ?? null;
 
 const redis = creds ? new Redis({ url: creds.url, token: creds.token }) : null;
 
-export const METRIC_TYPES = ["articles", "images", "videos", "audios", "site"] as const;
+export const METRIC_TYPES = ["articles", "images", "videos", "audios"] as const;
+
+/** 全站作品总浏览量累加键（每次作品浏览 +1） */
+const TOTAL_VIEWS_KEY = "views:__total__";
 export type MetricType = (typeof METRIC_TYPES)[number];
 
 /** 校验并组装 id = `${type}:${slug}`，防止写入任意 Redis 键 */
@@ -87,10 +90,17 @@ export async function readManyMetrics(ids: string[]): Promise<Record<string, Met
   return out;
 }
 
-/** 浏览量 +1，返回最新浏览量 */
+/** 浏览量 +1，同时累加全站总浏览量，返回该作品最新浏览量 */
 export async function incrView(id: string): Promise<number> {
   if (!redis) return 0;
-  return await redis.incr(keys(id).views);
+  const [n] = await Promise.all([redis.incr(keys(id).views), redis.incr(TOTAL_VIEWS_KEY)]);
+  return n;
+}
+
+/** 全站作品总浏览量 */
+export async function readTotalViews(): Promise<number> {
+  if (!redis) return 0;
+  return (await redis.get<number>(TOTAL_VIEWS_KEY)) ?? 0;
 }
 
 /** 点赞数 +1 / -1，返回最新点赞数（不会低于 0） */
