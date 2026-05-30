@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getArticleSummaries } from "@/lib/articles";
+import { MetricsInline } from "@/components/metrics-inline";
 
 export const metadata = {
   title: "文章",
@@ -21,9 +22,12 @@ export default function ArticlesIndexPage() {
             >
               <div className="font-medium text-foreground">{item.title}</div>
               {item.excerpt ? <p className="mt-1 text-sm text-muted-foreground">{item.excerpt}</p> : null}
-              {item.date ? (
-                <div className="mt-2 font-mono text-[11px] text-muted-foreground/90">{item.date}</div>
-              ) : null}
+              <div className="mt-2 flex items-center gap-3">
+                {item.date ? (
+                  <span className="font-mono text-[11px] text-muted-foreground/90">{item.date}</span>
+                ) : null}
+                <MetricsInline type="articles" slug={item.slug} />
+              </div>
             </Link>
           </li>
         ))}

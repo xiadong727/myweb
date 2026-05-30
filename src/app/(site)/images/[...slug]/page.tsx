@@ -1,8 +1,8 @@
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getAllGalleries, getGalleryBySlug } from "@/lib/galleries";
 import { EpisodeNav } from "@/components/episode-nav";
 import { MetricsBar } from "@/components/metrics-bar";
+import { GalleryLightbox } from "@/components/gallery-lightbox";
 import { getRelatedEpisodeLinks } from "@/lib/episode";
 
 type Props = { params: Promise<{ slug: string[] }> };
@@ -34,26 +34,7 @@ export default async function GalleryPage({ params }: Props) {
           <MetricsBar type="images" slug={path} />
         </div>
       </header>
-      <div className="mt-10 columns-1 gap-4 sm:columns-2">
-        {gallery.images.map((img, i) => (
-          <div
-            key={`${img.src}-${i}`}
-            className="mb-4 break-inside-avoid overflow-hidden rounded-xl border border-border bg-card shadow-sm"
-          >
-            <div className="relative w-full">
-              <Image
-                src={img.src}
-                alt={img.alt}
-                width={1600}
-                height={1000}
-                className="h-auto w-full object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-            {img.alt ? <p className="px-3 py-2 text-xs text-muted-foreground">{img.alt}</p> : null}
-          </div>
-        ))}
-      </div>
+      <GalleryLightbox images={gallery.images} />
 
       <EpisodeNav
         links={getRelatedEpisodeLinks(gallery.episode ?? null, { type: "images", slug: path })}

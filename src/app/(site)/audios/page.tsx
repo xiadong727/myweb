@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllAudios } from "@/lib/audios";
+import { MetricsInline } from "@/components/metrics-inline";
 
 export const metadata = {
   title: "音频",
@@ -21,6 +22,9 @@ export default function AudiosIndexPage() {
             >
               <div className="font-medium text-foreground">{a.title}</div>
               <p className="mt-1 text-sm text-muted-foreground">{a.description}</p>
+              <div className="mt-2">
+                <MetricsInline type="audios" slug={a.slug} />
+              </div>
             </Link>
           </li>
         ))}

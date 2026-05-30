@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAllVideos } from "@/lib/videos";
+import { MetricsInline } from "@/components/metrics-inline";
 
 export const metadata = {
   title: "视频",
@@ -21,8 +22,9 @@ export default function VideosIndexPage() {
             >
               <div className="font-medium text-foreground">{v.title}</div>
               <p className="mt-1 text-sm text-muted-foreground">{v.description}</p>
-              <div className="mt-2 font-mono text-[11px] text-muted-foreground/90">
-                {v.kind === "embed" ? "嵌入" : "文件"}
+              <div className="mt-2 flex items-center gap-3 font-mono text-[11px] text-muted-foreground/90">
+                <span>{v.kind === "embed" ? "嵌入" : "文件"}</span>
+                <MetricsInline type="videos" slug={v.slug} />
               </div>
             </Link>
           </li>

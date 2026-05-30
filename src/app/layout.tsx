@@ -36,6 +36,7 @@ export const metadata: Metadata = {
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
     url: SITE_URL,
+    images: [{ url: "/images/logo.jpg" }],
   },
 };
 

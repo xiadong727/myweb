@@ -67,6 +67,26 @@ export async function readMetrics(id: string): Promise<Metrics> {
   return { views: views ?? 0, likes: likes ?? 0 };
 }
 
+/** 批量读取多个作品的计数（一次 mget），用于列表页 */
+export async function readManyMetrics(ids: string[]): Promise<Record<string, Metrics>> {
+  const out: Record<string, Metrics> = {};
+  if (ids.length === 0) return out;
+  if (!redis) {
+    for (const id of ids) out[id] = { views: 0, likes: 0 };
+    return out;
+  }
+  const flat: string[] = [];
+  for (const id of ids) {
+    const k = keys(id);
+    flat.push(k.views, k.likes);
+  }
+  const vals = await redis.mget<(number | null)[]>(...flat);
+  ids.forEach((id, i) => {
+    out[id] = { views: vals[i * 2] ?? 0, likes: vals[i * 2 + 1] ?? 0 };
+  });
+  return out;
+}
+
 /** 浏览量 +1，返回最新浏览量 */
 export async function incrView(id: string): Promise<number> {
   if (!redis) return 0;

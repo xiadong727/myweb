@@ -86,6 +86,22 @@ export function getArticleSummaries() {
     .filter((x): x is { slug: string } & ArticleMeta => x !== null);
 }
 
+/** 所有标签及其文章数，按数量降序 */
+export function getAllTags(): { tag: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const a of getArticleSummaries()) {
+    for (const t of a.tags ?? []) counts.set(t, (counts.get(t) ?? 0) + 1);
+  }
+  return [...counts.entries()]
+    .map(([tag, count]) => ({ tag, count }))
+    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
+}
+
+/** 某个标签下的所有文章 */
+export function getArticlesByTag(tag: string) {
+  return getArticleSummaries().filter((a) => (a.tags ?? []).includes(tag));
+}
+
 export type ArticleNeighbor = { slug: string; title: string };
 
 /**

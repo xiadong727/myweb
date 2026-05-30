@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   getArticleBySlug,
@@ -12,8 +13,10 @@ import { ReadingProgress } from "@/components/reading-progress";
 import { QuoteCard } from "@/components/quote-card";
 import { EpisodeNav } from "@/components/episode-nav";
 import { MetricsBar } from "@/components/metrics-bar";
+import { Comments } from "@/components/comments";
 import { episodeKeyFromArticle, getRelatedEpisodeLinks } from "@/lib/episode";
 import { extractToc, estimateReadingMinutes } from "@/lib/toc";
+import { absoluteUrl, SITE_NAME } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string[] }> };
 
@@ -27,7 +30,23 @@ export async function generateMetadata({ params }: Props) {
   const article = getArticleBySlug(path);
   if (!article) return { title: "未找到" };
   const { title } = resolveArticleDisplay(article);
-  return { title };
+  const ogImage = `/api/og?slug=${encodeURIComponent(path)}`;
+  return {
+    title,
+    description: article.meta.excerpt,
+    openGraph: {
+      title,
+      description: article.meta.excerpt,
+      type: "article",
+      url: absoluteUrl(`/articles/${path}`),
+      images: [{ url: ogImage, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      images: [ogImage],
+    },
+  };
 }
 
 export default async function ArticlePage({ params }: Props) {
@@ -45,8 +64,24 @@ export default async function ArticlePage({ params }: Props) {
   const readingMinutes = estimateReadingMinutes(content);
   const { prev, next, isEpisode } = getArticleNeighbors(path);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    url: absoluteUrl(`/articles/${path}`),
+    ...(article.meta.excerpt ? { description: article.meta.excerpt } : {}),
+    ...(article.meta.date ? { datePublished: article.meta.date } : {}),
+    author: { "@type": "Organization", name: SITE_NAME },
+    publisher: { "@type": "Organization", name: SITE_NAME },
+    ...(article.meta.tags?.length ? { keywords: article.meta.tags.join(", ") } : {}),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <ReadingProgress />
       <article className="mx-auto max-w-4xl px-4 pb-16 sm:px-8 lg:px-12">
         <header className="pb-6 sm:pb-8">
@@ -58,12 +93,13 @@ export default async function ArticlePage({ params }: Props) {
           {article.meta.tags?.length ? (
             <div className="mt-4 flex flex-wrap gap-2">
               {article.meta.tags.map((t) => (
-                <span
+                <Link
                   key={t}
-                  className="rounded-full border border-primary/20 bg-primary/5 px-2.5 py-0.5 text-xs text-primary"
+                  href={`/tags/${encodeURIComponent(t)}`}
+                  className="rounded-full border border-primary/20 bg-primary/5 px-2.5 py-0.5 text-xs text-primary transition hover:border-primary/40 hover:bg-primary/10"
                 >
                   {t}
-                </span>
+                </Link>
               ))}
             </div>
           ) : null}
@@ -77,6 +113,7 @@ export default async function ArticlePage({ params }: Props) {
         <EpisodeNav links={episodeLinks} />
         <ArticlePager prev={prev} next={next} isEpisode={isEpisode} />
       </article>
+      <Comments />
     </>
   );
 }

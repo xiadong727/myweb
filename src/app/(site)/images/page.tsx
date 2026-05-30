@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getAllGalleries } from "@/lib/galleries";
+import { MetricsInline } from "@/components/metrics-inline";
 
 export const metadata = {
   title: "图片",
@@ -33,6 +34,9 @@ export default function ImagesIndexPage() {
             <div className="p-4">
               <h2 className="font-semibold text-foreground">{g.title}</h2>
               <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{g.description}</p>
+              <div className="mt-2">
+                <MetricsInline type="images" slug={g.slug} />
+              </div>
             </div>
           </Link>
         ))}

@@ -15,6 +15,7 @@ import { getAllGalleries } from "@/lib/galleries";
 import { getAllVideos } from "@/lib/videos";
 import { getAllAudios } from "@/lib/audios";
 import { getLighthouseDomainStats, getLighthouseTotalEpisodes } from "@/lib/lighthouse";
+import { MetricsInline } from "@/components/metrics-inline";
 
 const ABOUT_SLUG = "cogrow/10years02";
 
@@ -235,6 +236,9 @@ export default function HomePage() {
                     {a.excerpt ? (
                       <p className="mt-0.5 line-clamp-1 text-sm text-muted-foreground">{a.excerpt}</p>
                     ) : null}
+                    <div className="mt-1">
+                      <MetricsInline type="articles" slug={a.slug} />
+                    </div>
                   </div>
                   <time className="shrink-0 font-mono text-xs text-muted-foreground">{a.date}</time>
                   <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground/40 transition group-hover:translate-x-0.5 group-hover:text-primary" />

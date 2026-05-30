@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Compass, Sparkles, ChevronRight } from "lucide-react";
 import { getLighthouseOverview, LIGHTHOUSE_DOMAIN_COUNT, type DomainGroup } from "@/lib/lighthouse";
+import { MetricsInline } from "@/components/metrics-inline";
 
 export const metadata = {
   title: "与光同行",
@@ -58,6 +59,7 @@ export default function LighthousePage() {
                   <span className="min-w-0 flex-1 truncate font-medium text-foreground transition group-hover:text-primary">
                     {e.title}
                   </span>
+                  <MetricsInline type="articles" slug={e.slug} />
                   {e.date ? (
                     <time className="shrink-0 font-mono text-[11px] text-muted-foreground/80">{e.date}</time>
                   ) : null}
@@ -115,6 +117,7 @@ function DomainSection({ domain: d }: { domain: DomainGroup }) {
                 <span className="min-w-0 flex-1 truncate font-medium text-foreground transition group-hover:text-primary">
                   {e.title}
                 </span>
+                <MetricsInline type="articles" slug={e.slug} />
                 {e.date ? (
                   <time className="shrink-0 font-mono text-[11px] text-muted-foreground/80">{e.date}</time>
                 ) : null}
