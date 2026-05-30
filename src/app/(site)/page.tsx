@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import {
   ArrowRight,
   FileText,
@@ -133,19 +132,9 @@ export default function HomePage() {
           style={{ background: "var(--hero-blob-b)" }}
         />
 
-        {/* 左上角 logo */}
-        <Image
-          src="/images/logo.jpg"
-          alt={nav.site.title}
-          width={40}
-          height={40}
-          priority
-          className="absolute left-4 top-4 z-20 h-10 w-10 rounded-xl object-cover shadow-md ring-1 ring-white/60"
-        />
-
         <div className="relative z-10 grid items-center gap-7 lg:grid-cols-2 lg:gap-10">
           {/* 左栏：品牌 */}
-          <div className="pt-12 lg:pt-0">
+          <div>
             <h1
               className="text-5xl font-extrabold tracking-tight text-foreground sm:text-6xl"
               style={{

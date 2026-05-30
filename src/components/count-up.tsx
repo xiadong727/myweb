@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 /** 数字滚动动画：挂载或 value 变化时，从当前值缓动到目标值（easeOutCubic）。 */
 export function CountUp({
   value,
-  duration = 1200,
+  duration = 2200,
   className,
   style,
 }: {
