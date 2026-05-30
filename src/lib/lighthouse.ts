@@ -1,28 +1,18 @@
 import { getArticleSummaries } from "./articles";
+import {
+  LIGHTHOUSE_DOMAINS,
+  LIGHTHOUSE_TARGET_TOTAL,
+  type DomainStat,
+  type EpisodeEntry,
+  type DomainGroup,
+  type LighthouseOverview,
+} from "./lighthouse-shared";
 
-/** 与光同行 10 大领域（L01–L10），顺序即展示顺序 */
-export const LIGHTHOUSE_DOMAINS: { code: string; name: string }[] = [
-  { code: "L01", name: "哲学" },
-  { code: "L02", name: "思维" },
-  { code: "L03", name: "品格" },
-  { code: "L04", name: "历史" },
-  { code: "L05", name: "科学" },
-  { code: "L06", name: "艺术" },
-  { code: "L07", name: "人际" },
-  { code: "L08", name: "财富" },
-  { code: "L09", name: "生活" },
-  { code: "L10", name: "心灵" },
-];
+// 重新导出静态常量与类型，方便其它服务端模块从 "@/lib/lighthouse" 一处引入。
+// 客户端组件请直接从 "@/lib/lighthouse-shared" 引入，避免打包进 fs 依赖。
+export * from "./lighthouse-shared";
 
 const DOMAIN_CODES = new Set(LIGHTHOUSE_DOMAINS.map((d) => d.code));
-
-export type DomainStat = {
-  code: string;
-  name: string;
-  count: number;
-  /** 该领域最新一期文章的 slug，无则为 null */
-  latestSlug: string | null;
-};
 
 /** 统计每个领域已更新的期数，以及最新一期的链接 */
 export function getLighthouseDomainStats(): DomainStat[] {
@@ -45,4 +35,46 @@ export function getLighthouseDomainStats(): DomainStat[] {
 /** 主线已更新的总期数 */
 export function getLighthouseTotalEpisodes(): number {
   return getArticleSummaries().filter((a) => a.domain && DOMAIN_CODES.has(a.domain)).length;
+}
+
+/** 汇总「与光同行」总览页所需数据：按领域分组 + 最近更新 + 总进度 */
+export function getLighthouseOverview(recentLimit = 5): LighthouseOverview {
+  const articles = getArticleSummaries().filter(
+    (a) => a.domain && DOMAIN_CODES.has(a.domain),
+  );
+
+  const domains: DomainGroup[] = LIGHTHOUSE_DOMAINS.map((d) => {
+    const episodes: EpisodeEntry[] = articles
+      .filter((a) => a.domain === d.code)
+      .map((a) => ({
+        episode: a.episode ?? null,
+        slug: a.slug,
+        title: a.title,
+        date: a.date ?? null,
+      }))
+      .sort((a, b) => (a.episode ?? 0) - (b.episode ?? 0));
+    return { code: d.code, name: d.name, layer: d.layer, count: episodes.length, episodes };
+  });
+
+  const nameByCode = new Map(LIGHTHOUSE_DOMAINS.map((d) => [d.code, d.name]));
+  const recent = articles
+    .filter((a) => a.date)
+    .sort((a, b) => ((a.date as string) < (b.date as string) ? 1 : -1))
+    .slice(0, recentLimit)
+    .map((a) => ({
+      episode: a.episode ?? null,
+      slug: a.slug,
+      title: a.title,
+      date: a.date ?? null,
+      code: a.domain as string,
+      name: nameByCode.get(a.domain as string) ?? "",
+    }));
+
+  return {
+    domains,
+    recent,
+    publishedTotal: articles.length,
+    targetTotal: LIGHTHOUSE_TARGET_TOTAL,
+    openedDomains: domains.filter((d) => d.count > 0).length,
+  };
 }

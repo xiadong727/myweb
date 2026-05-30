@@ -249,22 +249,35 @@ export default function HomePage() {
       <section className="mt-14">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 className="flex items-center gap-2 text-xl font-bold tracking-tight text-foreground">
+            <Link
+              href="/lighthouse"
+              className="group inline-flex items-center gap-2 text-xl font-bold tracking-tight text-foreground transition hover:text-primary"
+            >
               <Compass className="h-5 w-5 text-primary" />
               与光同行 · 10 领域
-            </h2>
+              <ArrowRight className="h-4 w-4 text-primary opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100" />
+            </Link>
             <p className="mt-1.5 text-sm text-muted-foreground">
               用 10 年时间，把人类智慧拆解成 10 个领域慢慢走 · 已更新{" "}
               <span className="font-semibold text-primary">{totalEpisodes}</span> 期
             </p>
           </div>
-          <Link
-            href={`/articles/${ABOUT_SLUG}`}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition hover:border-primary/40 hover:bg-primary/5"
-          >
-            了解这件事
-            <ArrowRight className="h-4 w-4 text-primary" />
-          </Link>
+          <div className="flex items-center gap-2.5">
+            <Link
+              href={`/articles/${ABOUT_SLUG}`}
+              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition hover:border-primary/40 hover:bg-primary/5"
+            >
+              了解这件事
+              <ArrowRight className="h-4 w-4 text-primary" />
+            </Link>
+            <Link
+              href="/lighthouse"
+              className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90"
+            >
+              进入主线
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
         <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
           {domainStats.map((d, i) => {
