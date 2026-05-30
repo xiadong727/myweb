@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
-import { getArticleSummaries } from "@/lib/articles";
+import { getArticleSummaries, getAllTags } from "@/lib/articles";
 import { getAllGalleries } from "@/lib/galleries";
 import { getAllVideos } from "@/lib/videos";
 import { getAllAudios } from "@/lib/audios";
@@ -15,8 +15,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/images`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/videos`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/audios`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${SITE_URL}/tags`, lastModified: now, changeFrequency: "weekly", priority: 0.4 },
+    { url: `${SITE_URL}/about`, lastModified: now, changeFrequency: "yearly", priority: 0.5 },
     { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
   ];
+
+  const tags: MetadataRoute.Sitemap = getAllTags().map((t) => ({
+    url: `${SITE_URL}/tags/${encodeURIComponent(t.tag)}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.4,
+  }));
 
   const articles: MetadataRoute.Sitemap = getArticleSummaries().map((a) => ({
     url: `${SITE_URL}/articles/${a.slug}`,
@@ -46,5 +55,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
-  return [...staticPages, ...articles, ...images, ...videos, ...audios];
+  return [...staticPages, ...tags, ...articles, ...images, ...videos, ...audios];
 }

@@ -3,6 +3,7 @@ import { ExternalLink } from "lucide-react";
 import { getAllVideos, getVideoBySlug } from "@/lib/videos";
 import { EpisodeNav } from "@/components/episode-nav";
 import { MetricsBar } from "@/components/metrics-bar";
+import { VideoPlayer } from "@/components/video-player";
 import { getRelatedEpisodeLinks } from "@/lib/episode";
 
 type Props = { params: Promise<{ slug: string[] }> };
@@ -50,29 +51,13 @@ export default async function VideoPage({ params }: Props) {
       </header>
 
       <div className="mt-8 overflow-hidden rounded-xl border border-border bg-muted/40 shadow-inner">
-        {video.kind === "embed" && video.embedUrl ? (
-          <div className="aspect-video w-full">
-            <iframe
-              title={video.title}
-              src={video.embedUrl}
-              className="h-full w-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
-          </div>
-        ) : video.kind === "file" && video.src ? (
-          <video
-            controls
-            className="aspect-video w-full"
-            poster={video.poster}
-            preload="metadata"
-          >
-            <source src={video.src} />
-            您的浏览器不支持 HTML5 视频。
-          </video>
-        ) : (
-          <div className="p-8 text-center text-sm text-muted-foreground">未配置可用的视频源。</div>
-        )}
+        <VideoPlayer
+          kind={video.kind}
+          embedUrl={video.embedUrl}
+          src={video.src}
+          poster={video.poster}
+          title={video.title}
+        />
       </div>
 
       <EpisodeNav
