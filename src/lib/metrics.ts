@@ -1,13 +1,43 @@
 import { Redis } from "@upstash/redis";
 
-// 同时兼容 Upstash 原生变量名与 Vercel KV 集成注入的变量名
-const url = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
-const token = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
+/**
+ * 自动识别 Vercel/Upstash 注入的 REST 凭证。
+ * 不同时期、不同集成会用不同前缀（UPSTASH_REDIS_、KV_、STORAGE_、自定义前缀…），
+ * 这里既优先匹配已知命名，也兜底扫描任意 `*REST_API_URL` + 同前缀 `*REST_API_TOKEN`。
+ */
+function resolveRedisCreds(): { url: string; token: string; source: string } | null {
+  const env = process.env;
+
+  const known: [string, string][] = [
+    ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"],
+    ["KV_REST_API_URL", "KV_REST_API_TOKEN"],
+  ];
+  for (const [u, t] of known) {
+    if (env[u] && env[t]) return { url: env[u] as string, token: env[t] as string, source: u };
+  }
+
+  // 兜底：任意以 REST_API_URL 结尾的变量 + 同前缀的 REST_API_TOKEN
+  for (const key of Object.keys(env)) {
+    if (key.endsWith("REST_API_URL")) {
+      const prefix = key.slice(0, -"REST_API_URL".length);
+      const tokenKey = `${prefix}REST_API_TOKEN`;
+      if (env[key] && env[tokenKey]) {
+        return { url: env[key] as string, token: env[tokenKey] as string, source: key };
+      }
+    }
+  }
+  return null;
+}
+
+const creds = resolveRedisCreds();
 
 /** 是否已配置数据库；未配置时所有操作安全降级为 0，不报错 */
-export const metricsEnabled = Boolean(url && token);
+export const metricsEnabled = Boolean(creds);
 
-const redis = metricsEnabled ? new Redis({ url: url as string, token: token as string }) : null;
+/** 命中的环境变量名（仅变量名、非密钥），供诊断用 */
+export const metricsSource = creds?.source ?? null;
+
+const redis = creds ? new Redis({ url: creds.url, token: creds.token }) : null;
 
 export const METRIC_TYPES = ["articles", "images", "videos", "audios"] as const;
 export type MetricType = (typeof METRIC_TYPES)[number];
