@@ -1,18 +1,16 @@
 import { ImageResponse } from "next/og";
 import { type NextRequest } from "next/server";
-import { getArticleBySlug, resolveArticleDisplay } from "@/lib/articles";
 import { loadOgFont } from "@/lib/og";
 import { SITE_NAME } from "@/lib/site";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 const SIZE = { width: 1200, height: 630 };
 
-// 文章分享图： /api/og?slug=<文章路径>
+// 文章分享图： /api/og?title=<标题>
 export async function GET(request: NextRequest) {
-  const slug = request.nextUrl.searchParams.get("slug") ?? "";
-  const article = slug ? getArticleBySlug(slug) : null;
-  const title = article ? resolveArticleDisplay(article).title : SITE_NAME;
+  const raw = (request.nextUrl.searchParams.get("title") ?? "").slice(0, 80);
+  const title = raw || SITE_NAME;
   const brand = `${SITE_NAME} · 与光同行`;
 
   const fontData = await loadOgFont(`${title}${brand}认知陪伴记录美好“”·—、，。：！？`);
@@ -60,6 +58,12 @@ export async function GET(request: NextRequest) {
         </div>
       </div>
     ),
-    { ...SIZE, ...(fonts ? { fonts } : {}) },
+    {
+      ...SIZE,
+      ...(fonts ? { fonts } : {}),
+      headers: {
+        "cache-control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800",
+      },
+    },
   );
 }

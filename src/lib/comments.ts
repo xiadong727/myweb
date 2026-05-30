@@ -8,8 +8,7 @@ export const GISCUS = {
   // 已为你预填仓库 ID（即 giscus 的 data-repo-id）
   repoId: process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? "R_kgDOSIy1hg",
   category: "Announcements",
-  // ↓↓↓ 只差这一个：在 giscus.app 生成后，把 data-category-id 填进下面的引号里 ↓↓↓
-  categoryId: process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? "",
+  categoryId: process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? "DIC_kwDOSIy1hs4C-Kjw",
 };
 
 /** 两个 ID 都填了才启用；否则评论区自动隐藏 */

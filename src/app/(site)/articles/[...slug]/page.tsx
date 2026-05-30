@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props) {
   const article = getArticleBySlug(path);
   if (!article) return { title: "未找到" };
   const { title } = resolveArticleDisplay(article);
-  const ogImage = `/api/og?slug=${encodeURIComponent(path)}`;
+  const ogImage = `/api/og?title=${encodeURIComponent(title)}`;
   return {
     title,
     description: article.meta.excerpt,
