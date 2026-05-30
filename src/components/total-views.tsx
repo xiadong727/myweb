@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CountUp } from "./count-up";
+import { RollingNumber } from "./rolling-number";
 
-/** 全站作品总浏览量（只读，不自增）。数据来自 /api/metrics?total=1，加载后滚动到位。 */
+/** 全站作品总浏览量（只读，不自增）。数据来自 /api/metrics?total=1，加载后翻滚到位。 */
 export function TotalViews({
   className,
   style,
@@ -29,5 +29,5 @@ export function TotalViews({
     };
   }, []);
 
-  return <CountUp value={n ?? 0} className={className} style={style} />;
+  return <RollingNumber value={n ?? 0} className={className} style={style} />;
 }

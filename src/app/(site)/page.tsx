@@ -16,7 +16,7 @@ import { getAllAudios } from "@/lib/audios";
 import { getLighthouseDomainStats, getLighthouseTotalEpisodes } from "@/lib/lighthouse";
 import { MetricsInline } from "@/components/metrics-inline";
 import { TotalViews } from "@/components/total-views";
-import { CountUp } from "@/components/count-up";
+import { RollingNumber } from "@/components/rolling-number";
 
 const ABOUT_SLUG = "cogrow/10years02";
 
@@ -152,17 +152,17 @@ export default function HomePage() {
           {/* 右栏：数据面板（暖光立体 + 滚动动画） */}
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
             <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.14] to-primary/[0.03] p-5 text-center shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm">
-              <CountUp
+              <RollingNumber
                 value={totalWorks}
-                className="block bg-gradient-to-br from-amber-500 via-orange-500 to-rose-500 bg-clip-text text-5xl font-extrabold tabular-nums text-transparent sm:text-6xl"
-                style={{ filter: "drop-shadow(0 3px 6px rgba(249,115,22,0.35))" }}
+                className="text-5xl font-extrabold tabular-nums text-orange-500 sm:text-6xl"
+                style={{ filter: "drop-shadow(0 3px 6px rgba(249,115,22,0.4))" }}
               />
               <div className="mt-1.5 text-xs font-medium tracking-wider text-muted-foreground">总作品数</div>
             </div>
             <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.14] to-primary/[0.03] p-5 text-center shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm">
               <TotalViews
-                className="block bg-gradient-to-br from-rose-500 via-pink-500 to-fuchsia-500 bg-clip-text text-5xl font-extrabold tabular-nums text-transparent sm:text-6xl"
-                style={{ filter: "drop-shadow(0 3px 6px rgba(236,72,153,0.35))" }}
+                className="text-5xl font-extrabold tabular-nums text-rose-500 sm:text-6xl"
+                style={{ filter: "drop-shadow(0 3px 6px rgba(236,72,153,0.4))" }}
               />
               <div className="mt-1.5 text-xs font-medium tracking-wider text-muted-foreground">总浏览量</div>
             </div>
@@ -174,9 +174,9 @@ export default function HomePage() {
                 { n: audioCount, label: "音频", color: "text-purple-500", glow: "rgba(168,85,247,0.4)" },
               ].map((s) => (
                 <div key={s.label} className="py-3.5 text-center">
-                  <CountUp
+                  <RollingNumber
                     value={s.n}
-                    className={`block text-2xl font-extrabold tabular-nums ${s.color}`}
+                    className={`text-2xl font-extrabold tabular-nums ${s.color}`}
                     style={{ filter: `drop-shadow(0 2px 5px ${s.glow})` }}
                   />
                   <div className="mt-0.5 text-[11px] text-muted-foreground">{s.label}</div>
