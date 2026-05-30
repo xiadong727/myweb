@@ -15,8 +15,7 @@ import { getAllVideos } from "@/lib/videos";
 import { getAllAudios } from "@/lib/audios";
 import { getLighthouseDomainStats, getLighthouseTotalEpisodes } from "@/lib/lighthouse";
 import { MetricsInline } from "@/components/metrics-inline";
-import { TotalViews } from "@/components/total-views";
-import { RollingNumber } from "@/components/rolling-number";
+import { StatsPanel } from "@/components/stats-panel";
 
 const ABOUT_SLUG = "cogrow/10years02";
 
@@ -149,41 +148,14 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* 右栏：数据面板（暖光立体 + 滚动动画） */}
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.14] to-primary/[0.03] p-5 text-center shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm">
-              <RollingNumber
-                value={totalWorks}
-                className="text-5xl font-extrabold tabular-nums text-orange-500 sm:text-6xl"
-                style={{ filter: "drop-shadow(0 3px 6px rgba(249,115,22,0.4))" }}
-              />
-              <div className="mt-1.5 text-xs font-medium tracking-wider text-muted-foreground">总作品数</div>
-            </div>
-            <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.14] to-primary/[0.03] p-5 text-center shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm">
-              <TotalViews
-                className="text-5xl font-extrabold tabular-nums text-rose-500 sm:text-6xl"
-                style={{ filter: "drop-shadow(0 3px 6px rgba(236,72,153,0.4))" }}
-              />
-              <div className="mt-1.5 text-xs font-medium tracking-wider text-muted-foreground">总浏览量</div>
-            </div>
-            <div className="col-span-2 grid grid-cols-4 divide-x divide-primary/10 overflow-hidden rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/[0.07] to-transparent shadow-md ring-1 ring-inset ring-white/30 backdrop-blur-sm">
-              {[
-                { n: articleCount, label: "文章", color: "text-blue-500", glow: "rgba(59,130,246,0.4)" },
-                { n: imageCount, label: "图片", color: "text-emerald-500", glow: "rgba(16,185,129,0.4)" },
-                { n: videoCount, label: "视频", color: "text-rose-500", glow: "rgba(244,63,94,0.4)" },
-                { n: audioCount, label: "音频", color: "text-purple-500", glow: "rgba(168,85,247,0.4)" },
-              ].map((s) => (
-                <div key={s.label} className="py-3.5 text-center">
-                  <RollingNumber
-                    value={s.n}
-                    className={`text-2xl font-extrabold tabular-nums ${s.color}`}
-                    style={{ filter: `drop-shadow(0 2px 5px ${s.glow})` }}
-                  />
-                  <div className="mt-0.5 text-[11px] text-muted-foreground">{s.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* 右栏：数据面板（暖光立体 + 同步翻滚） */}
+          <StatsPanel
+            totalWorks={totalWorks}
+            articleCount={articleCount}
+            imageCount={imageCount}
+            videoCount={videoCount}
+            audioCount={audioCount}
+          />
         </div>
       </div>
 
