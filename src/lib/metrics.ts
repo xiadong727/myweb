@@ -39,7 +39,7 @@ export const metricsSource = creds?.source ?? null;
 
 const redis = creds ? new Redis({ url: creds.url, token: creds.token }) : null;
 
-export const METRIC_TYPES = ["articles", "images", "videos", "audios"] as const;
+export const METRIC_TYPES = ["articles", "images", "videos", "audios", "site"] as const;
 export type MetricType = (typeof METRIC_TYPES)[number];
 
 /** 校验并组装 id = `${type}:${slug}`，防止写入任意 Redis 键 */

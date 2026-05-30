@@ -5,7 +5,6 @@ import {
   ImageIcon,
   Video,
   Headphones,
-  Mail,
   Sparkles,
   Compass,
 } from "lucide-react";
@@ -16,10 +15,9 @@ import { getAllVideos } from "@/lib/videos";
 import { getAllAudios } from "@/lib/audios";
 import { getLighthouseDomainStats, getLighthouseTotalEpisodes } from "@/lib/lighthouse";
 import { MetricsInline } from "@/components/metrics-inline";
+import { SiteVisits } from "@/components/site-visits";
 
 const ABOUT_SLUG = "cogrow/10years02";
-const MISSION =
-  "用十年时间，把人类数千年的智慧结晶，打磨成每个家庭都能读懂、用得上的“思想工具”。";
 
 export default function HomePage() {
   const nav = getNavigation();
@@ -29,13 +27,14 @@ export default function HomePage() {
   const imageCount = galleries.reduce((n, g) => n + (g.images?.length ?? 0), 0);
   const videoCount = getAllVideos().length;
   const audioCount = getAllAudios().length;
+  const articleCount = summaries.length;
+  const totalWorks = articleCount + imageCount + videoCount + audioCount;
   const latest = [...summaries]
     .filter((a) => a.date)
     .sort((a, b) => ((a.date as string) < (b.date as string) ? 1 : -1))
     .slice(0, 6);
   const domainStats = getLighthouseDomainStats();
   const totalEpisodes = getLighthouseTotalEpisodes();
-  const openedDomains = domainStats.filter((d) => d.count > 0).length;
   const featuredQuote = [...summaries]
     .filter((a) => a.quote)
     .sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? 1 : -1))[0];
@@ -83,7 +82,6 @@ export default function HomePage() {
     {
       href: "/articles",
       title: nav.trees.articles.label,
-      desc: "与光同行系列 · 思考、认知与陪伴的文字沉淀。",
       count: summaries.length,
       unit: "篇",
       icon: FileText,
@@ -92,7 +90,6 @@ export default function HomePage() {
     {
       href: "/images",
       title: nav.trees.images.label,
-      desc: "影像、设计与值得珍藏的画面。",
       count: imageCount,
       unit: "张",
       icon: ImageIcon,
@@ -101,7 +98,6 @@ export default function HomePage() {
     {
       href: "/videos",
       title: nav.trees.videos.label,
-      desc: "知识短片、分享与想反复看的片段。",
       count: videoCount,
       unit: "部",
       icon: Video,
@@ -110,7 +106,6 @@ export default function HomePage() {
     {
       href: "/audios",
       title: nav.trees.audios?.label ?? "音频",
-      desc: "播客、对谈与声音笔记。",
       count: audioCount,
       unit: "期",
       icon: Headphones,
@@ -136,83 +131,67 @@ export default function HomePage() {
           style={{ background: "var(--hero-blob-b)" }}
         />
 
-        <div className="relative z-10 grid items-center gap-7 lg:grid-cols-5 lg:gap-10">
+        <div className="relative z-10 grid items-center gap-7 lg:grid-cols-2 lg:gap-10">
           {/* 左栏：品牌 */}
-          <div className="lg:col-span-3">
+          <div>
             <p className="text-xs font-bold uppercase tracking-[0.25em] text-primary">记录与分享</p>
-            <h1 className="mt-3 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            <h1 className="mt-3 text-5xl font-bold tracking-tight text-foreground sm:text-6xl">
               {nav.site.title}
             </h1>
-            <p className="mt-3 text-base leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
               {nav.site.tagline}
             </p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link
-                href="/lighthouse"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-medium text-white shadow-md transition-all hover:scale-105 hover:shadow-lg"
-              >
-                <Compass className="h-4 w-4" />
-                走进与光同行
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium text-foreground shadow-sm transition-all hover:scale-105 hover:border-primary/30 hover:bg-muted"
-              >
-                <Mail className="h-4 w-4 text-muted-foreground" />
-                联系我
-              </Link>
-            </div>
           </div>
 
-          {/* 右栏：与光同行使命卡 */}
-          <Link
-            href="/lighthouse"
-            className="group block rounded-2xl border border-primary/20 bg-card/60 p-5 backdrop-blur-sm transition hover:border-primary/40 hover:bg-card/80 lg:col-span-2"
-          >
-            <div className="flex items-center gap-2 text-sm font-semibold text-primary">
-              <Compass className="h-4 w-4" />
-              与光同行
+          {/* 右栏：数据面板 */}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            <div className="rounded-2xl border border-primary/15 bg-card/60 p-5 text-center backdrop-blur-sm">
+              <div className="text-5xl font-extrabold tabular-nums text-primary sm:text-6xl">
+                {totalWorks}
+              </div>
+              <div className="mt-1.5 text-xs tracking-wider text-muted-foreground">总作品数</div>
             </div>
-            <p className="mt-3 text-sm leading-relaxed text-foreground/80">{MISSION}</p>
-            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-border/50 pt-3 text-xs text-muted-foreground">
-              <span>
-                已发布 <span className="font-semibold text-primary">{totalEpisodes}</span> 期
-              </span>
-              <span>
-                已开启 <span className="font-semibold text-primary">{openedDomains}</span> / 10 领域
-              </span>
-              <span className="ml-auto inline-flex items-center gap-1 text-primary opacity-0 transition group-hover:opacity-100">
-                查看 <ArrowRight className="h-3.5 w-3.5" />
-              </span>
+            <div className="rounded-2xl border border-primary/15 bg-card/60 p-5 text-center backdrop-blur-sm">
+              <SiteVisits className="text-5xl font-extrabold tabular-nums text-foreground sm:text-6xl" />
+              <div className="mt-1.5 text-xs tracking-wider text-muted-foreground">访问人数</div>
             </div>
-          </Link>
+            <div className="col-span-2 grid grid-cols-4 divide-x divide-border/40 overflow-hidden rounded-2xl border border-border/50 bg-card/40 backdrop-blur-sm">
+              {[
+                { n: articleCount, label: "文章", color: "text-blue-500" },
+                { n: imageCount, label: "图片", color: "text-emerald-500" },
+                { n: videoCount, label: "视频", color: "text-rose-500" },
+                { n: audioCount, label: "音频", color: "text-purple-500" },
+              ].map((s) => (
+                <div key={s.label} className="py-3.5 text-center">
+                  <div className={`text-2xl font-bold tabular-nums ${s.color}`}>{s.n}</div>
+                  <div className="mt-0.5 text-[11px] text-muted-foreground">{s.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {cards.map((c) => (
           <Link
             key={c.href}
             href={c.href}
-            className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-500 hover:-translate-y-1 ${c.style.borderHover} ${c.style.shadowHover}`}
+            className={`group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 sm:p-5 ${c.style.borderHover} ${c.style.shadowHover}`}
           >
-            <div className={`absolute -right-8 -top-8 h-32 w-32 rounded-full blur-3xl transition-all duration-700 group-hover:scale-150 ${c.style.blob}`} />
+            <div className={`absolute -right-8 -top-8 h-24 w-24 rounded-full blur-3xl transition-all duration-700 group-hover:scale-150 ${c.style.blob}`} />
             <div className="relative z-10 flex items-center justify-between">
-              <c.icon className={`h-8 w-8 transition-transform duration-500 group-hover:scale-110 ${c.style.text}`} />
+              <c.icon className={`h-7 w-7 transition-transform duration-300 group-hover:scale-110 ${c.style.text}`} />
               {c.count > 0 ? (
-                <span className="font-mono text-sm text-muted-foreground/70">
-                  <span className={`font-bold ${c.style.text}`}>{c.count}</span> {c.unit}
+                <span className="font-mono text-xs text-muted-foreground/70">
+                  <span className={`text-sm font-bold ${c.style.text}`}>{c.count}</span> {c.unit}
                 </span>
               ) : null}
             </div>
-            <h2 className="relative z-10 mt-5 text-lg font-bold tracking-wide text-foreground">{c.title}</h2>
-            <p className="relative z-10 mt-2 text-sm leading-relaxed text-muted-foreground transition-colors group-hover:text-foreground/80">
-              {c.desc}
-            </p>
-            <span className={`relative z-10 mt-auto pt-6 inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-widest ${c.style.text}`}>
-              进入
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
-            </span>
+            <div className="relative z-10 mt-4 flex items-center justify-between">
+              <h2 className="text-base font-bold tracking-wide text-foreground">{c.title}</h2>
+              <ArrowRight className={`h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 ${c.style.text}`} />
+            </div>
           </Link>
         ))}
       </div>
