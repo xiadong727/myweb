@@ -2,6 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getAllGalleries, getGalleryBySlug } from "@/lib/galleries";
 import { EpisodeNav } from "@/components/episode-nav";
+import { MetricsBar } from "@/components/metrics-bar";
 import { getRelatedEpisodeLinks } from "@/lib/episode";
 
 type Props = { params: Promise<{ slug: string[] }> };
@@ -29,6 +30,9 @@ export default async function GalleryPage({ params }: Props) {
       <header className="max-w-2xl">
         <h1 className="text-3xl font-semibold tracking-tight text-foreground">{gallery.title}</h1>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{gallery.description}</p>
+        <div className="mt-4">
+          <MetricsBar type="images" slug={path} />
+        </div>
       </header>
       <div className="mt-10 columns-1 gap-4 sm:columns-2">
         {gallery.images.map((img, i) => (

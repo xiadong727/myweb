@@ -11,6 +11,7 @@ import { ArticlePager } from "@/components/article-pager";
 import { ReadingProgress } from "@/components/reading-progress";
 import { QuoteCard } from "@/components/quote-card";
 import { EpisodeNav } from "@/components/episode-nav";
+import { MetricsBar } from "@/components/metrics-bar";
 import { episodeKeyFromArticle, getRelatedEpisodeLinks } from "@/lib/episode";
 import { extractToc, estimateReadingMinutes } from "@/lib/toc";
 
@@ -66,6 +67,9 @@ export default async function ArticlePage({ params }: Props) {
               ))}
             </div>
           ) : null}
+          <div className="mt-5">
+            <MetricsBar type="articles" slug={path} />
+          </div>
         </header>
         <ArticleToc items={toc} />
         <ArticleBody content={content} articleSlug={path} />

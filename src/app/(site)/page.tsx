@@ -258,8 +258,7 @@ export default function HomePage() {
               <ArrowRight className="h-4 w-4 text-primary opacity-0 transition group-hover:translate-x-0.5 group-hover:opacity-100" />
             </Link>
             <p className="mt-1.5 text-sm text-muted-foreground">
-              把人类智慧拆成一个个领域，一期一期慢慢走 · 已更新{" "}
-              <span className="font-semibold text-primary">{totalEpisodes}</span> 期
+              已更新 <span className="font-semibold text-primary">{totalEpisodes}</span> 期
             </p>
           </div>
           <div className="flex items-center gap-2.5">

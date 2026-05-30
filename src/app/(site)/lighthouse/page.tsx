@@ -18,8 +18,8 @@ export default function LighthousePage() {
           <Compass className="h-7 w-7 text-primary" />
           与光同行
         </h1>
-        <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          把人类智慧拆成一个个领域，一期一期慢慢走。不赶进度、不设期限，只求走得扎实。
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+          用十年时间，把人类数千年的智慧结晶，打磨成每个家庭都能读懂、用得上的“思想工具”，留下一套能够穿越周期、可以代际传递的精神作品。
         </p>
 
         <div className="mt-7 flex flex-wrap gap-x-8 gap-y-3">

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { ExternalLink } from "lucide-react";
 import { getAllVideos, getVideoBySlug } from "@/lib/videos";
 import { EpisodeNav } from "@/components/episode-nav";
+import { MetricsBar } from "@/components/metrics-bar";
 import { getRelatedEpisodeLinks } from "@/lib/episode";
 
 type Props = { params: Promise<{ slug: string[] }> };
@@ -43,6 +44,9 @@ export default async function VideoPage({ params }: Props) {
             </a>
           </div>
         ) : null}
+        <div className="mt-6">
+          <MetricsBar type="videos" slug={path} />
+        </div>
       </header>
 
       <div className="mt-8 overflow-hidden rounded-xl border border-border bg-muted/40 shadow-inner">

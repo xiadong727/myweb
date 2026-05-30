@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getAllAudios, getAudioBySlug } from "@/lib/audios";
 import { EpisodeNav } from "@/components/episode-nav";
+import { MetricsBar } from "@/components/metrics-bar";
 import { getRelatedEpisodeLinks } from "@/lib/episode";
 
 type Props = { params: Promise<{ slug: string[] }> };
@@ -39,6 +40,9 @@ export default async function AudioPage({ params }: Props) {
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             {audio.description}
           </p>
+          <div className="mt-4">
+            <MetricsBar type="audios" slug={path} />
+          </div>
         </div>
       </div>
 
