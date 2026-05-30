@@ -7,7 +7,7 @@ const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
 
 /** 单个数位的纵向翻滚（类似日历 / 里程表）：从 0 滚到目标数字。 */
-function DigitRoller({ target, duration, delay }: { target: number; duration: number; delay: number }) {
+function DigitRoller({ target, duration }: { target: number; duration: number }) {
   const [pos, setPos] = useState(0);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ function DigitRoller({ target, duration, delay }: { target: number; duration: nu
           display: "flex",
           flexDirection: "column",
           transform: `translateY(-${pos * 10}%)`,
-          transition: `transform ${duration}ms ${EASE} ${delay}ms`,
+          transition: `transform ${duration}ms ${EASE}`,
         }}
       >
         {DIGITS.map((d) => (
@@ -52,13 +52,8 @@ export function RollingNumber({
   return (
     <span className={className} style={{ ...style, display: "inline-flex" }}>
       {digits.map((d, i) => (
-        // key 含位数，保证位数变化时重新挂载并重新滚动
-        <DigitRoller
-          key={`${digits.length}-${i}`}
-          target={d}
-          duration={duration}
-          delay={i * 90}
-        />
+        // key 含位数，保证位数变化时重新挂载并重新滚动；所有数位同时滚动（无错峰）
+        <DigitRoller key={`${digits.length}-${i}`} target={d} duration={duration} />
       ))}
     </span>
   );
