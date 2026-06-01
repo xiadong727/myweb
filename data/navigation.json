@@ -30,7 +30,13 @@
             {
               "id": "lh-L02",
               "title": "思维 (L02)",
-              "children": []
+              "children": [
+                {
+                  "id": "a-imported-wx-9aox9fQCrg7j",
+                  "title": "看见自己的思维盲区——认知偏差",
+                  "slug": "imported/wx-9aox9fQCrg7j"
+                }
+              ]
             },
             {
               "id": "lh-L03",
