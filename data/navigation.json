@@ -82,13 +82,7 @@
         {
           "id": "qinzijiaoyu",
           "title": "亲子·教育",
-          "children": [
-            {
-              "id": "art-qinzi-first",
-              "title": "静态站点起步",
-              "slug": "tech/first-steps"
-            }
-          ]
+          "children": []
         },
         {
           "id": "chuangyegaojianqian",
@@ -130,13 +124,7 @@
             {
               "id": "aigongju",
               "title": "AI工具",
-              "children": [
-                {
-                  "id": "leaf-arch",
-                  "title": "架构随笔",
-                  "slug": "tech/arch-notes"
-                }
-              ]
+              "children": []
             },
             {
               "id": "sheyingxiangji",
@@ -151,62 +139,62 @@
                   "id": "sheyingjichuzhishi",
                   "title": "摄影基础知识",
                   "children": [
-                {
-                  "id": "baoguang3yaosu",
-                  "title": "曝光3要素",
-                  "slug": "tech/first-steps"
-                },
-                {
-                  "id": "jingshenduijiao",
-                  "title": "景深&对焦",
-                  "slug": "tech/first-steps"
-                },
-                {
-                  "id": "jiaojuju",
-                  "title": "焦距",
-                  "slug": "tech/first-steps"
-                },
-                {
-                  "id": "jingbie",
-                  "title": "景别",
-                  "slug": "tech/first-steps"
-                },
-                {
-                  "id": "goutu",
-                  "title": "构图",
-                  "slug": "tech/first-steps"
-                },
-                {
-                  "id": "fenzhen",
-                  "title": "分镜",
-                  "slug": "tech/first-steps"
-                },
-                {
-                  "id": "yunjing",
-                  "title": "运镜",
-                  "slug": "tech/first-steps"
-                },
-                {
-                  "id": "zhuanchang",
-                  "title": "转场",
-                  "slug": "tech/first-steps"
-                },
-                {
-                  "id": "shijiao",
-                  "title": "视角",
-                  "slug": "tech/first-steps"
-                },
-                {
-                  "id": "zhenglv",
-                  "title": "帧率",
-                  "slug": "tech/first-steps"
-                },
-                {
-                  "id": "se",
-                  "title": "色彩",
-                  "slug": "tech/first-steps"
-                }
-              ]
+                    {
+                      "id": "baoguang3yaosu",
+                      "title": "曝光3要素",
+                      "slug": "tech/first-steps"
+                    },
+                    {
+                      "id": "jingshenduijiao",
+                      "title": "景深&对焦",
+                      "slug": "tech/first-steps"
+                    },
+                    {
+                      "id": "jiaojuju",
+                      "title": "焦距",
+                      "slug": "tech/first-steps"
+                    },
+                    {
+                      "id": "jingbie",
+                      "title": "景别",
+                      "slug": "tech/first-steps"
+                    },
+                    {
+                      "id": "goutu",
+                      "title": "构图",
+                      "slug": "tech/first-steps"
+                    },
+                    {
+                      "id": "fenzhen",
+                      "title": "分镜",
+                      "slug": "tech/first-steps"
+                    },
+                    {
+                      "id": "yunjing",
+                      "title": "运镜",
+                      "slug": "tech/first-steps"
+                    },
+                    {
+                      "id": "zhuanchang",
+                      "title": "转场",
+                      "slug": "tech/first-steps"
+                    },
+                    {
+                      "id": "shijiao",
+                      "title": "视角",
+                      "slug": "tech/first-steps"
+                    },
+                    {
+                      "id": "zhenglv",
+                      "title": "帧率",
+                      "slug": "tech/first-steps"
+                    },
+                    {
+                      "id": "se",
+                      "title": "色彩",
+                      "slug": "tech/first-steps"
+                    }
+                  ]
                 }
               ]
             },
@@ -279,16 +267,56 @@
           "id": "vid-lighthouse",
           "title": "与光同行 · 每期视频",
           "children": [
-            { "id": "vid-lh-L01", "title": "哲学 (L01)", "children": [] },
-            { "id": "vid-lh-L02", "title": "思维 (L02)", "children": [] },
-            { "id": "vid-lh-L03", "title": "品格 (L03)", "children": [] },
-            { "id": "vid-lh-L04", "title": "历史 (L04)", "children": [] },
-            { "id": "vid-lh-L05", "title": "科学 (L05)", "children": [] },
-            { "id": "vid-lh-L06", "title": "艺术 (L06)", "children": [] },
-            { "id": "vid-lh-L07", "title": "人际 (L07)", "children": [] },
-            { "id": "vid-lh-L08", "title": "财富 (L08)", "children": [] },
-            { "id": "vid-lh-L09", "title": "生活 (L09)", "children": [] },
-            { "id": "vid-lh-L10", "title": "心灵 (L10)", "children": [] }
+            {
+              "id": "vid-lh-L01",
+              "title": "哲学 (L01)",
+              "children": []
+            },
+            {
+              "id": "vid-lh-L02",
+              "title": "思维 (L02)",
+              "children": []
+            },
+            {
+              "id": "vid-lh-L03",
+              "title": "品格 (L03)",
+              "children": []
+            },
+            {
+              "id": "vid-lh-L04",
+              "title": "历史 (L04)",
+              "children": []
+            },
+            {
+              "id": "vid-lh-L05",
+              "title": "科学 (L05)",
+              "children": []
+            },
+            {
+              "id": "vid-lh-L06",
+              "title": "艺术 (L06)",
+              "children": []
+            },
+            {
+              "id": "vid-lh-L07",
+              "title": "人际 (L07)",
+              "children": []
+            },
+            {
+              "id": "vid-lh-L08",
+              "title": "财富 (L08)",
+              "children": []
+            },
+            {
+              "id": "vid-lh-L09",
+              "title": "生活 (L09)",
+              "children": []
+            },
+            {
+              "id": "vid-lh-L10",
+              "title": "心灵 (L10)",
+              "children": []
+            }
           ]
         },
         {
@@ -343,16 +371,56 @@
           "id": "aud-lighthouse",
           "title": "与光同行 · 每期音频",
           "children": [
-            { "id": "aud-lh-L01", "title": "哲学 (L01)", "children": [] },
-            { "id": "aud-lh-L02", "title": "思维 (L02)", "children": [] },
-            { "id": "aud-lh-L03", "title": "品格 (L03)", "children": [] },
-            { "id": "aud-lh-L04", "title": "历史 (L04)", "children": [] },
-            { "id": "aud-lh-L05", "title": "科学 (L05)", "children": [] },
-            { "id": "aud-lh-L06", "title": "艺术 (L06)", "children": [] },
-            { "id": "aud-lh-L07", "title": "人际 (L07)", "children": [] },
-            { "id": "aud-lh-L08", "title": "财富 (L08)", "children": [] },
-            { "id": "aud-lh-L09", "title": "生活 (L09)", "children": [] },
-            { "id": "aud-lh-L10", "title": "心灵 (L10)", "children": [] }
+            {
+              "id": "aud-lh-L01",
+              "title": "哲学 (L01)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L02",
+              "title": "思维 (L02)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L03",
+              "title": "品格 (L03)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L04",
+              "title": "历史 (L04)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L05",
+              "title": "科学 (L05)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L06",
+              "title": "艺术 (L06)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L07",
+              "title": "人际 (L07)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L08",
+              "title": "财富 (L08)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L09",
+              "title": "生活 (L09)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L10",
+              "title": "心灵 (L10)",
+              "children": []
+            }
           ]
         },
         {
