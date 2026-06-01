@@ -37,6 +37,8 @@ export type GalleryItem = {
   images: { src: string; alt: string }[];
   /** 「一鱼三吃」同期关联键，如 "L01-ep001"；填写后会与同键的文章/音频/视频互相链接 */
   episode?: string;
+  /** 草稿：为 true 时线上隐藏，仅本地预览 */
+  draft?: boolean;
 };
 
 export type VideoItem = {
@@ -50,6 +52,8 @@ export type VideoItem = {
   originalUrl?: string;
   /** 「一鱼三吃」同期关联键，如 "L01-ep001" */
   episode?: string;
+  /** 草稿：为 true 时线上隐藏，仅本地预览 */
+  draft?: boolean;
 };
 
 export type AudioItem = {
@@ -60,6 +64,8 @@ export type AudioItem = {
   cover?: string;
   /** 「一鱼三吃」同期关联键，如 "L01-ep001" */
   episode?: string;
+  /** 草稿：为 true 时线上隐藏，仅本地预览 */
+  draft?: boolean;
 };
 
 export type ArticleMeta = {
@@ -79,4 +85,6 @@ export type ArticleMeta = {
   score?: number;
   media?: { audio?: boolean; video?: boolean };
   access?: "free" | "member";
+  /** 草稿：为 true 时线上隐藏，仅本地预览 */
+  draft?: boolean;
 };

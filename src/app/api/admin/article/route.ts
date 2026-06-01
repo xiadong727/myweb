@@ -16,6 +16,7 @@ function parse(body: Record<string, unknown>) {
     domain: body.domain ? String(body.domain) : undefined,
     episode: body.episode != null && body.episode !== "" ? Number(body.episode) : undefined,
     quote: body.quote ? String(body.quote) : undefined,
+    draft: Boolean(body.draft),
     body: String(body.body ?? ""),
     navTitle: body.navTitle ? String(body.navTitle) : undefined,
   };

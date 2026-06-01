@@ -89,6 +89,15 @@ function removeBySlug(nodes: NavNode[], slug: string): boolean {
   }
   return false;
 }
+/** 取出（并从原位置移除）某 slug 对应的内容节点 */
+function takeLeafBySlug(nodes: NavNode[], slug: string): NavNode | null {
+  for (let i = 0; i < nodes.length; i++) {
+    const n = nodes[i];
+    if (!isNavGroup(n) && n.slug === slug) { nodes.splice(i, 1); return n; }
+    if (isNavGroup(n)) { const r = takeLeafBySlug(n.children, slug); if (r) return r; }
+  }
+  return null;
+}
 function updateTitleBySlug(nodes: NavNode[], slug: string, title: string): boolean {
   for (const n of nodes) {
     if (!isNavGroup(n) && n.slug === slug) { n.title = title; return true; }
@@ -158,7 +167,7 @@ export function getAdminOptions() {
 }
 
 // ---------- 文章 增/查/改/删 ----------
-type ArticleFields = { title: string; date?: string; excerpt?: string; tags?: string[]; domain?: string; episode?: number; quote?: string };
+type ArticleFields = { title: string; date?: string; excerpt?: string; tags?: string[]; domain?: string; episode?: number; quote?: string; draft?: boolean };
 
 /** 把编辑表单的字段合并进（已有的）frontmatter 数据，保留 year/layer 等其它字段 */
 function mergeFrontmatter(base: Record<string, unknown>, input: ArticleFields): Record<string, unknown> {
@@ -174,12 +183,13 @@ function mergeFrontmatter(base: Record<string, unknown>, input: ArticleFields): 
   setOrDel("domain", input.domain);
   if (input.episode != null) data.episode = input.episode; else delete data.episode;
   setOrDel("quote", input.quote);
+  if (input.draft) data.draft = true; else delete data.draft;
   return data;
 }
 
 export type ArticleInput = {
   slug: string; title: string; date?: string; excerpt?: string; tags?: string[];
-  domain?: string; episode?: number; quote?: string; body: string;
+  domain?: string; episode?: number; quote?: string; draft?: boolean; body: string;
   navParentId: string; navTitle?: string;
 };
 
@@ -216,6 +226,7 @@ export function getArticle(slug: string) {
     domain: (data.domain as string) || "",
     episode: data.episode != null ? String(data.episode) : "",
     quote: (data.quote as string) || "",
+    draft: Boolean(data.draft),
     body,
   };
 }
@@ -312,10 +323,14 @@ export function listImages(): string[] {
 }
 
 // ---------- 菜单管理 ----------
-export function navOp(section: SectionKey, op: string, payload: { id?: string; title?: string; parentId?: string; dir?: "up" | "down" }) {
+export function navOp(section: SectionKey, op: string, payload: { id?: string; slug?: string; title?: string; parentId?: string; dir?: "up" | "down" }) {
   const nav = readNav();
   const tree = nav.trees[section];
-  if (op === "rename") {
+  if (op === "moveBySlug") {
+    const node = takeLeafBySlug(tree.nodes, payload.slug || "");
+    if (!node) throw new Error("未找到该内容的菜单条目");
+    if (!addNavNode(nav, section, payload.parentId || "", node)) throw new Error("未找到目标分类");
+  } else if (op === "rename") {
     const loc = locate(tree.nodes, payload.id || "");
     if (!loc) throw new Error("未找到节点");
     loc.siblings[loc.index].title = (payload.title || "").trim() || loc.siblings[loc.index].title;

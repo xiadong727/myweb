@@ -17,6 +17,7 @@ function walkMarkdown(dir, prefix, out) {
       const slug = [...prefix, name.replace(/\.md$/, "")].join("/");
       const raw = fs.readFileSync(full, "utf8");
       const { data, content } = matter(raw);
+      if (data.draft) continue; // 跳过草稿
       const title = data.title || slug;
       const excerpt = data.excerpt || "";
       const text = [title, excerpt, content].join("\n");
@@ -43,6 +44,7 @@ walkMarkdown(path.join(root, "content/articles"), [], docs);
 
 const galleries = loadJson("data/galleries.json") || [];
 for (const g of galleries) {
+  if (g.draft) continue;
   docs.push({
     id: `image:${g.slug}`,
     title: g.title,
@@ -56,6 +58,7 @@ for (const g of galleries) {
 
 const videos = loadJson("data/videos.json") || [];
 for (const v of videos) {
+  if (v.draft) continue;
   docs.push({
     id: `video:${v.slug}`,
     title: v.title,
@@ -67,6 +70,7 @@ for (const v of videos) {
 
 const audios = loadJson("data/audios.json") || [];
 for (const a of audios) {
+  if (a.draft) continue;
   docs.push({
     id: `audio:${a.slug}`,
     title: a.title,

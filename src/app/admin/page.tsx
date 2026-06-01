@@ -41,10 +41,11 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
   );
 }
 
-const emptyA = { slug: "", title: "", date: "", excerpt: "", tags: "", domain: "", episode: "", quote: "", body: "", navParentId: "", navTitle: "" };
-const emptyG = { slug: "", title: "", description: "", cover: "", episode: "", navParentId: "", navTitle: "" };
-const emptyV = { slug: "", title: "", description: "", kind: "embed", embedUrl: "", src: "", originalUrl: "", episode: "", navParentId: "", navTitle: "" };
-const emptyAu = { slug: "", title: "", description: "", src: "", cover: "", episode: "", navParentId: "", navTitle: "" };
+const emptyA = { slug: "", title: "", date: "", excerpt: "", tags: "", domain: "", episode: "", quote: "", body: "", navParentId: "", navTitle: "", draft: false };
+const emptyG = { slug: "", title: "", description: "", cover: "", episode: "", navParentId: "", navTitle: "", draft: false };
+const emptyV = { slug: "", title: "", description: "", kind: "embed", embedUrl: "", src: "", originalUrl: "", episode: "", navParentId: "", navTitle: "", draft: false };
+const emptyAu = { slug: "", title: "", description: "", src: "", cover: "", episode: "", navParentId: "", navTitle: "", draft: false };
+const DRAFT_KEY = "admin-draft-article";
 
 export default function AdminPage() {
   const [view, setView] = useState<View>("create");
@@ -62,6 +63,8 @@ export default function AdminPage() {
   const [gImages, setGImages] = useState<{ src: string; alt: string }[]>([]);
   const [v, setV] = useState({ ...emptyV });
   const [au, setAu] = useState({ ...emptyAu });
+  const [q, setQ] = useState(""); // 管理列表搜索
+  const [bili, setBili] = useState(""); // B站链接转换输入
 
   const reload = useCallback(() => {
     fetch("/api/admin/options").then((r) => r.json()).then((d) => (d.error ? setMsg({ ok: false, text: d.error }) : setData(d)))
@@ -75,8 +78,35 @@ export default function AdminPage() {
     return () => window.removeEventListener("beforeunload", h);
   }, [dirty]);
 
+  // 恢复上次未保存的文章草稿（本地）
+  useEffect(() => {
+    let s: string | null = null;
+    try { s = localStorage.getItem(DRAFT_KEY); } catch { /* ignore */ }
+    if (!s) return;
+    try {
+      const d = JSON.parse(s);
+      if (d && (d.title || d.body)) queueMicrotask(() => { setA(d); setMsg({ ok: true, text: "已恢复上次未保存的文章草稿（如不需要，点上方「取消」或直接覆盖）" }); });
+    } catch { /* ignore */ }
+  }, []);
+
+  // 自动保存文章表单到本地（仅新建文章时）
+  useEffect(() => {
+    if (view !== "create" || tab !== "articles" || editing) return;
+    const t = setTimeout(() => { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(a)); } catch { /* ignore */ } }, 800);
+    return () => clearTimeout(t);
+  }, [a, view, tab, editing]);
+
   const markDirty = () => setDirty(true);
-  function resetForms() { setA({ ...emptyA, date: today() }); setG({ ...emptyG }); setGImages([]); setV({ ...emptyV }); setAu({ ...emptyAu }); setEditing(null); setDirty(false); }
+  function resetForms() { setA({ ...emptyA, date: today() }); setG({ ...emptyG }); setGImages([]); setV({ ...emptyV }); setAu({ ...emptyAu }); setEditing(null); setDirty(false); try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ } }
+
+  // B 站链接/BV号 → 嵌入链接
+  function applyBilibili() {
+    const m = bili.match(/BV[0-9A-Za-z]+/);
+    if (!m) { setMsg({ ok: false, text: "没识别到 BV 号，请粘贴 B 站视频链接或 BVxxxx" }); return; }
+    const bv = m[0];
+    setV((s) => ({ ...s, embedUrl: `https://player.bilibili.com/player.html?bvid=${bv}&page=1&high_quality=1&danmaku=0`, originalUrl: `https://www.bilibili.com/video/${bv}` }));
+    setMsg({ ok: true, text: `✅ 已根据 ${bv} 自动填好嵌入链接` });
+  }
 
   async function api(url: string, method: string, payload?: unknown) {
     setBusy(true); setMsg(null);
@@ -105,22 +135,26 @@ export default function AdminPage() {
     const navTitle = a.navTitle || (a.domain && a.episode ? `第${pad3(a.episode)}期 · ${a.title}` : a.title);
     const payload = { ...a, navTitle, tags: a.tags ? a.tags.split(/[,，]/).map((s) => s.trim()).filter(Boolean) : [] };
     const d = editing ? await api("/api/admin/article", "PUT", payload) : await api("/api/admin/article", "POST", payload);
-    if (d) { setMsg({ ok: true, text: `✅ 已${editing ? "更新" : "保存"}：${d.file || d.slug}。可继续编辑，最后点右上角「发布」上线。` }); setDirty(false); reload(); }
+    if (d) { setMsg({ ok: true, text: `✅ 已${editing ? "更新" : "保存"}：${d.file || d.slug}。可继续编辑，最后点右上角「发布」上线。` }); setDirty(false); try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ } reload(); }
+  }
+  async function moveTo(section: Tab, slug: string, parentId: string) {
+    const d = await api("/api/admin/nav", "POST", { section, op: "moveBySlug", slug, parentId });
+    if (d) { setMsg({ ok: true, text: "✅ 已移动到新分类" }); reload(); }
   }
   async function saveMedia(section: Exclude<SectionKey, "articles">) {
     let item: Record<string, unknown> & { slug: string; title: string }; let navTitle: string;
     if (section === "images") {
       if (!gImages.length) { setMsg({ ok: false, text: "请先添加至少一张图片" }); return; }
       if (dupSlug("images", g.slug)) { setMsg({ ok: false, text: "该 slug 已存在" }); return; }
-      item = { slug: g.slug, title: g.title, description: g.description, cover: g.cover || gImages[0].src, images: gImages, ...(g.episode ? { episode: g.episode } : {}) };
+      item = { slug: g.slug, title: g.title, description: g.description, cover: g.cover || gImages[0].src, images: gImages, ...(g.episode ? { episode: g.episode } : {}), ...(g.draft ? { draft: true } : {}) };
       navTitle = g.navTitle || g.title;
     } else if (section === "videos") {
       if (dupSlug("videos", v.slug)) { setMsg({ ok: false, text: "该 slug 已存在" }); return; }
-      item = { slug: v.slug, title: v.title, description: v.description, kind: v.kind, ...(v.kind === "embed" ? { embedUrl: v.embedUrl, ...(v.originalUrl ? { originalUrl: v.originalUrl } : {}) } : { src: v.src }), ...(v.episode ? { episode: v.episode } : {}) };
+      item = { slug: v.slug, title: v.title, description: v.description, kind: v.kind, ...(v.kind === "embed" ? { embedUrl: v.embedUrl, ...(v.originalUrl ? { originalUrl: v.originalUrl } : {}) } : { src: v.src }), ...(v.episode ? { episode: v.episode } : {}), ...(v.draft ? { draft: true } : {}) };
       navTitle = v.navTitle || v.title;
     } else {
       if (dupSlug("audios", au.slug)) { setMsg({ ok: false, text: "该 slug 已存在" }); return; }
-      item = { slug: au.slug, title: au.title, description: au.description, src: au.src, ...(au.cover ? { cover: au.cover } : {}), ...(au.episode ? { episode: au.episode } : {}) };
+      item = { slug: au.slug, title: au.title, description: au.description, src: au.src, ...(au.cover ? { cover: au.cover } : {}), ...(au.episode ? { episode: au.episode } : {}), ...(au.draft ? { draft: true } : {}) };
       navTitle = au.navTitle || au.title;
     }
     const parentId = section === "images" ? g.navParentId : section === "videos" ? v.navParentId : au.navParentId;
@@ -134,13 +168,13 @@ export default function AdminPage() {
     if (section === "articles") {
       const d = await api(`/api/admin/article?slug=${encodeURIComponent(slug)}`, "GET");
       if (!d) return;
-      setA({ slug: d.slug, title: d.title, date: d.date, excerpt: d.excerpt, tags: (d.tags || []).join(", "), domain: d.domain, episode: d.episode, quote: d.quote, body: d.body, navParentId: "", navTitle: "" });
+      setA({ slug: d.slug, title: d.title, date: d.date, excerpt: d.excerpt, tags: (d.tags || []).join(", "), domain: d.domain, episode: d.episode, quote: d.quote, body: d.body, navParentId: "", navTitle: "", draft: Boolean(d.draft) });
     } else {
       const d = await api(`/api/admin/media?section=${section}&slug=${encodeURIComponent(slug)}`, "GET");
       if (!d) return;
-      if (section === "images") { setG({ slug: d.slug, title: d.title, description: d.description || "", cover: d.cover || "", episode: d.episode || "", navParentId: "", navTitle: "" }); setGImages(d.images || []); }
-      else if (section === "videos") setV({ slug: d.slug, title: d.title, description: d.description || "", kind: d.kind || "embed", embedUrl: d.embedUrl || "", src: d.src || "", originalUrl: d.originalUrl || "", episode: d.episode || "", navParentId: "", navTitle: "" });
-      else setAu({ slug: d.slug, title: d.title, description: d.description || "", src: d.src || "", cover: d.cover || "", episode: d.episode || "", navParentId: "", navTitle: "" });
+      if (section === "images") { setG({ slug: d.slug, title: d.title, description: d.description || "", cover: d.cover || "", episode: d.episode || "", navParentId: "", navTitle: "", draft: Boolean(d.draft) }); setGImages(d.images || []); }
+      else if (section === "videos") setV({ slug: d.slug, title: d.title, description: d.description || "", kind: d.kind || "embed", embedUrl: d.embedUrl || "", src: d.src || "", originalUrl: d.originalUrl || "", episode: d.episode || "", navParentId: "", navTitle: "", draft: Boolean(d.draft) });
+      else setAu({ slug: d.slug, title: d.title, description: d.description || "", src: d.src || "", cover: d.cover || "", episode: d.episode || "", navParentId: "", navTitle: "", draft: Boolean(d.draft) });
     }
     setTab(section); setEditing(slug); setView("create"); setDirty(false);
   }
@@ -195,9 +229,11 @@ export default function AdminPage() {
 
       {/* ===== 管理内容（列表 + 编辑/删除） ===== */}
       {view === "manage" && data ? (
-        <div className="mt-6 divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
-          {(data.lists[tab] || []).length === 0 ? <p className="p-4 text-sm text-muted-foreground">该板块还没有内容。</p> :
-            data.lists[tab].map((it) => (
+        <>
+        <input className={`${inputCls} mt-4`} placeholder="🔍 搜索标题或路径…" value={q} onChange={(e) => setQ(e.target.value)} />
+        <div className="mt-3 divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+          {(() => { const list = (data.lists[tab] || []).filter((it) => !q || it.title.includes(q) || it.slug.includes(q)); return list.length === 0 ? <p className="p-4 text-sm text-muted-foreground">{q ? "没有匹配的内容。" : "该板块还没有内容。"}</p> :
+            list.map((it) => (
               <div key={it.slug} className="flex items-center gap-3 px-4 py-3">
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-sm font-medium text-foreground">{it.title}</div>
@@ -206,8 +242,9 @@ export default function AdminPage() {
                 <button onClick={() => edit(tab, it.slug)} className="rounded-lg border border-border px-3 py-1 text-xs hover:border-primary/40">编辑</button>
                 <button onClick={() => del(tab, it.slug)} className="rounded-lg px-3 py-1 text-xs text-rose-500 hover:bg-rose-500/10">删除</button>
               </div>
-            ))}
+            )); })()}
         </div>
+        </>
       ) : null}
 
       {/* ===== 新建 / 编辑表单 ===== */}
@@ -242,6 +279,8 @@ export default function AdminPage() {
               <MarkdownEditor value={a.body} onChange={(b) => { setA((s) => ({ ...s, body: b })); markDirty(); }} onUpload={uploadFiles} />
               {!editing ? <Field label="挂到哪个菜单分类 *"><select className={inputCls} value={a.navParentId} onChange={(e) => setA({ ...a, navParentId: e.target.value })}>{cats.map((o) => <option key={o.id || "_t"} value={o.id}>{o.label}</option>)}</select></Field> : null}
               <Field label="菜单显示名(可选)" hint="留空：主线用「第NNN期·标题」，其它用标题"><input className={inputCls} value={a.navTitle} onChange={(e) => setA({ ...a, navTitle: e.target.value })} /></Field>
+              <DraftToggle checked={a.draft} onChange={(c) => { setA({ ...a, draft: c }); markDirty(); }} />
+              {editing ? <MoveToField cats={cats} onMove={(pid) => moveTo("articles", editing, pid)} /> : null}
               <FormFooter editing={!!editing} busy={busy} onSubmit={saveArticle} onDelete={() => del("articles", editing!)} />
             </>
           )}
@@ -261,8 +300,11 @@ export default function AdminPage() {
                 </div>
                 {gImages.map((im, i) => (
                   <div key={i} className="mt-2 flex items-center gap-2">
+                    <span className="font-mono text-xs text-muted-foreground/60">{i + 1}.</span>
                     <code className="flex-1 truncate text-xs text-muted-foreground">{im.src}</code>
-                    <input className="w-36 rounded border border-border bg-card px-2 py-1 text-xs" placeholder="alt 描述" value={im.alt} onChange={(e) => setGImages((x) => x.map((y, j) => (j === i ? { ...y, alt: e.target.value } : y)))} />
+                    <input className="w-32 rounded border border-border bg-card px-2 py-1 text-xs" placeholder="alt 描述" value={im.alt} onChange={(e) => setGImages((x) => x.map((y, j) => (j === i ? { ...y, alt: e.target.value } : y)))} />
+                    <button title="上移" disabled={i === 0} onClick={() => setGImages((x) => { const n = [...x]; [n[i - 1], n[i]] = [n[i], n[i - 1]]; return n; })} className="text-xs text-muted-foreground hover:text-primary disabled:opacity-30">↑</button>
+                    <button title="下移" disabled={i === gImages.length - 1} onClick={() => setGImages((x) => { const n = [...x]; [n[i + 1], n[i]] = [n[i], n[i + 1]]; return n; })} className="text-xs text-muted-foreground hover:text-primary disabled:opacity-30">↓</button>
                     <button className="text-xs text-rose-500" onClick={() => setGImages((x) => x.filter((_, j) => j !== i))}>删</button>
                   </div>
                 ))}
@@ -270,6 +312,8 @@ export default function AdminPage() {
               <Field label="封面图路径" hint="默认第一张"><input className={inputCls} value={g.cover} onChange={(e) => setG({ ...g, cover: e.target.value })} /></Field>
               <Field label="一鱼三吃 episode（可选）" hint="如 L01-ep002"><input className={inputCls} value={g.episode} onChange={(e) => setG({ ...g, episode: e.target.value })} /></Field>
               {!editing ? <Field label="挂到哪个菜单分类 *"><select className={inputCls} value={g.navParentId} onChange={(e) => setG({ ...g, navParentId: e.target.value })}>{cats.map((o) => <option key={o.id || "_t"} value={o.id}>{o.label}</option>)}</select></Field> : null}
+              <DraftToggle checked={g.draft} onChange={(c) => { setG({ ...g, draft: c }); markDirty(); }} />
+              {editing ? <MoveToField cats={cats} onMove={(pid) => moveTo("images", editing, pid)} /> : null}
               <FormFooter editing={!!editing} busy={busy} onSubmit={() => saveMedia("images")} onDelete={() => del("images", editing!)} />
             </>
           )}
@@ -281,10 +325,17 @@ export default function AdminPage() {
               <Field label="描述"><input className={inputCls} value={v.description} onChange={(e) => setV({ ...v, description: e.target.value })} /></Field>
               <Field label="类型"><select className={inputCls} value={v.kind} onChange={(e) => setV({ ...v, kind: e.target.value })}><option value="embed">嵌入（B站/YouTube）</option><option value="file">文件直链</option></select></Field>
               {v.kind === "embed"
-                ? <><Field label="嵌入链接 embedUrl *"><input className={inputCls} value={v.embedUrl} onChange={(e) => setV({ ...v, embedUrl: e.target.value })} /></Field><Field label="原视频链接(可选)"><input className={inputCls} value={v.originalUrl} onChange={(e) => setV({ ...v, originalUrl: e.target.value })} /></Field></>
+                ? <>
+                    <div className="flex items-end gap-2 rounded-lg border border-primary/20 bg-primary/[0.03] p-3">
+                      <div className="flex-1"><Field label="🅱️ B站链接 / BV号（自动转换）" hint="粘贴 https://www.bilibili.com/video/BVxxx 或 BVxxx"><input className={inputCls} value={bili} onChange={(e) => setBili(e.target.value)} placeholder="BV1xx411..." /></Field></div>
+                      <button type="button" onClick={applyBilibili} className="rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground">转换</button>
+                    </div>
+                    <Field label="嵌入链接 embedUrl *"><input className={inputCls} value={v.embedUrl} onChange={(e) => setV({ ...v, embedUrl: e.target.value })} /></Field><Field label="原视频链接(可选)"><input className={inputCls} value={v.originalUrl} onChange={(e) => setV({ ...v, originalUrl: e.target.value })} /></Field></>
                 : <Field label="视频直链 src *"><input className={inputCls} value={v.src} onChange={(e) => setV({ ...v, src: e.target.value })} /></Field>}
               <Field label="一鱼三吃 episode（可选）"><input className={inputCls} value={v.episode} onChange={(e) => setV({ ...v, episode: e.target.value })} /></Field>
               {!editing ? <Field label="挂到哪个菜单分类 *"><select className={inputCls} value={v.navParentId} onChange={(e) => setV({ ...v, navParentId: e.target.value })}>{cats.map((o) => <option key={o.id || "_t"} value={o.id}>{o.label}</option>)}</select></Field> : null}
+              <DraftToggle checked={v.draft} onChange={(c) => { setV({ ...v, draft: c }); markDirty(); }} />
+              {editing ? <MoveToField cats={cats} onMove={(pid) => moveTo("videos", editing, pid)} /> : null}
               <FormFooter editing={!!editing} busy={busy} onSubmit={() => saveMedia("videos")} onDelete={() => del("videos", editing!)} />
             </>
           )}
@@ -301,6 +352,8 @@ export default function AdminPage() {
               </div>
               <Field label="一鱼三吃 episode（可选）"><input className={inputCls} value={au.episode} onChange={(e) => setAu({ ...au, episode: e.target.value })} /></Field>
               {!editing ? <Field label="挂到哪个菜单分类 *"><select className={inputCls} value={au.navParentId} onChange={(e) => setAu({ ...au, navParentId: e.target.value })}>{cats.map((o) => <option key={o.id || "_t"} value={o.id}>{o.label}</option>)}</select></Field> : null}
+              <DraftToggle checked={au.draft} onChange={(c) => { setAu({ ...au, draft: c }); markDirty(); }} />
+              {editing ? <MoveToField cats={cats} onMove={(pid) => moveTo("audios", editing, pid)} /> : null}
               <FormFooter editing={!!editing} busy={busy} onSubmit={() => saveMedia("audios")} onDelete={() => del("audios", editing!)} />
             </>
           )}
@@ -321,6 +374,25 @@ export default function AdminPage() {
 
       {picker ? <ImagePicker open multiple={picker.multiple} onClose={() => setPicker(null)} onPick={(ps) => picker.onPick(ps)} /> : null}
     </main>
+  );
+}
+
+function DraftToggle({ checked, onChange }: { checked: boolean; onChange: (c: boolean) => void }) {
+  return (
+    <label className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm text-foreground">
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="h-4 w-4" />
+      草稿（勾选后线上隐藏，仅本地预览；发布后取消勾选即公开）
+    </label>
+  );
+}
+
+function MoveToField({ cats, onMove }: { cats: Opt[]; onMove: (id: string) => void }) {
+  const [pid, setPid] = useState("");
+  return (
+    <div className="flex items-end gap-2">
+      <div className="flex-1"><Field label="移动到菜单分类" hint="把这条内容挪到别的分类下"><select className={inputCls} value={pid} onChange={(e) => setPid(e.target.value)}>{cats.map((o) => <option key={o.id || "_t"} value={o.id}>{o.label}</option>)}</select></Field></div>
+      <button type="button" onClick={() => onMove(pid)} className="rounded-lg border border-border px-3 py-2 text-sm hover:border-primary/40">移动</button>
+    </div>
   );
 }
 

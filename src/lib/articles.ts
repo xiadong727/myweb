@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import type { ArticleMeta } from "./types";
+import { DRAFTS_VISIBLE } from "./site";
 
 const ARTICLES_DIR = path.join(process.cwd(), "content/articles");
 
@@ -83,7 +84,19 @@ export function getArticleSummaries() {
       const { title } = resolveArticleDisplay(a);
       return { slug, ...a.meta, title };
     })
-    .filter((x): x is { slug: string } & ArticleMeta => x !== null);
+    .filter((x): x is { slug: string } & ArticleMeta => x !== null)
+    // 线上隐藏草稿（本地开发可见，便于预览）
+    .filter((x) => DRAFTS_VISIBLE || !x.draft);
+}
+
+/** 草稿文章 slug 集合（用于导航剪枝） */
+export function getDraftArticleSlugs(): Set<string> {
+  const set = new Set<string>();
+  for (const slug of getArticleSlugs()) {
+    const a = getArticleBySlug(slug);
+    if (a?.meta.draft) set.add(slug);
+  }
+  return set;
 }
 
 /** 所有标签及其文章数，按数量降序 */

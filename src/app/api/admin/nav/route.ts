@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
     if (!VALID.includes(section)) return NextResponse.json({ error: "无效的板块" }, { status: 400 });
     return NextResponse.json(navOp(section, String(body.op), {
       id: body.id ? String(body.id) : undefined,
+      slug: body.slug ? String(body.slug) : undefined,
       title: body.title ? String(body.title) : undefined,
       parentId: body.parentId ? String(body.parentId) : undefined,
       dir: body.dir === "up" || body.dir === "down" ? body.dir : undefined,

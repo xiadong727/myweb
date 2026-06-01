@@ -16,6 +16,7 @@ import { MetricsBar } from "@/components/metrics-bar";
 import { Comments } from "@/components/comments";
 import { episodeKeyFromArticle, getRelatedEpisodeLinks } from "@/lib/episode";
 import { extractToc, estimateReadingMinutes } from "@/lib/toc";
+import { DRAFTS_VISIBLE } from "@/lib/site";
 import { absoluteUrl, SITE_NAME } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string[] }> };
@@ -54,6 +55,7 @@ export default async function ArticlePage({ params }: Props) {
   const path = slug.join("/");
   const article = getArticleBySlug(path);
   if (!article) notFound();
+  if (article.meta.draft && !DRAFTS_VISIBLE) notFound(); // 草稿线上隐藏
 
   const { title, content } = resolveArticleDisplay(article);
   const episodeLinks = getRelatedEpisodeLinks(episodeKeyFromArticle(article.meta), {
