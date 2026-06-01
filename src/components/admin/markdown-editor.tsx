@@ -3,7 +3,8 @@
 import { useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Bold, Italic, Heading2, Heading3, List, ListOrdered, Quote, Link2, Code, Image as ImageIcon } from "lucide-react";
+import { Bold, Italic, Heading2, Heading3, List, ListOrdered, Quote, Link2, Code, Image as ImageIcon, FolderOpen } from "lucide-react";
+import { ImagePicker } from "./image-picker";
 
 type Props = {
   value: string;
@@ -28,6 +29,7 @@ export function MarkdownEditor({ value, onChange, onUpload }: Props) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [mode, setMode] = useState<"split" | "write" | "preview">("split");
   const [uploading, setUploading] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   function setSel(start: number, end: number) {
     requestAnimationFrame(() => {
@@ -97,6 +99,9 @@ export function MarkdownEditor({ value, onChange, onUpload }: Props) {
         <ToolBtn title="插入图片（上传）" onClick={() => fileRef.current?.click()}>
           <ImageIcon className={`h-4 w-4 ${uploading ? "animate-pulse text-primary" : ""}`} />
         </ToolBtn>
+        <ToolBtn title="从图片库选择" onClick={() => setPickerOpen(true)}>
+          <FolderOpen className="h-4 w-4" />
+        </ToolBtn>
         <input ref={fileRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleImage(e.target.files)} />
 
         <div className="ml-auto flex gap-0.5 text-xs">
@@ -116,7 +121,8 @@ export function MarkdownEditor({ value, onChange, onUpload }: Props) {
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onDrop={(e) => { if (e.dataTransfer.files?.length) { e.preventDefault(); handleImage(e.dataTransfer.files); } }}
-            placeholder="在这里写正文。用上方按钮排版，或把图片直接拖进来插入。"
+            onPaste={(e) => { const imgs = Array.from(e.clipboardData.files).filter((f) => f.type.startsWith("image/")); if (imgs.length) { e.preventDefault(); const dt = new DataTransfer(); imgs.forEach((f) => dt.items.add(f)); handleImage(dt.files); } }}
+            placeholder="在这里写正文。用上方按钮排版，可粘贴/拖入图片自动插入。"
             className="h-80 w-full resize-y border-0 bg-card p-3 font-mono text-sm text-foreground outline-none"
           />
         )}
@@ -130,6 +136,8 @@ export function MarkdownEditor({ value, onChange, onUpload }: Props) {
           </div>
         )}
       </div>
+
+      <ImagePicker open={pickerOpen} multiple onClose={() => setPickerOpen(false)} onPick={(ps) => insertAtCursor(`\n${ps.map((p) => `![](${p})`).join("\n")}\n`)} />
     </div>
   );
 }

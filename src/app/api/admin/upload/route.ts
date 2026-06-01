@@ -1,7 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { ADMIN_ENABLED, saveImage } from "@/lib/admin";
+import { ADMIN_ENABLED, saveImage, listImages } from "@/lib/admin";
 
 export const dynamic = "force-dynamic";
+
+// 图片库：列出 public/images 已有图片
+export async function GET() {
+  if (!ADMIN_ENABLED) return NextResponse.json({ error: "后台仅在本地开发可用" }, { status: 403 });
+  return NextResponse.json({ images: listImages() });
+}
 
 export async function POST(request: NextRequest) {
   if (!ADMIN_ENABLED) {
