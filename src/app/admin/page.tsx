@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { MarkdownEditor } from "@/components/admin/markdown-editor";
 
 type Opt = { id: string; label: string };
 type Options = { sections: Record<string, Opt[]> };
@@ -48,8 +49,6 @@ export default function AdminPage() {
   const [v, setV] = useState({ slug: "", title: "", description: "", kind: "embed", embedUrl: "", src: "", originalUrl: "", episode: "", navParentId: "", navTitle: "" });
   // —— 音频 —— //
   const [au, setAu] = useState({ slug: "", title: "", description: "", src: "", cover: "", episode: "", navParentId: "", navTitle: "" });
-
-  const uploadRef = useRef<HTMLInputElement>(null);
 
   async function upload(files: FileList | null): Promise<string[]> {
     if (!files || files.length === 0) return [];
@@ -130,18 +129,9 @@ export default function AdminPage() {
               {epKey(a.domain, a.episode) ? <p className="mt-2 text-xs text-muted-foreground">一鱼三吃关联键：<code className="text-primary">{epKey(a.domain, a.episode)}</code>（配套图/音/视频填这个即可互链）</p> : null}
             </fieldset>
 
-            <Field label="正文 (Markdown) *">
-              <textarea className={`${inputCls} h-64 font-mono`} value={a.body} onChange={(e) => setA({ ...a, body: e.target.value })} placeholder="直接写 Markdown……" />
+            <Field label="正文 *" hint="用工具栏排版，可直接插入/拖入图片，右侧实时预览">
+              <MarkdownEditor value={a.body} onChange={(b) => setA((s) => ({ ...s, body: b }))} onUpload={upload} />
             </Field>
-            <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm">
-              <span className="text-muted-foreground">插图：</span>
-              <input ref={uploadRef} type="file" accept="image/*" multiple className="ml-2 text-xs"
-                onChange={async (e) => {
-                  try { const ps = await upload(e.target.files); if (ps.length) { setA((s) => ({ ...s, body: `${s.body}\n${ps.map((p) => `![](${p})`).join("\n")}\n` })); setMsg({ ok: true, text: `已上传 ${ps.length} 张并插入正文末尾` }); } }
-                  catch (err) { setMsg({ ok: false, text: (err as Error).message }); }
-                }} />
-              <p className="mt-1 text-xs text-muted-foreground">选择图片会上传到 public/images 并把 Markdown 自动追加到正文末尾。</p>
-            </div>
 
             <CategoryAndSubmit section="articles" opts={opts} parentId={a.navParentId} setParentId={(id) => setA({ ...a, navParentId: id })} navTitle={a.navTitle} setNavTitle={(t) => setA({ ...a, navTitle: t })}
               busy={busy} onSubmit={() => submit("/api/admin/article", { ...a, tags: a.tags ? a.tags.split(/[,，]/).map((s) => s.trim()).filter(Boolean) : [] })} />
