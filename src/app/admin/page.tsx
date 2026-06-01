@@ -10,7 +10,7 @@ import { uploadFiles } from "@/lib/admin-client";
 import type { SectionKey } from "@/lib/types";
 
 type Opt = { id: string; label: string };
-type ListItem = { slug: string; title: string };
+type ListItem = { slug: string; title: string; views?: number; likes?: number };
 type Data = {
   sections: Record<SectionKey, Opt[]>;
   lists: Record<SectionKey, ListItem[]>;
@@ -18,7 +18,8 @@ type Data = {
   domains: Record<string, { folder: string; nextEpisode: number }>;
   navTree: Record<SectionKey, { label: string; nodes: unknown[] }>;
 };
-type View = "create" | "manage" | "menu";
+type View = "create" | "manage" | "menu" | "import";
+type ImportResult = { input: string; ok: boolean; title?: string; slug?: string; error?: string };
 type Tab = SectionKey;
 
 const DOMAINS: [string, string][] = [
@@ -51,7 +52,9 @@ export default function AdminPage() {
   const [view, setView] = useState<View>("create");
   const [tab, setTab] = useState<Tab>("articles");
   const [data, setData] = useState<Data | null>(null);
-  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [msg, setMsg] = useState<{ ok: boolean; text: string; href?: string } | null>(null);
+  const [imp, setImp] = useState<{ type: "wechat" | "bilibili"; text: string; parent: string }>({ type: "wechat", text: "", parent: "" });
+  const [impResults, setImpResults] = useState<ImportResult[]>([]);
   const [busy, setBusy] = useState(false);
   const [dirty, setDirty] = useState(false);
   const [editing, setEditing] = useState<string | null>(null); // slug being edited, null = create
@@ -135,7 +138,7 @@ export default function AdminPage() {
     const navTitle = a.navTitle || (a.domain && a.episode ? `第${pad3(a.episode)}期 · ${a.title}` : a.title);
     const payload = { ...a, navTitle, tags: a.tags ? a.tags.split(/[,，]/).map((s) => s.trim()).filter(Boolean) : [] };
     const d = editing ? await api("/api/admin/article", "PUT", payload) : await api("/api/admin/article", "POST", payload);
-    if (d) { setMsg({ ok: true, text: `✅ 已${editing ? "更新" : "保存"}：${d.file || d.slug}。可继续编辑，最后点右上角「发布」上线。` }); setDirty(false); try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ } reload(); }
+    if (d) { setMsg({ ok: true, text: `✅ 已${editing ? "更新" : "保存"}：${d.slug}`, href: `/articles/${d.slug}` }); setDirty(false); try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ } reload(); }
   }
   async function moveTo(section: Tab, slug: string, parentId: string) {
     const d = await api("/api/admin/nav", "POST", { section, op: "moveBySlug", slug, parentId });
@@ -159,7 +162,15 @@ export default function AdminPage() {
     }
     const parentId = section === "images" ? g.navParentId : section === "videos" ? v.navParentId : au.navParentId;
     const d = editing ? await api("/api/admin/media", "PUT", { section, item, navTitle }) : await api("/api/admin/media", "POST", { section, item, navParentId: parentId, navTitle });
-    if (d) { setMsg({ ok: true, text: `✅ 已${editing ? "更新" : "保存"}：${d.slug}。最后点右上角「发布」上线。` }); setDirty(false); reload(); }
+    if (d) { setMsg({ ok: true, text: `✅ 已${editing ? "更新" : "保存"}：${d.slug}`, href: `/${section}/${d.slug}` }); setDirty(false); reload(); }
+  }
+
+  async function runImport() {
+    const items = imp.text.split(/[\n,]+/).map((s) => s.trim()).filter(Boolean);
+    if (!items.length) { setMsg({ ok: false, text: "请粘贴至少一条链接" }); return; }
+    setImpResults([]);
+    const d = await api("/api/admin/import", "POST", { type: imp.type, items, navParentId: imp.parent });
+    if (d) { setImpResults(d.results || []); const okN = (d.results || []).filter((r: ImportResult) => r.ok).length; setMsg({ ok: true, text: `导入完成：成功 ${okN} / ${items.length}（均为草稿，去「管理内容」检查后发布）` }); reload(); }
   }
 
   // —— 载入已有内容到表单（编辑） —— //
@@ -208,13 +219,18 @@ export default function AdminPage() {
       </p>
 
       <div className="mt-5 flex gap-2">
-        {([["create", editing ? "✏️ 编辑中" : "➕ 新建"], ["manage", "🗂️ 管理内容"], ["menu", "🧭 菜单"]] as [View, string][]).map(([vw, label]) => (
+        {([["create", editing ? "✏️ 编辑中" : "➕ 新建"], ["manage", "🗂️ 管理内容"], ["import", "📥 导入"], ["menu", "🧭 菜单"]] as [View, string][]).map(([vw, label]) => (
           <button key={vw} onClick={() => { setView(vw); setMsg(null); }} className={`rounded-full px-4 py-1.5 text-sm font-medium ${view === vw ? "bg-primary text-primary-foreground" : "border border-border bg-card text-muted-foreground"}`}>{label}</button>
         ))}
         {editing ? <button onClick={resetForms} className="rounded-full px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground">取消编辑，改为新建</button> : null}
       </div>
 
-      {msg ? <div className={`mt-4 rounded-lg px-3 py-2 text-sm ${msg.ok ? "bg-emerald-500/10 text-emerald-700" : "bg-rose-500/10 text-rose-600"}`}>{msg.text}</div> : null}
+      {msg ? (
+        <div className={`mt-4 rounded-lg px-3 py-2 text-sm ${msg.ok ? "bg-emerald-500/10 text-emerald-700" : "bg-rose-500/10 text-rose-600"}`}>
+          {msg.text}
+          {msg.href ? <> · <a href={msg.href} target="_blank" rel="noreferrer" className="underline">在新标签预览 →</a></> : null}
+        </div>
+      ) : null}
 
       {(view === "create" || view === "manage") && (
         <div className="mt-5 flex flex-wrap gap-2">
@@ -226,6 +242,48 @@ export default function AdminPage() {
 
       {/* ===== 菜单管理 ===== */}
       {view === "menu" && data ? <div className="mt-6"><MenuManager navTree={data.navTree as never} onChanged={reload} /></div> : null}
+
+      {/* ===== 导入 ===== */}
+      {view === "import" && data ? (
+        <div className="mt-6 space-y-4">
+          <div className="flex gap-2">
+            {([["wechat", "📰 公众号文章"], ["bilibili", "📺 B站视频"]] as ["wechat" | "bilibili", string][]).map(([t, l]) => (
+              <button key={t} onClick={() => { setImp({ ...imp, type: t }); setImpResults([]); }} className={`rounded-full px-4 py-1.5 text-sm ${imp.type === t ? "bg-primary text-primary-foreground" : "border border-border bg-card text-muted-foreground"}`}>{l}</button>
+            ))}
+          </div>
+          <p className="text-sm text-muted-foreground">
+            {imp.type === "wechat"
+              ? "粘贴公众号文章链接（mp.weixin.qq.com/s/…），每行一个，可一次多条。"
+              : "粘贴 B 站视频链接或 BV 号，每行一个，可一次多条。"}
+          </p>
+          <textarea className={`${inputCls} h-40 font-mono`} value={imp.text} onChange={(e) => setImp({ ...imp, text: e.target.value })}
+            placeholder={imp.type === "wechat" ? "https://mp.weixin.qq.com/s/xxxxxxxx\nhttps://mp.weixin.qq.com/s/yyyyyyyy" : "BV1xx411c7XX\nhttps://www.bilibili.com/video/BV1yy..."} />
+          <Field label="导入到哪个菜单分类">
+            <select className={inputCls} value={imp.parent} onChange={(e) => setImp({ ...imp, parent: e.target.value })}>
+              {(data.sections[imp.type === "wechat" ? "articles" : "videos"]).map((o) => <option key={o.id || "_t"} value={o.id}>{o.label}</option>)}
+            </select>
+          </Field>
+          <button disabled={busy} onClick={runImport} className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-60">
+            {busy ? "导入中…（逐条抓取，请稍候）" : "开始导入（存为草稿）"}
+          </button>
+          {impResults.length ? (
+            <div className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card text-sm">
+              {impResults.map((r, i) => (
+                <div key={i} className="flex items-start gap-2 px-3 py-2">
+                  <span>{r.ok ? "✅" : "❌"}</span>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-foreground">{r.ok ? r.title : r.error}</div>
+                    <div className="truncate font-mono text-xs text-muted-foreground">{r.ok ? r.slug : r.input}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : null}
+          <p className="rounded-lg bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+            导入内容均存为**草稿**、图片/封面已下载到本地；请到「管理内容」检查（公众号排版可能有损耗，可在编辑器微调），确认无误后取消草稿并点「发布」。
+          </p>
+        </div>
+      ) : null}
 
       {/* ===== 管理内容（列表 + 编辑/删除） ===== */}
       {view === "manage" && data ? (
@@ -239,6 +297,7 @@ export default function AdminPage() {
                   <div className="truncate text-sm font-medium text-foreground">{it.title}</div>
                   <div className="truncate font-mono text-xs text-muted-foreground">{it.slug}</div>
                 </div>
+                <span className="shrink-0 font-mono text-xs text-muted-foreground" title="浏览量 / 点赞">👁 {it.views ?? 0} · ♥ {it.likes ?? 0}</span>
                 <button onClick={() => edit(tab, it.slug)} className="rounded-lg border border-border px-3 py-1 text-xs hover:border-primary/40">编辑</button>
                 <button onClick={() => del(tab, it.slug)} className="rounded-lg px-3 py-1 text-xs text-rose-500 hover:bg-rose-500/10">删除</button>
               </div>

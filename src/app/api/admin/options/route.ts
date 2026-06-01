@@ -7,5 +7,5 @@ export async function GET() {
   if (!ADMIN_ENABLED) {
     return NextResponse.json({ error: "后台仅在本地开发可用" }, { status: 403 });
   }
-  return NextResponse.json(getAdminOptions());
+  return NextResponse.json(await getAdminOptions());
 }

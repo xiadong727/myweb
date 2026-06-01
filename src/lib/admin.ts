@@ -4,6 +4,7 @@ import { execSync } from "child_process";
 import matter from "gray-matter";
 import type { SectionKey, SiteNavigation, NavNode, NavGroup } from "./types";
 import { isNavGroup } from "./types";
+import { readManyMetrics } from "./metrics";
 
 /** 后台只在本地开发可用（线上文件系统只读，且出于安全禁止写入） */
 export const ADMIN_ENABLED = process.env.NODE_ENV !== "production";
@@ -131,7 +132,7 @@ function listArticles(): { slug: string; title: string }[] {
   return out.sort((a, b) => a.slug.localeCompare(b.slug));
 }
 
-export function getAdminOptions() {
+export async function getAdminOptions() {
   const nav = readNav();
   const sections = {} as Record<SectionKey, CategoryOption[]>;
   (["articles", "images", "videos", "audios"] as SectionKey[]).forEach((k) => {
@@ -140,10 +141,25 @@ export function getAdminOptions() {
     sections[k] = opts;
   });
 
-  const articles = listArticles();
-  const images = readArr<{ slug: string; title: string }>(MEDIA_FILE.images).map((x) => ({ slug: x.slug, title: x.title }));
-  const videos = readArr<{ slug: string; title: string }>(MEDIA_FILE.videos).map((x) => ({ slug: x.slug, title: x.title }));
-  const audios = readArr<{ slug: string; title: string }>(MEDIA_FILE.audios).map((x) => ({ slug: x.slug, title: x.title }));
+  const articlesRaw = listArticles();
+  const imagesRaw = readArr<{ slug: string; title: string }>(MEDIA_FILE.images).map((x) => ({ slug: x.slug, title: x.title }));
+  const videosRaw = readArr<{ slug: string; title: string }>(MEDIA_FILE.videos).map((x) => ({ slug: x.slug, title: x.title }));
+  const audiosRaw = readArr<{ slug: string; title: string }>(MEDIA_FILE.audios).map((x) => ({ slug: x.slug, title: x.title }));
+
+  // 读取每条内容的浏览量/点赞（用于管理列表展示）
+  const ids: string[] = [
+    ...articlesRaw.map((x) => `articles:${x.slug}`),
+    ...imagesRaw.map((x) => `images:${x.slug}`),
+    ...videosRaw.map((x) => `videos:${x.slug}`),
+    ...audiosRaw.map((x) => `audios:${x.slug}`),
+  ];
+  const metrics = await readManyMetrics(ids);
+  const withM = (section: SectionKey, arr: { slug: string; title: string }[]) =>
+    arr.map((x) => ({ ...x, ...(metrics[`${section}:${x.slug}`] ?? { views: 0, likes: 0 }) }));
+  const articles = withM("articles", articlesRaw);
+  const images = withM("images", imagesRaw);
+  const videos = withM("videos", videosRaw);
+  const audios = withM("audios", audiosRaw);
 
   // 每个领域的下一期 + 文件夹
   const arts = listArticles();

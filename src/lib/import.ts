@@ -21,8 +21,7 @@ async function downloadImage(url: string, referer: string, prefix: string): Prom
 
 // ---------- HTML → Markdown（聚焦公众号正文常见标签） ----------
 function nodeToMd(node: Node): string {
-  // 文本节点
-  // @ts-expect-error node-html-parser TextNode has nodeType 3
+  // 文本节点（nodeType 3）
   if (node.nodeType === 3) return (node.text || "").replace(/\s+/g, " ");
   const el = node as HTMLElement;
   const tag = (el.tagName || "").toLowerCase();
