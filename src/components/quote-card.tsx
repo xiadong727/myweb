@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Quote, Download } from "lucide-react";
+import { Download } from "lucide-react";
 
 function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
   const lines: string[] = [];
@@ -90,15 +90,12 @@ export function QuoteCard({ quote, source }: { quote: string; source?: string })
 
   return (
     <section className="mt-12 overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent p-5 sm:p-6">
-      <div className="flex items-start gap-3">
-        <Quote className="mt-1 h-6 w-6 shrink-0 text-primary/70" />
-        <blockquote className="flex-1 text-[1.15rem] font-medium leading-relaxed text-foreground/90">
-          {quote}
-          {source ? (
-            <footer className="mt-2 text-sm font-normal text-muted-foreground">— {source}</footer>
-          ) : null}
-        </blockquote>
-      </div>
+      <blockquote className="text-[1.15rem] font-medium leading-relaxed text-foreground/90">
+        {quote}
+        {source ? (
+          <footer className="mt-2 text-sm font-normal text-muted-foreground">— {source}</footer>
+        ) : null}
+      </blockquote>
       <div className="mt-4 flex justify-end">
         <button
           type="button"
