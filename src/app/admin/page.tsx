@@ -18,8 +18,9 @@ type Data = {
   domains: Record<string, { folder: string; nextEpisode: number }>;
   navTree: Record<SectionKey, { label: string; nodes: unknown[] }>;
 };
-type View = "create" | "manage" | "menu" | "import";
+type View = "create" | "manage" | "menu" | "import" | "settings";
 type ImportResult = { input: string; ok: boolean; title?: string; slug?: string; error?: string };
+type ArtStyle = { firstLineIndent: boolean; justify: boolean; fontSize: string; lineHeight: number; letterSpacing: string; paragraphGap: string };
 type Tab = SectionKey;
 
 const DOMAINS: [string, string][] = [
@@ -68,6 +69,7 @@ export default function AdminPage() {
   const [au, setAu] = useState({ ...emptyAu });
   const [q, setQ] = useState(""); // 管理列表搜索
   const [bili, setBili] = useState(""); // B站链接转换输入
+  const [settings, setSettings] = useState<ArtStyle | null>(null);
 
   const reload = useCallback(() => {
     fetch("/api/admin/options").then((r) => r.json()).then((d) => (d.error ? setMsg({ ok: false, text: d.error }) : setData(d)))
@@ -91,6 +93,18 @@ export default function AdminPage() {
       if (d && (d.title || d.body)) queueMicrotask(() => { setA(d); setMsg({ ok: true, text: "已恢复上次未保存的文章草稿（如不需要，点上方「取消」或直接覆盖）" }); });
     } catch { /* ignore */ }
   }, []);
+
+  // 进入「设置」时加载文章排版配置
+  useEffect(() => {
+    if (view !== "settings" || settings) return;
+    fetch("/api/admin/settings").then((r) => r.json()).then((d) => { if (d.article) setSettings(d.article); }).catch(() => {});
+  }, [view, settings]);
+
+  async function saveSettings() {
+    if (!settings) return;
+    const d = await api("/api/admin/settings", "POST", { article: settings });
+    if (d) setMsg({ ok: true, text: "✅ 排版设置已保存。本地立即生效；线上点「发布」后生效。" });
+  }
 
   // 自动保存文章表单到本地（仅新建文章时）
   useEffect(() => {
@@ -219,7 +233,7 @@ export default function AdminPage() {
       </p>
 
       <div className="mt-5 flex gap-2">
-        {([["create", editing ? "✏️ 编辑中" : "➕ 新建"], ["manage", "🗂️ 管理内容"], ["import", "📥 导入"], ["menu", "🧭 菜单"]] as [View, string][]).map(([vw, label]) => (
+        {([["create", editing ? "✏️ 编辑中" : "➕ 新建"], ["manage", "🗂️ 管理内容"], ["import", "📥 导入"], ["menu", "🧭 菜单"], ["settings", "⚙️ 设置"]] as [View, string][]).map(([vw, label]) => (
           <button key={vw} onClick={() => { setView(vw); setMsg(null); }} className={`rounded-full px-4 py-1.5 text-sm font-medium ${view === vw ? "bg-primary text-primary-foreground" : "border border-border bg-card text-muted-foreground"}`}>{label}</button>
         ))}
         {editing ? <button onClick={resetForms} className="rounded-full px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground">取消编辑，改为新建</button> : null}
@@ -242,6 +256,35 @@ export default function AdminPage() {
 
       {/* ===== 菜单管理 ===== */}
       {view === "menu" && data ? <div className="mt-6"><MenuManager navTree={data.navTree as never} onChanged={reload} /></div> : null}
+
+      {/* ===== 设置：文章排版 ===== */}
+      {view === "settings" ? (
+        <div className="mt-6 space-y-4">
+          <h2 className="text-base font-bold text-foreground">文章排版</h2>
+          {!settings ? <p className="text-sm text-muted-foreground">加载中…</p> : (
+            <>
+              <label className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm text-foreground">
+                <input type="checkbox" className="h-4 w-4" checked={settings.firstLineIndent} onChange={(e) => setSettings({ ...settings, firstLineIndent: e.target.checked })} />
+                首行缩进两格（中文常见排版；取消则不缩进）
+              </label>
+              <label className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm text-foreground">
+                <input type="checkbox" className="h-4 w-4" checked={settings.justify} onChange={(e) => setSettings({ ...settings, justify: e.target.checked })} />
+                两端对齐（取消则左对齐）
+              </label>
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="正文字号" hint="如 1.05rem / 1.1rem"><input className={inputCls} value={settings.fontSize} onChange={(e) => setSettings({ ...settings, fontSize: e.target.value })} /></Field>
+                <Field label="行高" hint="如 1.9 / 2.0"><input className={inputCls} type="number" step="0.05" value={settings.lineHeight} onChange={(e) => setSettings({ ...settings, lineHeight: Number(e.target.value) })} /></Field>
+                <Field label="字间距" hint="如 0.02em"><input className={inputCls} value={settings.letterSpacing} onChange={(e) => setSettings({ ...settings, letterSpacing: e.target.value })} /></Field>
+                <Field label="段落间距" hint="如 1.25rem"><input className={inputCls} value={settings.paragraphGap} onChange={(e) => setSettings({ ...settings, paragraphGap: e.target.value })} /></Field>
+              </div>
+              <button disabled={busy} onClick={saveSettings} className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:opacity-60">
+                {busy ? "保存中…" : "保存排版设置"}
+              </button>
+              <p className="rounded-lg bg-muted/40 px-3 py-2 text-xs text-muted-foreground">改这里会统一影响**所有文章**正文的排版。保存后本地刷新即生效；线上需点右上角「🚀 发布」后生效。</p>
+            </>
+          )}
+        </div>
+      ) : null}
 
       {/* ===== 导入 ===== */}
       {view === "import" && data ? (

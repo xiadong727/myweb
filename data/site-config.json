@@ -1,0 +1,10 @@
+{
+  "article": {
+    "firstLineIndent": true,
+    "justify": true,
+    "fontSize": "1.05rem",
+    "lineHeight": 1.9,
+    "letterSpacing": "0.02em",
+    "paragraphGap": "1.25rem"
+  }
+}

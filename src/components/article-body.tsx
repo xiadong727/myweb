@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { resolveArticleMarkdownAssetUrl } from "@/lib/article-assets";
 import { makeSlugger } from "@/lib/toc";
-import { bodyTextStyle, paragraphStyle } from "@/lib/article-style";
+import { getArticleStyle, bodyTextStyleOf, paragraphStyleOf } from "@/lib/article-style";
 
 type HastNode = {
   type: string;
@@ -40,6 +40,9 @@ export function ArticleBody({
   /** 如 `cogrow/10years02`，用于把 `![](images/a.png)` 解析到 content/articles 下 */
   articleSlug?: string;
 }) {
+  const style = getArticleStyle();
+  const bodyTextStyle = bodyTextStyleOf(style);
+  const paragraphStyle = paragraphStyleOf(style);
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}

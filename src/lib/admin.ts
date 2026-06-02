@@ -5,6 +5,7 @@ import matter from "gray-matter";
 import type { SectionKey, SiteNavigation, NavNode, NavGroup } from "./types";
 import { isNavGroup } from "./types";
 import { readManyMetrics } from "./metrics";
+import { getArticleStyle, type ArticleStyle } from "./article-style";
 
 /** 后台只在本地开发可用（线上文件系统只读，且出于安全禁止写入） */
 export const ADMIN_ENABLED = process.env.NODE_ENV !== "production";
@@ -371,6 +372,21 @@ export function navOp(section: SectionKey, op: string, payload: { id?: string; s
   }
   writeNav(nav);
   return { ok: true };
+}
+
+// ---------- 站点设置（文章排版等） ----------
+const SITE_CONFIG = path.join(ROOT, "data/site-config.json");
+
+export function getSiteSettings() {
+  return { article: getArticleStyle() };
+}
+
+export function saveArticleStyleSetting(style: Partial<ArticleStyle>) {
+  let cfg: Record<string, unknown> = {};
+  try { cfg = JSON.parse(fs.readFileSync(SITE_CONFIG, "utf8")); } catch { cfg = {}; }
+  cfg.article = { ...getArticleStyle(), ...style };
+  fs.writeFileSync(SITE_CONFIG, JSON.stringify(cfg, null, 2) + "\n", "utf8");
+  return cfg.article;
 }
 
 // ---------- 一键发布（本地执行 git） ----------
