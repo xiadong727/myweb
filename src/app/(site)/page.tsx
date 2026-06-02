@@ -332,7 +332,7 @@ export default function HomePage() {
             </span>
 
             <figure className="relative z-10 mx-auto mt-6 max-w-3xl text-center sm:mt-8">
-              <blockquote className="text-2xl font-semibold leading-[1.7] tracking-wide text-foreground sm:text-[2rem] sm:leading-[1.65]">
+              <blockquote className="whitespace-pre-line text-2xl font-semibold leading-[1.7] tracking-wide text-foreground sm:text-[2rem] sm:leading-[1.65]">
                 {featuredQuote.quote}
               </blockquote>
               <figcaption className="mt-8 flex items-center justify-center gap-3 text-sm text-muted-foreground">

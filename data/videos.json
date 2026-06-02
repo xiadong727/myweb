@@ -13,5 +13,13 @@
     "description": "第二个嵌入示例。可替换为 B 站 iframe 或 YouTube。清晰度由托管平台决定。",
     "kind": "embed",
     "embedUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+  },
+  {
+    "slug": "imported/bili-BV1gsqvBCE23",
+    "title": "用一个故事讲透“经济学”",
+    "description": "-",
+    "kind": "embed",
+    "embedUrl": "https://player.bilibili.com/player.html?bvid=BV1gsqvBCE23&page=1&high_quality=1&danmaku=0",
+    "originalUrl": "https://www.bilibili.com/video/BV1gsqvBCE23"
   }
 ]

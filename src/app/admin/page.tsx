@@ -329,7 +329,7 @@ export default function AdminPage() {
                   <Field label="领域"><select className={inputCls} value={a.domain} onChange={(e) => onDomainChange(e.target.value)}>{DOMAINS.map(([val, l]) => <option key={val} value={val}>{l}</option>)}</select></Field>
                   <Field label="期号" hint={a.domain && data ? `建议第 ${data.domains[a.domain]?.nextEpisode} 期` : "数字"}><input className={inputCls} type="number" value={a.episode} onChange={(e) => setA({ ...a, episode: e.target.value })} /></Field>
                 </div>
-                <div className="mt-3"><Field label="本期金句" hint="显示在首页与文末金句卡"><input className={inputCls} value={a.quote} onChange={(e) => setA({ ...a, quote: e.target.value })} /></Field></div>
+                <div className="mt-3"><Field label="本期金句" hint="显示在首页与文末金句卡；可换行（回车）写多行"><textarea className={`${inputCls} h-20`} value={a.quote} onChange={(e) => setA({ ...a, quote: e.target.value })} placeholder="一行一句，回车换行" /></Field></div>
               </fieldset>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-foreground">正文 *</span>
