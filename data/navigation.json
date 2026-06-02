@@ -21,14 +21,14 @@
               "title": "哲学 (L01)",
               "children": [
                 {
-                  "id": "lh-L01-ep001",
-                  "title": "第001期 · 一切始于提问——苏格拉底的追问",
-                  "slug": "lighthouse/L01-philosophy/ep001-socrates-questioning"
-                },
-                {
                   "id": "a-imported-wx-5wrig5BwZwjH",
                   "title": "第005期 · 何为智慧？",
                   "slug": "imported/wx-5wrig5BwZwjH"
+                },
+                {
+                  "id": "a-imported-wx-bEPdQ1UDjXy7",
+                  "title": "第001期 · 一切始于提问——苏格拉底的追问",
+                  "slug": "imported/wx-bEPdQ1UDjXy7"
                 }
               ]
             },
