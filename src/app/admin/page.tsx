@@ -135,7 +135,7 @@ export default function AdminPage() {
   // —— 提交（新建/更新） —— //
   async function saveArticle() {
     if (dupSlug("articles", a.slug)) { setMsg({ ok: false, text: "该文件路径已存在，请换一个" }); return; }
-    const navTitle = a.navTitle || (a.domain && a.episode ? `第${pad3(a.episode)}期 · ${a.title}` : a.title);
+    const navTitle = a.navTitle || a.title;
     const payload = { ...a, navTitle, tags: a.tags ? a.tags.split(/[,，]/).map((s) => s.trim()).filter(Boolean) : [] };
     const d = editing ? await api("/api/admin/article", "PUT", payload) : await api("/api/admin/article", "POST", payload);
     if (d) { setMsg({ ok: true, text: `✅ 已${editing ? "更新" : "保存"}：${d.slug}`, href: `/articles/${d.slug}` }); setDirty(false); try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ } reload(); }
