@@ -87,7 +87,13 @@
             {
               "id": "lh-L09",
               "title": "生活 (L09)",
-              "children": []
+              "children": [
+                {
+                  "id": "a-imported-wx-VZ9wxuQNNhEx",
+                  "title": "效率悖论：为什么AI提效了，我们反而更忙了？",
+                  "slug": "imported/wx-VZ9wxuQNNhEx"
+                }
+              ]
             },
             {
               "id": "lh-L10",
