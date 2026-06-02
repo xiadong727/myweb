@@ -1,6 +1,5 @@
 ---
 title: 看见自己的思维盲区——认知偏差
-draft: true
 domain: L02
 episode: 3
 quote: 如果一个决定是可逆的，快速做；如果是不可逆的，慢慢来。
