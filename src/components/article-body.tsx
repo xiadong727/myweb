@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { resolveArticleMarkdownAssetUrl } from "@/lib/article-assets";
 import { makeSlugger } from "@/lib/toc";
+import { bodyTextStyle, paragraphStyle } from "@/lib/article-style";
 
 type HastNode = {
   type: string;
@@ -52,22 +53,16 @@ export function ArticleBody({
         ),
         h3: (props) => <h3 className="mt-8 scroll-mt-24 text-[1.15rem] sm:text-[1.25rem] lg:text-[1.35rem] font-semibold leading-[1.5] text-foreground" {...props} />,
         h4: (props) => <h4 className="mt-6 text-[1.05rem] sm:text-[1.15rem] font-semibold leading-[1.5] text-foreground" {...props} />,
-        p: (props) => (
-          <p
-            className="mt-5 text-justify text-[1.05rem] leading-[1.8] sm:leading-[1.9] tracking-[0.02em] text-muted-foreground"
-            style={{ textIndent: "2em" }}
-            {...props}
-          />
-        ),
+        p: (props) => <p className="text-muted-foreground" style={paragraphStyle} {...props} />,
         a: (props) => (
           <a
             className="font-medium text-primary underline decoration-primary/30 underline-offset-4 hover:opacity-80"
             {...props}
           />
         ),
-        ul: (props) => <ul className="mt-5 list-disc space-y-3 pl-[2.5em] sm:pl-[3.5em] text-[1.05rem] leading-[1.8] sm:leading-[1.9] tracking-[0.02em] text-muted-foreground" {...props} />,
-        ol: (props) => <ol className="mt-5 list-decimal space-y-3 pl-[2.5em] sm:pl-[3.5em] text-[1.05rem] leading-[1.8] sm:leading-[1.9] tracking-[0.02em] text-muted-foreground" {...props} />,
-        li: (props) => <li className="leading-[1.8] sm:leading-[1.9]" {...props} />,
+        ul: (props) => <ul className="mt-5 list-disc space-y-3 pl-[2.5em] text-muted-foreground sm:pl-[3.5em]" style={bodyTextStyle} {...props} />,
+        ol: (props) => <ol className="mt-5 list-decimal space-y-3 pl-[2.5em] text-muted-foreground sm:pl-[3.5em]" style={bodyTextStyle} {...props} />,
+        li: (props) => <li {...props} />,
         code: (props) => {
           const { className, children, ...rest } = props;
           const isBlock = Boolean(className);
@@ -98,7 +93,8 @@ export function ArticleBody({
         ),
         blockquote: (props) => (
           <blockquote
-            className="mt-6 border-l-4 border-primary/40 bg-primary/5 py-3 pl-4 sm:pl-5 pr-4 text-[1.05rem] leading-[1.8] sm:leading-[1.9] text-muted-foreground italic"
+            className="mt-6 border-l-4 border-primary/40 bg-primary/5 py-3 pl-4 pr-4 italic text-muted-foreground sm:pl-5"
+            style={bodyTextStyle}
             {...props}
           />
         ),
