@@ -1,13 +1,5 @@
 import Link from "next/link";
-import {
-  ArrowRight,
-  FileText,
-  ImageIcon,
-  Video,
-  Headphones,
-  Sparkles,
-  Compass,
-} from "lucide-react";
+import { ArrowRight, Sparkles, Compass } from "lucide-react";
 import { getNavigation } from "@/lib/navigation";
 import { getArticleSummaries } from "@/lib/articles";
 import { getAllGalleries } from "@/lib/galleries";
@@ -38,80 +30,6 @@ export default function HomePage() {
   const featuredQuote = [...summaries]
     .filter((a) => a.quote)
     .sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? 1 : -1))[0];
-
-  // 为每个板块定义专属的渐变色和悬浮光晕
-  const styles = {
-    articles: {
-      gradient: "from-blue-500 to-indigo-500",
-      text: "text-blue-500",
-      borderHover: "hover:border-blue-500/40",
-      shadowHover: "hover:shadow-[0_8px_24px_-12px_rgba(59,130,246,0.6)]",
-      blob: "bg-blue-500/15",
-    },
-    images: {
-      gradient: "from-emerald-400 to-teal-500",
-      text: "text-emerald-500",
-      borderHover: "hover:border-emerald-500/40",
-      shadowHover: "hover:shadow-[0_8px_24px_-12px_rgba(16,185,129,0.6)]",
-      blob: "bg-emerald-500/15",
-    },
-    videos: {
-      gradient: "from-rose-400 to-orange-500",
-      text: "text-rose-500",
-      borderHover: "hover:border-rose-500/40",
-      shadowHover: "hover:shadow-[0_8px_24px_-12px_rgba(244,63,94,0.6)]",
-      blob: "bg-rose-500/15",
-    },
-    audios: {
-      gradient: "from-purple-500 to-fuchsia-500",
-      text: "text-purple-500",
-      borderHover: "hover:border-purple-500/40",
-      shadowHover: "hover:shadow-[0_8px_24px_-12px_rgba(168,85,247,0.6)]",
-      blob: "bg-purple-500/15",
-    },
-    contact: {
-      gradient: "from-zinc-500 to-slate-600",
-      text: "text-zinc-500",
-      borderHover: "hover:border-zinc-500/40",
-      shadowHover: "hover:shadow-[0_8px_24px_-12px_rgba(113,113,122,0.6)]",
-      blob: "bg-zinc-500/15",
-    },
-  };
-
-  const cards = [
-    {
-      href: "/articles",
-      title: nav.trees.articles.label,
-      count: summaries.length,
-      unit: "篇",
-      icon: FileText,
-      style: styles.articles,
-    },
-    {
-      href: "/images",
-      title: nav.trees.images.label,
-      count: imageCount,
-      unit: "张",
-      icon: ImageIcon,
-      style: styles.images,
-    },
-    {
-      href: "/videos",
-      title: nav.trees.videos.label,
-      count: videoCount,
-      unit: "部",
-      icon: Video,
-      style: styles.videos,
-    },
-    {
-      href: "/audios",
-      title: nav.trees.audios?.label ?? "音频",
-      count: audioCount,
-      unit: "期",
-      icon: Headphones,
-      style: styles.audios,
-    },
-  ];
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
@@ -157,30 +75,6 @@ export default function HomePage() {
             audioCount={audioCount}
           />
         </div>
-      </div>
-
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        {cards.map((c) => (
-          <Link
-            key={c.href}
-            href={c.href}
-            className={`group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 sm:p-5 ${c.style.borderHover} ${c.style.shadowHover}`}
-          >
-            <div className={`absolute -right-8 -top-8 h-24 w-24 rounded-full blur-3xl transition-all duration-700 group-hover:scale-150 ${c.style.blob}`} />
-            <div className="relative z-10 flex items-center justify-between">
-              <c.icon className={`h-7 w-7 transition-transform duration-300 group-hover:scale-110 ${c.style.text}`} />
-              {c.count > 0 ? (
-                <span className="font-mono text-xs text-muted-foreground/70">
-                  <span className={`text-sm font-bold ${c.style.text}`}>{c.count}</span> {c.unit}
-                </span>
-              ) : null}
-            </div>
-            <div className="relative z-10 mt-4 flex items-center justify-between">
-              <h2 className="text-base font-bold tracking-wide text-foreground">{c.title}</h2>
-              <ArrowRight className={`h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 ${c.style.text}`} />
-            </div>
-          </Link>
-        ))}
       </div>
 
       {/* 与光同行 · 主线进度墙 */}
