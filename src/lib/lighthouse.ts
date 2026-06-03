@@ -2,6 +2,8 @@ import { getArticleSummaries } from "./articles";
 import { getAllGalleries } from "./galleries";
 import { getAllVideos } from "./videos";
 import { getAllAudios } from "./audios";
+import { getNavigation } from "./navigation";
+import { isNavGroup, type NavNode, type SectionKey } from "./types";
 import {
   LIGHTHOUSE_DOMAINS,
   type DomainStat,
@@ -24,24 +26,49 @@ export type DomainWorks = {
   audios: DomainWork[];
 };
 
+/** 从导航树里，把挂在「与光同行 · …」各领域子目录（id 形如 vid-lh-L08）下的内容 slug → 领域编号。
+ *  这样：把作品放进对应领域的菜单目录，就会被算进该领域（无需再填 episode 键）。 */
+function mediaDomainMap(section: SectionKey): Map<string, string> {
+  const map = new Map<string, string>();
+  const walk = (nodes: NavNode[], domain: string | null) => {
+    for (const n of nodes) {
+      if (isNavGroup(n)) {
+        const m = n.id.match(/-lh-(L\d\d)$/);
+        walk(n.children, m ? m[1] : domain);
+      } else if (domain) {
+        map.set(n.slug, domain);
+      }
+    }
+  };
+  walk(getNavigation().trees[section].nodes, null);
+  return map;
+}
+
+type DomainMaps = { images: Map<string, string>; videos: Map<string, string>; audios: Map<string, string> };
+function buildDomainMaps(): DomainMaps {
+  return { images: mediaDomainMap("images"), videos: mediaDomainMap("videos"), audios: mediaDomainMap("audios") };
+}
+
 /** 某领域下的全部作品，按文章/图片/视频/音频分类。
- *  文章按 frontmatter 的 domain 归属；图片/视频/音频按「一鱼三吃」键 episode 前缀（如 L01-）归属。 */
-export function getDomainWorks(code: string): DomainWorks {
-  const inDomain = (ep?: string) => typeof ep === "string" && ep.startsWith(`${code}-`);
+ *  归属规则：文章按 frontmatter 的 domain；图片/视频/音频按「episode 键前缀（如 L08-）」**或**「放在该领域的菜单目录下」。 */
+export function getDomainWorks(code: string, maps: DomainMaps = buildDomainMaps()): DomainWorks {
+  const has = (ep: string | undefined, slug: string, m: Map<string, string>) =>
+    (typeof ep === "string" && ep.startsWith(`${code}-`)) || m.get(slug) === code;
   const articles = getArticleSummaries()
     .filter((a) => a.domain === code)
     .sort((a, b) => (a.episode ?? 0) - (b.episode ?? 0))
     .map((a) => ({ slug: a.slug, title: a.title, date: a.date ?? null }));
-  const images = getAllGalleries().filter((g) => inDomain(g.episode)).map((g) => ({ slug: g.slug, title: g.title, date: null }));
-  const videos = getAllVideos().filter((v) => inDomain(v.episode)).map((v) => ({ slug: v.slug, title: v.title, date: null }));
-  const audios = getAllAudios().filter((a) => inDomain(a.episode)).map((a) => ({ slug: a.slug, title: a.title, date: null }));
+  const images = getAllGalleries().filter((g) => has(g.episode, g.slug, maps.images)).map((g) => ({ slug: g.slug, title: g.title, date: null }));
+  const videos = getAllVideos().filter((v) => has(v.episode, v.slug, maps.videos)).map((v) => ({ slug: v.slug, title: v.title, date: null }));
+  const audios = getAllAudios().filter((a) => has(a.episode, a.slug, maps.audios)).map((a) => ({ slug: a.slug, title: a.title, date: null }));
   return { articles, images, videos, audios };
 }
 
 /** 统计每个领域的作品数（文章+图片+视频+音频之和） */
 export function getLighthouseDomainStats(): DomainStat[] {
+  const maps = buildDomainMaps();
   return LIGHTHOUSE_DOMAINS.map((d) => {
-    const w = getDomainWorks(d.code);
+    const w = getDomainWorks(d.code, maps);
     const count = w.articles.length + w.images.length + w.videos.length + w.audios.length;
     return {
       code: d.code,
