@@ -31,7 +31,6 @@ const DOMAINS: [string, string][] = [
 ];
 const inputCls = "w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none focus:border-primary/50";
 const today = () => new Date().toISOString().slice(0, 10);
-const pad3 = (n: number | string) => String(Number(n)).padStart(3, "0");
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -138,12 +137,11 @@ export default function AdminPage() {
 
   const dupSlug = (section: Tab, slug: string) => !editing && slug && data?.existingSlugs[section]?.includes(slug.trim());
 
-  // —— 智能填充：选领域后自动带出期号/路径 —— //
+  // —— 选领域后自动带出该领域的文件夹路径前缀 —— //
   function onDomainChange(domain: string) {
     if (!domain || !data) { setA((s) => ({ ...s, domain })); return; }
     const info = data.domains[domain];
-    const ep = info.nextEpisode;
-    setA((s) => ({ ...s, domain, episode: s.episode || String(ep), slug: s.slug || `lighthouse/${info.folder}/ep${pad3(ep)}-` }));
+    setA((s) => ({ ...s, domain, slug: s.slug || `lighthouse/${info.folder}/` }));
   }
 
   // —— 提交（新建/更新） —— //
@@ -368,11 +366,8 @@ export default function AdminPage() {
               <Field label="摘要"><input className={inputCls} value={a.excerpt} onChange={(e) => setA({ ...a, excerpt: e.target.value })} /></Field>
               <fieldset className="rounded-xl border border-primary/20 bg-primary/[0.03] p-4">
                 <legend className="px-2 text-sm font-semibold text-primary">与光同行主线（可选）</legend>
-                <div className="grid grid-cols-2 gap-4">
-                  <Field label="领域"><select className={inputCls} value={a.domain} onChange={(e) => onDomainChange(e.target.value)}>{DOMAINS.map(([val, l]) => <option key={val} value={val}>{l}</option>)}</select></Field>
-                  <Field label="期号" hint={a.domain && data ? `建议第 ${data.domains[a.domain]?.nextEpisode} 期` : "数字"}><input className={inputCls} type="number" value={a.episode} onChange={(e) => setA({ ...a, episode: e.target.value })} /></Field>
-                </div>
-                <div className="mt-3"><Field label="本期金句" hint="显示在首页与文末金句卡；可换行（回车）写多行"><textarea className={`${inputCls} h-20`} value={a.quote} onChange={(e) => setA({ ...a, quote: e.target.value })} placeholder="一行一句，回车换行" /></Field></div>
+                <Field label="领域" hint="选了领域，这篇就归入该领域"><select className={inputCls} value={a.domain} onChange={(e) => onDomainChange(e.target.value)}>{DOMAINS.map(([val, l]) => <option key={val} value={val}>{l}</option>)}</select></Field>
+                <div className="mt-3"><Field label="本期金句" hint="显示在文末金句卡；可换行（回车）写多行"><textarea className={`${inputCls} h-20`} value={a.quote} onChange={(e) => setA({ ...a, quote: e.target.value })} placeholder="一行一句，回车换行" /></Field></div>
               </fieldset>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium text-foreground">正文 *</span>

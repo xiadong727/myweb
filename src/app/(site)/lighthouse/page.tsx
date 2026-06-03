@@ -54,7 +54,6 @@ export default function LighthousePage() {
                 >
                   <span className="shrink-0 rounded-md bg-primary/10 px-2 py-0.5 font-mono text-[11px] font-medium text-primary">
                     {e.code}
-                    {e.episode != null ? `·${String(e.episode).padStart(3, "0")}` : ""}
                   </span>
                   <span className="min-w-0 flex-1 truncate font-medium text-foreground transition group-hover:text-primary">
                     {e.title}
@@ -111,9 +110,6 @@ function DomainSection({ domain: d }: { domain: DomainGroup }) {
                 href={`/articles/${e.slug}`}
                 className="group flex items-center gap-3 px-5 py-3 transition hover:bg-primary/5"
               >
-                <span className="w-12 shrink-0 font-mono text-xs text-muted-foreground">
-                  {e.episode != null ? `第${String(e.episode).padStart(3, "0")}` : "—"}
-                </span>
                 <span className="min-w-0 flex-1 truncate font-medium text-foreground transition group-hover:text-primary">
                   {e.title}
                 </span>

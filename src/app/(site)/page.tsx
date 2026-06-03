@@ -9,7 +9,7 @@ import { getLighthouseDomainStats, getLighthouseTotalEpisodes } from "@/lib/ligh
 import { MetricsInline } from "@/components/metrics-inline";
 import { StatsPanel } from "@/components/stats-panel";
 
-const ABOUT_SLUG = "cogrow/10years02";
+const ABOUT_SLUG = "imported/wx-uP0_Qj_2eDOn";
 
 export default function HomePage() {
   const nav = getNavigation();
@@ -27,12 +27,9 @@ export default function HomePage() {
     .slice(0, 6);
   const domainStats = getLighthouseDomainStats();
   const totalEpisodes = getLighthouseTotalEpisodes();
-  const featuredQuote = [...summaries]
-    .filter((a) => a.quote)
-    .sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? 1 : -1))[0];
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
+    <main className="mx-auto max-w-6xl px-4 pb-8 pt-2 sm:px-6 sm:pt-8 lg:py-12">
       <div
         className="relative overflow-hidden rounded-3xl border p-6 shadow-sm sm:p-8 lg:p-10"
         style={{
@@ -205,39 +202,6 @@ export default function HomePage() {
         </section>
       ) : null}
 
-      {/* 精选金句 */}
-      {featuredQuote?.quote ? (
-        <section className="mt-14">
-          <Link
-            href={`/articles/${featuredQuote.slug}`}
-            className="group relative block overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-primary/[0.04] to-transparent px-6 py-14 sm:px-10 sm:py-20"
-          >
-            {/* 左上角标签 */}
-            <p className="absolute left-6 top-7 z-10 flex items-center gap-2.5 sm:left-10 sm:top-9">
-              <span className="h-4 w-1 rounded-full bg-primary" />
-              <span className="text-sm font-bold tracking-[0.2em] text-primary">本期金句</span>
-            </p>
-            {/* 右上角装饰引号水印 */}
-            <span
-              aria-hidden
-              className="pointer-events-none absolute -right-4 -top-14 select-none font-serif text-[13rem] leading-none text-primary/[0.06] sm:text-[18rem]"
-            >
-              ”
-            </span>
-
-            <figure className="relative z-10 mx-auto mt-6 max-w-3xl text-center sm:mt-8">
-              <blockquote className="whitespace-pre-line text-2xl font-semibold leading-[1.7] tracking-wide text-foreground sm:text-[2rem] sm:leading-[1.65]">
-                {featuredQuote.quote}
-              </blockquote>
-              <figcaption className="mt-8 flex items-center justify-center gap-3 text-sm text-muted-foreground">
-                <span className="h-px w-8 bg-primary/30" />
-                <span className="transition group-hover:text-primary">{featuredQuote.title}</span>
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:text-primary" />
-              </figcaption>
-            </figure>
-          </Link>
-        </section>
-      ) : null}
     </main>
   );
 }

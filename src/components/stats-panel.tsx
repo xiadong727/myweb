@@ -60,32 +60,30 @@ export function StatsPanel({ totalWorks, articleCount, imageCount, videoCount, a
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:gap-4">
-      <div className={bigTile}>
+    <div className="grid grid-cols-4 gap-2 sm:gap-3">
+      <div className={`${bigTile} col-span-2`}>
         <RollingNumber value={v(totalWorks)} className={`${bigNum} text-orange-500`} style={{ filter: "drop-shadow(0 3px 6px rgba(249,115,22,0.4))" }} />
         <div className="mt-1.5 text-sm font-bold tracking-wide text-foreground/75" style={{ textShadow: "0 1px 1px rgba(255,255,255,0.6)" }}>总作品数</div>
       </div>
-      <div className={bigTile}>
+      <div className={`${bigTile} col-span-2`}>
         <RollingNumber value={v(views)} className={`${bigNum} text-rose-500`} style={{ filter: "drop-shadow(0 3px 6px rgba(236,72,153,0.4))" }} />
         <div className="mt-1.5 text-sm font-bold tracking-wide text-foreground/75" style={{ textShadow: "0 1px 1px rgba(255,255,255,0.6)" }}>总浏览量</div>
       </div>
 
-      {/* 四个可点击的板块卡片（暖光立体，与上方一致；点进对应作品列表） */}
-      <div className="col-span-2 grid grid-cols-4 gap-2 sm:gap-3">
-        {sections.map((s, i) => (
-          <Link
-            key={s.href}
-            href={s.href}
-            className="group overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.14] to-primary/[0.03] px-1.5 py-3 text-center shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl sm:px-3"
-          >
-            <RollingNumber value={v(s.count)} className={`block text-2xl font-extrabold tabular-nums ${s.color}`} style={{ filter: `drop-shadow(0 2px 5px ${s.glow})` }} />
-            <div className="mt-1 flex items-center justify-center gap-1">
-              <s.icon className={`icon-wiggle h-4 w-4 shrink-0 ${s.color}`} style={{ animationDelay: `${i * 0.5}s` }} />
-              <span className="whitespace-nowrap text-[13px] font-bold text-foreground/75" style={{ textShadow: "0 1px 1px rgba(255,255,255,0.6)" }}>{s.label}</span>
-            </div>
-          </Link>
-        ))}
-      </div>
+      {/* 四个板块卡片：每个占 1 列，恰好两个对应上方一个大卡片，左边界对齐 */}
+      {sections.map((s, i) => (
+        <Link
+          key={s.href}
+          href={s.href}
+          className="group overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.14] to-primary/[0.03] px-1.5 py-3 text-center shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl sm:px-3"
+        >
+          <RollingNumber value={v(s.count)} className={`block text-2xl font-extrabold tabular-nums ${s.color}`} style={{ filter: `drop-shadow(0 2px 5px ${s.glow})` }} />
+          <div className="mt-1 flex items-center justify-center gap-1">
+            <s.icon className={`icon-wiggle h-4 w-4 shrink-0 ${s.color}`} style={{ animationDelay: `${i * 0.5}s` }} />
+            <span className="whitespace-nowrap text-[13px] font-bold text-foreground/75" style={{ textShadow: "0 1px 1px rgba(255,255,255,0.6)" }}>{s.label}</span>
+          </div>
+        </Link>
+      ))}
     </div>
   );
 }
