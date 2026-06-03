@@ -29,7 +29,7 @@ export default function HomePage() {
   const totalEpisodes = getLighthouseTotalEpisodes();
 
   return (
-    <main className="mx-auto max-w-6xl px-4 pb-8 pt-2 sm:px-6 sm:pt-8 lg:py-12">
+    <main className="mx-auto max-w-6xl px-4 pb-10 pt-2 sm:px-6 lg:pb-12 lg:pt-3">
       <div
         className="relative overflow-hidden rounded-3xl border p-6 shadow-sm sm:p-8 lg:p-10"
         style={{
