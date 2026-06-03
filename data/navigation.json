@@ -357,7 +357,13 @@
         {
           "id": "vid-personal",
           "title": "个人作品",
-          "children": []
+          "children": [
+            {
+              "id": "cat-日常生活",
+              "title": "日常生活",
+              "children": []
+            }
+          ]
         },
         {
           "id": "vid-study",
