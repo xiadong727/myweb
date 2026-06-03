@@ -324,7 +324,13 @@
             {
               "id": "vid-lh-L06",
               "title": "艺术 (L06)",
-              "children": []
+              "children": [
+                {
+                  "id": "vid-imported-bili-BV1um421j7Bq",
+                  "title": "39种常见乐器，看看你最喜欢哪个？",
+                  "slug": "imported/bili-BV1um421j7Bq"
+                }
+              ]
             },
             {
               "id": "vid-lh-L07",
