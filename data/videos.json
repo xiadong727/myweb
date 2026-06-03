@@ -22,5 +22,13 @@
     "kind": "embed",
     "embedUrl": "https://player.bilibili.com/player.html?bvid=BV1um421j7Bq&page=1&high_quality=1&danmaku=0",
     "originalUrl": "https://www.bilibili.com/video/BV1um421j7Bq"
+  },
+  {
+    "slug": "imported/bili-BV18i421Q7RW",
+    "title": "绘画艺术",
+    "description": "-",
+    "kind": "embed",
+    "embedUrl": "https://player.bilibili.com/player.html?bvid=BV18i421Q7RW&page=1&high_quality=1&danmaku=0",
+    "originalUrl": "https://www.bilibili.com/video/BV18i421Q7RW"
   }
 ]

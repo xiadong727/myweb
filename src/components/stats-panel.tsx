@@ -63,11 +63,11 @@ export function StatsPanel({ totalWorks, articleCount, imageCount, videoCount, a
     <div className="grid grid-cols-2 gap-3 sm:gap-4">
       <div className={bigTile}>
         <RollingNumber value={v(totalWorks)} className={`${bigNum} text-orange-500`} style={{ filter: "drop-shadow(0 3px 6px rgba(249,115,22,0.4))" }} />
-        <div className="mt-1.5 text-xs font-medium tracking-wider text-muted-foreground">总作品数</div>
+        <div className="mt-1.5 text-sm font-bold tracking-wide text-foreground/75" style={{ textShadow: "0 1px 1px rgba(255,255,255,0.6)" }}>总作品数</div>
       </div>
       <div className={bigTile}>
         <RollingNumber value={v(views)} className={`${bigNum} text-rose-500`} style={{ filter: "drop-shadow(0 3px 6px rgba(236,72,153,0.4))" }} />
-        <div className="mt-1.5 text-xs font-medium tracking-wider text-muted-foreground">总浏览量</div>
+        <div className="mt-1.5 text-sm font-bold tracking-wide text-foreground/75" style={{ textShadow: "0 1px 1px rgba(255,255,255,0.6)" }}>总浏览量</div>
       </div>
 
       {/* 四个可点击的板块卡片（暖光立体，与上方一致；点进对应作品列表） */}
@@ -80,8 +80,8 @@ export function StatsPanel({ totalWorks, articleCount, imageCount, videoCount, a
           >
             <RollingNumber value={v(s.count)} className={`block text-2xl font-extrabold tabular-nums ${s.color}`} style={{ filter: `drop-shadow(0 2px 5px ${s.glow})` }} />
             <div className="mt-1 flex items-center justify-center gap-1">
-              <s.icon className={`icon-wiggle h-3.5 w-3.5 ${s.color}`} style={{ animationDelay: `${i * 0.5}s` }} />
-              <span className="text-[11px] text-muted-foreground">{s.label}</span>
+              <s.icon className={`icon-wiggle h-4 w-4 ${s.color}`} style={{ animationDelay: `${i * 0.5}s` }} />
+              <span className="text-[13px] font-bold text-foreground/75" style={{ textShadow: "0 1px 1px rgba(255,255,255,0.6)" }}>{s.label}</span>
             </div>
           </Link>
         ))}
