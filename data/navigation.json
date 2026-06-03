@@ -364,13 +364,7 @@
             {
               "id": "vid-talks",
               "title": "分享 · 演讲",
-              "children": [
-                {
-                  "id": "vid-talks-intro",
-                  "title": "频道介绍（示例·可删）",
-                  "slug": "talks/intro"
-                }
-              ]
+              "children": []
             },
             {
               "id": "vid-reel",

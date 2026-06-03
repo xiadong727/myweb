@@ -8,13 +8,6 @@
     "originalUrl": "https://www.bilibili.com/video/BV1um421j7Bq"
   },
   {
-    "slug": "talks/intro",
-    "title": "频道介绍（嵌入示例）",
-    "description": "第二个嵌入示例。可替换为 B 站 iframe 或 YouTube。清晰度由托管平台决定。",
-    "kind": "embed",
-    "embedUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ"
-  },
-  {
     "slug": "imported/bili-BV1gsqvBCE23",
     "title": "用一个故事讲透“经济学”",
     "description": "用一个故事讲透“经济学”",
