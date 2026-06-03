@@ -112,7 +112,7 @@ export default function HomePage() {
         </div>
         <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
           {domainStats.map((d, i) => {
-            const has = d.count > 0 && d.latestSlug;
+            const has = d.count > 0;
             const idx = String(i + 1).padStart(2, "0");
             const inner = (
               <>
@@ -127,7 +127,7 @@ export default function HomePage() {
                   <span className="font-mono text-[11px] text-muted-foreground">{d.code}</span>
                   {has ? (
                     <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                      {d.count} 期
+                      {d.count} 个
                     </span>
                   ) : (
                     <span className="text-[10px] text-muted-foreground/45">敬请期待</span>
@@ -145,7 +145,7 @@ export default function HomePage() {
             return has ? (
               <Link
                 key={d.code}
-                href={`/articles/${d.latestSlug}`}
+                href={`/lighthouse/${d.code}`}
                 className="group relative overflow-hidden rounded-xl border border-primary/30 bg-gradient-to-br from-primary/[0.07] to-transparent px-3.5 py-3 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md"
               >
                 {inner}

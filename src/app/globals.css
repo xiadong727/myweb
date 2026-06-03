@@ -348,3 +348,18 @@ body {
   background: var(--selection-bg);
   color: var(--selection-fg);
 }
+
+/* 首页板块图标：每隔几秒轻轻晃一下（多数时间静止） */
+@keyframes icon-wiggle {
+  0%, 85%, 100% { transform: rotate(0) scale(1); }
+  88% { transform: rotate(-13deg) scale(1.12); }
+  92% { transform: rotate(11deg) scale(1.12); }
+  96% { transform: rotate(-6deg) scale(1.06); }
+}
+.icon-wiggle {
+  animation: icon-wiggle 5s ease-in-out infinite;
+  transform-origin: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .icon-wiggle { animation: none; }
+}
