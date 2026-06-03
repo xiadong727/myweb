@@ -277,7 +277,18 @@
             {
               "id": "img-stock",
               "title": "素材库",
-              "children": []
+              "children": [
+                {
+                  "id": "img-touxiang",
+                  "title": "头像",
+                  "slug": "touxiang"
+                },
+                {
+                  "id": "img-touxiang1",
+                  "title": "头像",
+                  "slug": "touxiang1"
+                }
+              ]
             }
           ]
         }

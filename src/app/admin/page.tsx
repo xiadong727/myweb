@@ -154,9 +154,9 @@ export default function AdminPage() {
     const d = editing ? await api("/api/admin/article", "PUT", payload) : await api("/api/admin/article", "POST", payload);
     if (d) { setMsg({ ok: true, text: `✅ 已${editing ? "更新" : "保存"}：${d.slug}`, href: `/articles/${d.slug}` }); setDirty(false); try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ } reload(); }
   }
-  async function moveTo(section: Tab, slug: string, parentId: string) {
-    const d = await api("/api/admin/nav", "POST", { section, op: "moveBySlug", slug, parentId });
-    if (d) { setMsg({ ok: true, text: "✅ 已移动到新分类" }); reload(); }
+  async function moveTo(section: Tab, slug: string, parentId: string, title: string) {
+    const d = await api("/api/admin/nav", "POST", { section, op: "moveBySlug", slug, parentId, title });
+    if (d) { setMsg({ ok: true, text: "✅ 已归类到所选菜单分类" }); reload(); }
   }
   async function saveMedia(section: Exclude<SectionKey, "articles">) {
     let item: Record<string, unknown> & { slug: string; title: string }; let navTitle: string;

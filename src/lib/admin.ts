@@ -215,15 +215,15 @@ export function createArticle(input: ArticleInput) {
   if (!slug || !/^[\w\-/]+$/.test(slug)) throw new Error("文件路径只能包含字母数字、- _ /");
   const file = path.join(ARTICLES_DIR, `${slug}.md`);
   if (fs.existsSync(file)) throw new Error(`文件已存在：${slug}.md`);
-  const data = mergeFrontmatter({}, input);
-  const content = matter.stringify(`# ${input.title}\n\n${input.body || ""}`, data);
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, content, "utf8");
-
+  // 先把菜单挂好（挂不上就报错，不写文件），避免半成品
   const nav = readNav();
   const id = uniqueId(`a-${slug.replace(/\//g, "-")}`, allIds(nav));
   if (!addNavNode(nav, "articles", input.navParentId, { id, title: input.navTitle?.trim() || input.title, slug }))
     throw new Error("没找到要挂载的分类，请重选");
+  const data = mergeFrontmatter({}, input);
+  const content = matter.stringify(`# ${input.title}\n\n${input.body || ""}`, data);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, content, "utf8");
   writeNav(nav);
   return { slug, file: `content/articles/${slug}.md`, navId: id };
 }
@@ -278,13 +278,15 @@ export function createMedia({ section, item, navParentId, navTitle }: { section:
   if (!slug || !/^[\w\-/]+$/.test(slug)) throw new Error("slug 只能包含字母数字、- _ /");
   const arr = readArr<{ slug: string }>(MEDIA_FILE[section]);
   if (arr.some((x) => x.slug === slug)) throw new Error(`该 slug 已存在：${slug}`);
-  arr.push({ ...item, slug });
-  writeArr(MEDIA_FILE[section], arr);
+  // 先在内存里把菜单挂好；挂不上就直接报错，避免「写了数据但没挂菜单」的半成品
   const nav = readNav();
   const prefix = section === "images" ? "img" : section === "videos" ? "vid" : "aud";
   const id = uniqueId(`${prefix}-${slug.replace(/\//g, "-")}`, allIds(nav));
   if (!addNavNode(nav, section, navParentId, { id, title: navTitle?.trim() || item.title, slug }))
     throw new Error("没找到要挂载的分类，请重选");
+  // 两边都 OK，再一起写
+  arr.push({ ...item, slug });
+  writeArr(MEDIA_FILE[section], arr);
   writeNav(nav);
   return { slug, navId: id };
 }
@@ -344,8 +346,14 @@ export function navOp(section: SectionKey, op: string, payload: { id?: string; s
   const nav = readNav();
   const tree = nav.trees[section];
   if (op === "moveBySlug") {
-    const node = takeLeafBySlug(tree.nodes, payload.slug || "");
-    if (!node) throw new Error("未找到该内容的菜单条目");
+    const slug = payload.slug || "";
+    let node = takeLeafBySlug(tree.nodes, slug);
+    if (!node) {
+      // 菜单里还没有这条（例如导入时漏挂）→ 新建一个叶子挂上去
+      const prefix = section === "articles" ? "a" : section === "images" ? "img" : section === "videos" ? "vid" : "aud";
+      const id = uniqueId(`${prefix}-${slug.replace(/\//g, "-")}`, allIds(nav));
+      node = { id, title: (payload.title || slug).trim(), slug };
+    }
     if (!addNavNode(nav, section, payload.parentId || "", node)) throw new Error("未找到目标分类");
   } else if (op === "rename") {
     const loc = locate(tree.nodes, payload.id || "");

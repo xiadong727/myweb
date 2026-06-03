@@ -18,5 +18,29 @@
         "alt": "配色样本 3"
       }
     ]
+  },
+  {
+    "slug": "touxiang",
+    "title": "头像",
+    "description": "",
+    "cover": "/images/BJY.jpg",
+    "images": [
+      {
+        "src": "/images/BJY.jpg",
+        "alt": ""
+      }
+    ]
+  },
+  {
+    "slug": "touxiang1",
+    "title": "头像",
+    "description": "",
+    "cover": "/images/BJY.jpg",
+    "images": [
+      {
+        "src": "/images/BJY.jpg",
+        "alt": ""
+      }
+    ]
   }
 ]
