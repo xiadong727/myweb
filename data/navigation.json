@@ -82,7 +82,13 @@
             {
               "id": "lh-L08",
               "title": "财富 (L08)",
-              "children": []
+              "children": [
+                {
+                  "id": "a-imported-wx-bhcOcTw34EQk",
+                  "title": "如何获取财富？",
+                  "slug": "imported/wx-bhcOcTw34EQk"
+                }
+              ]
             },
             {
               "id": "lh-L09",
