@@ -334,7 +334,13 @@
             {
               "id": "vid-lh-L08",
               "title": "财富 (L08)",
-              "children": []
+              "children": [
+                {
+                  "id": "vid-imported-bili-BV1gsqvBCE23",
+                  "title": "用一个故事讲透“经济学”",
+                  "slug": "imported/bili-BV1gsqvBCE23"
+                }
+              ]
             },
             {
               "id": "vid-lh-L09",
