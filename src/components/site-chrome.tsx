@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Menu, X, Mail } from "lucide-react";
 import { TreeNav } from "@/components/tree-nav";
@@ -90,6 +91,7 @@ export function SiteChrome({
   nav: SiteNavigation;
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
   const [drawer, setDrawer] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [sidebarWidthPx, setSidebarWidthPx] = useState(SIDEBAR_WIDTH_DEFAULT);
@@ -277,9 +279,14 @@ export function SiteChrome({
           >
             <Menu className="h-5 w-5" />
           </button>
-          <Link href="/" className="truncate text-sm font-semibold text-foreground lg:hidden">
-            {nav.site.title}
-          </Link>
+          {/* 首页已有大标题，移动端顶栏不再重复显示站名 */}
+          {pathname === "/" ? (
+            <span aria-hidden className="lg:hidden" />
+          ) : (
+            <Link href="/" className="truncate text-sm font-semibold text-foreground lg:hidden">
+              {nav.site.title}
+            </Link>
+          )}
           <div className="flex items-center gap-2 sm:gap-4">
             <GlobalSearch />
             <ThemeSwitcher />

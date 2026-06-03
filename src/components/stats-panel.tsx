@@ -76,12 +76,12 @@ export function StatsPanel({ totalWorks, articleCount, imageCount, videoCount, a
           <Link
             key={s.href}
             href={s.href}
-            className="group rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.14] to-primary/[0.03] p-3 text-center shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+            className="group overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.14] to-primary/[0.03] px-1.5 py-3 text-center shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl sm:px-3"
           >
             <RollingNumber value={v(s.count)} className={`block text-2xl font-extrabold tabular-nums ${s.color}`} style={{ filter: `drop-shadow(0 2px 5px ${s.glow})` }} />
             <div className="mt-1 flex items-center justify-center gap-1">
-              <s.icon className={`icon-wiggle h-4 w-4 ${s.color}`} style={{ animationDelay: `${i * 0.5}s` }} />
-              <span className="text-[13px] font-bold text-foreground/75" style={{ textShadow: "0 1px 1px rgba(255,255,255,0.6)" }}>{s.label}</span>
+              <s.icon className={`icon-wiggle h-4 w-4 shrink-0 ${s.color}`} style={{ animationDelay: `${i * 0.5}s` }} />
+              <span className="whitespace-nowrap text-[13px] font-bold text-foreground/75" style={{ textShadow: "0 1px 1px rgba(255,255,255,0.6)" }}>{s.label}</span>
             </div>
           </Link>
         ))}
