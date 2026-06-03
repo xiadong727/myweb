@@ -147,7 +147,13 @@
         {
           "id": "qinzijiaoyu",
           "title": "亲子·教育",
-          "children": []
+          "children": [
+            {
+              "id": "a-imported-wx-u9WhBO4PWjvp",
+              "title": "为什么你越催，孩子越“废”？交还控制权，唤醒孩子的内驱力",
+              "slug": "imported/wx-u9WhBO4PWjvp"
+            }
+          ]
         },
         {
           "id": "chuangyegaojianqian",
