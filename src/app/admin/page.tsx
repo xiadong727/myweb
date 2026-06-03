@@ -382,7 +382,7 @@ export default function AdminPage() {
               {!editing ? <Field label="挂到哪个菜单分类 *"><select className={inputCls} value={a.navParentId} onChange={(e) => setA({ ...a, navParentId: e.target.value })}>{cats.map((o) => <option key={o.id || "_t"} value={o.id}>{o.label}</option>)}</select></Field> : null}
               <Field label="菜单显示名(可选)" hint="留空：主线用「第NNN期·标题」，其它用标题"><input className={inputCls} value={a.navTitle} onChange={(e) => setA({ ...a, navTitle: e.target.value })} /></Field>
               <DraftToggle checked={a.draft} onChange={(c) => { setA({ ...a, draft: c }); markDirty(); }} />
-              {editing ? <MoveToField cats={cats} onMove={(pid) => moveTo("articles", editing, pid)} /> : null}
+              {editing ? <MoveToField cats={cats} onMove={(pid) => moveTo("articles", editing, pid, a.title)} /> : null}
               <FormFooter editing={!!editing} busy={busy} onSubmit={saveArticle} onDelete={() => del("articles", editing!)} />
             </>
           )}
@@ -415,7 +415,7 @@ export default function AdminPage() {
               <Field label="一鱼三吃 episode（可选）" hint="如 L01-ep002"><input className={inputCls} value={g.episode} onChange={(e) => setG({ ...g, episode: e.target.value })} /></Field>
               {!editing ? <Field label="挂到哪个菜单分类 *"><select className={inputCls} value={g.navParentId} onChange={(e) => setG({ ...g, navParentId: e.target.value })}>{cats.map((o) => <option key={o.id || "_t"} value={o.id}>{o.label}</option>)}</select></Field> : null}
               <DraftToggle checked={g.draft} onChange={(c) => { setG({ ...g, draft: c }); markDirty(); }} />
-              {editing ? <MoveToField cats={cats} onMove={(pid) => moveTo("images", editing, pid)} /> : null}
+              {editing ? <MoveToField cats={cats} onMove={(pid) => moveTo("images", editing, pid, g.title)} /> : null}
               <FormFooter editing={!!editing} busy={busy} onSubmit={() => saveMedia("images")} onDelete={() => del("images", editing!)} />
             </>
           )}
@@ -437,7 +437,7 @@ export default function AdminPage() {
               <Field label="一鱼三吃 episode（可选）"><input className={inputCls} value={v.episode} onChange={(e) => setV({ ...v, episode: e.target.value })} /></Field>
               {!editing ? <Field label="挂到哪个菜单分类 *"><select className={inputCls} value={v.navParentId} onChange={(e) => setV({ ...v, navParentId: e.target.value })}>{cats.map((o) => <option key={o.id || "_t"} value={o.id}>{o.label}</option>)}</select></Field> : null}
               <DraftToggle checked={v.draft} onChange={(c) => { setV({ ...v, draft: c }); markDirty(); }} />
-              {editing ? <MoveToField cats={cats} onMove={(pid) => moveTo("videos", editing, pid)} /> : null}
+              {editing ? <MoveToField cats={cats} onMove={(pid) => moveTo("videos", editing, pid, v.title)} /> : null}
               <FormFooter editing={!!editing} busy={busy} onSubmit={() => saveMedia("videos")} onDelete={() => del("videos", editing!)} />
             </>
           )}
@@ -455,7 +455,7 @@ export default function AdminPage() {
               <Field label="一鱼三吃 episode（可选）"><input className={inputCls} value={au.episode} onChange={(e) => setAu({ ...au, episode: e.target.value })} /></Field>
               {!editing ? <Field label="挂到哪个菜单分类 *"><select className={inputCls} value={au.navParentId} onChange={(e) => setAu({ ...au, navParentId: e.target.value })}>{cats.map((o) => <option key={o.id || "_t"} value={o.id}>{o.label}</option>)}</select></Field> : null}
               <DraftToggle checked={au.draft} onChange={(c) => { setAu({ ...au, draft: c }); markDirty(); }} />
-              {editing ? <MoveToField cats={cats} onMove={(pid) => moveTo("audios", editing, pid)} /> : null}
+              {editing ? <MoveToField cats={cats} onMove={(pid) => moveTo("audios", editing, pid, au.title)} /> : null}
               <FormFooter editing={!!editing} busy={busy} onSubmit={() => saveMedia("audios")} onDelete={() => del("audios", editing!)} />
             </>
           )}

@@ -264,7 +264,7 @@
               "children": [
                 {
                   "id": "img-light-color",
-                  "title": "配色与光感（示例·可删）",
+                  "title": "配色与光感",
                   "slug": "visual/color-study"
                 }
               ]
@@ -282,11 +282,6 @@
                   "id": "img-touxiang",
                   "title": "头像",
                   "slug": "touxiang"
-                },
-                {
-                  "id": "img-touxiang1",
-                  "title": "头像",
-                  "slug": "touxiang1"
                 }
               ]
             }

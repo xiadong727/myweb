@@ -12,27 +12,11 @@
       {
         "src": "/images/WechatIMG308.jpg",
         "alt": "愿景"
-      },
-      {
-        "src": "https://picsum.photos/seed/color3/1200/1200",
-        "alt": "配色样本 3"
       }
     ]
   },
   {
     "slug": "touxiang",
-    "title": "头像",
-    "description": "",
-    "cover": "/images/BJY.jpg",
-    "images": [
-      {
-        "src": "/images/BJY.jpg",
-        "alt": ""
-      }
-    ]
-  },
-  {
-    "slug": "touxiang1",
     "title": "头像",
     "description": "",
     "cover": "/images/BJY.jpg",
