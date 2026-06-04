@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 export default function ImagesIndexPage() {
-  const galleries = getAllGalleries();
+  const galleries = [...getAllGalleries()].reverse(); // 最新加入的在前
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">

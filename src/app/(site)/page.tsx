@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles, Compass } from "lucide-react";
+import { ArrowRight, Sparkles, Compass, FileText, Image as ImageIcon, Video, Headphones, type LucideIcon } from "lucide-react";
 import { getNavigation } from "@/lib/navigation";
 import { getArticleSummaries } from "@/lib/articles";
 import { getAllGalleries } from "@/lib/galleries";
 import { getAllVideos } from "@/lib/videos";
 import { getAllAudios } from "@/lib/audios";
 import { getLighthouseDomainStats, getLighthouseTotalEpisodes } from "@/lib/lighthouse";
-import { MetricsInline } from "@/components/metrics-inline";
 import { StatsPanel } from "@/components/stats-panel";
 
 const ABOUT_SLUG = "imported/wx-uP0_Qj_2eDOn";
@@ -16,17 +15,28 @@ export default function HomePage() {
 
   const summaries = getArticleSummaries();
   const galleries = getAllGalleries();
+  const videos = getAllVideos();
+  const audios = getAllAudios();
   const imageCount = galleries.reduce((n, g) => n + (g.images?.length ?? 0), 0);
-  const videoCount = getAllVideos().length;
-  const audioCount = getAllAudios().length;
+  const videoCount = videos.length;
+  const audioCount = audios.length;
   const articleCount = summaries.length;
   const totalWorks = articleCount + imageCount + videoCount + audioCount;
-  const latest = [...summaries]
-    .filter((a) => a.date)
-    .sort((a, b) => ((a.date as string) < (b.date as string) ? 1 : -1))
-    .slice(0, 6);
   const domainStats = getLighthouseDomainStats();
   const totalEpisodes = getLighthouseTotalEpisodes();
+
+  // 各类型「最新更新」：文章按日期倒序；图片/视频/音频按加入顺序倒序（最新在前）
+  const latestArticles = [...summaries]
+    .filter((a) => a.date)
+    .sort((a, b) => ((a.date as string) < (b.date as string) ? 1 : -1))
+    .slice(0, 5)
+    .map((a) => ({ slug: a.slug, title: a.title }));
+  const recentBlocks: { label: string; base: string; icon: LucideIcon; color: string; items: { slug: string; title: string }[] }[] = [
+    { label: "文章", base: "/articles", icon: FileText, color: "text-blue-500", items: latestArticles },
+    { label: "图片", base: "/images", icon: ImageIcon, color: "text-emerald-500", items: [...galleries].reverse().slice(0, 5).map((g) => ({ slug: g.slug, title: g.title })) },
+    { label: "视频", base: "/videos", icon: Video, color: "text-rose-500", items: [...videos].reverse().slice(0, 5).map((v) => ({ slug: v.slug, title: v.title })) },
+    { label: "音频", base: "/audios", icon: Headphones, color: "text-purple-500", items: [...audios].reverse().slice(0, 5).map((a) => ({ slug: a.slug, title: a.title })) },
+  ];
 
   return (
     <main className="mx-auto max-w-6xl px-4 pb-10 pt-2 sm:px-6 lg:pb-12 lg:pt-3">
@@ -159,48 +169,41 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 最新更新 */}
-      {latest.length ? (
-        <section className="mt-14">
-          <div className="flex items-end justify-between gap-3">
-            <h2 className="flex items-center gap-2 text-xl font-bold tracking-tight text-foreground">
-              <Sparkles className="h-5 w-5 text-primary" />
-              最新更新
-            </h2>
-            <Link
-              href="/articles"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:opacity-80"
-            >
-              全部文章
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          <ul className="mt-5 divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
-            {latest.map((a) => (
-              <li key={a.slug}>
-                <Link
-                  href={`/articles/${a.slug}`}
-                  className="group flex items-center gap-4 px-4 py-3 transition hover:bg-primary/5 sm:px-5"
-                >
-                  <div className="min-w-0 flex-1">
-                    <h3 className="truncate font-medium text-foreground transition group-hover:text-primary">
-                      {a.title}
-                    </h3>
-                    {a.excerpt ? (
-                      <p className="mt-0.5 line-clamp-1 text-sm text-muted-foreground">{a.excerpt}</p>
-                    ) : null}
-                    <div className="mt-1">
-                      <MetricsInline type="articles" slug={a.slug} />
-                    </div>
-                  </div>
-                  <time className="shrink-0 font-mono text-xs text-muted-foreground">{a.date}</time>
-                  <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground/40 transition group-hover:translate-x-0.5 group-hover:text-primary" />
+      {/* 最新更新：按 文章 / 图片 / 视频 / 音频 分四块 */}
+      <section className="mt-14">
+        <h2 className="flex items-center gap-2 text-xl font-bold tracking-tight text-foreground">
+          <Sparkles className="h-5 w-5 text-primary" />
+          最新更新
+        </h2>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {recentBlocks.map((b) => (
+            <div key={b.base} className="flex flex-col rounded-2xl border border-border bg-card p-4 shadow-sm">
+              <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
+                <h3 className="flex items-center gap-1.5 text-sm font-bold text-foreground">
+                  <b.icon className={`h-4 w-4 ${b.color}`} />
+                  {b.label}
+                </h3>
+                <Link href={b.base} className="inline-flex items-center gap-0.5 text-xs font-medium text-primary hover:opacity-80">
+                  全部 <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+              </div>
+              {b.items.length ? (
+                <ul className="mt-2 space-y-0.5">
+                  {b.items.map((it) => (
+                    <li key={it.slug}>
+                      <Link href={`${b.base}/${it.slug}`} className="block truncate rounded px-1.5 py-1.5 text-sm text-muted-foreground transition hover:bg-primary/5 hover:text-primary">
+                        {it.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-3 px-1.5 text-xs italic text-muted-foreground/60">敬请期待…</p>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
 
     </main>
   );

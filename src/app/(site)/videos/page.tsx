@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 export default function VideosIndexPage() {
-  const videos = getAllVideos();
+  const videos = [...getAllVideos()].reverse(); // 最新加入的在前
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">

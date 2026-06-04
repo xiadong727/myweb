@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 export default function ArticlesIndexPage() {
-  const list = getArticleSummaries();
+  const list = [...getArticleSummaries()].sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? 1 : -1)); // 发布时间倒序
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
