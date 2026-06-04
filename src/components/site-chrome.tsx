@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Menu, X, Mail } from "lucide-react";
+import { ChevronLeft, ChevronRight, Menu, X, Mail, Rss } from "lucide-react";
 import { TreeNav } from "@/components/tree-nav";
 import { GlobalSearch } from "@/components/global-search";
 import { ThemeSwitcher } from "@/components/theme-switcher";
@@ -291,6 +291,32 @@ export function SiteChrome({
           </div>
         </header>
         <div className="flex-1">{children}</div>
+        <footer className="border-t border-border px-4 py-8 sm:px-8">
+          <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 text-center sm:flex-row sm:justify-between sm:text-left">
+            <p className="text-xs text-muted-foreground">
+              © {nav.site.title} · {nav.site.tagline}
+            </p>
+            <div className="flex items-center gap-5">
+              <a
+                href="/feed.xml"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition hover:text-primary"
+                title="RSS 订阅"
+              >
+                <Rss className="h-3.5 w-3.5" />
+                订阅
+              </a>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition hover:text-primary"
+              >
+                <Mail className="h-3.5 w-3.5" />
+                联系我
+              </Link>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   );

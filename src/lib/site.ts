@@ -1,9 +1,9 @@
 /**
  * 站点对外的根地址，用于 sitemap、robots、RSS 与 Open Graph 等绝对链接。
  * 部署到自有域名后，在 Vercel 项目的环境变量里设置 NEXT_PUBLIC_SITE_URL，
- * 例如 https://你的域名.com（结尾不要带斜杠）。未设置时回退到下面的占位地址。
+ * 例如 https://你的域名.com（结尾不要带斜杠）。未设置时回退到正式域名。
  */
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com").replace(
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.cogrow.top").replace(
   /\/+$/,
   "",
 );
