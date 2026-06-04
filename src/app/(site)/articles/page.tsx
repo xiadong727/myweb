@@ -28,7 +28,7 @@ export default function ArticlesIndexPage() {
                 <FileText className="h-5 w-5 text-blue-500" />
               </span>
               <div className="min-w-0 flex-1">
-                <h2 className="font-bold text-foreground transition group-hover:text-blue-500">{item.title}</h2>
+                <h2 className="text-[15px] font-bold leading-snug text-foreground transition group-hover:text-blue-500 sm:text-base">{item.title}</h2>
                 {item.excerpt ? <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">{item.excerpt}</p> : null}
                 <div className="mt-2 flex items-center gap-3 font-mono text-[11px] text-muted-foreground/90">
                   {item.date ? <span>{item.date}</span> : null}

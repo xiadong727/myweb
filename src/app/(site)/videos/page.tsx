@@ -28,7 +28,7 @@ export default function VideosIndexPage() {
                 <Video className="h-5 w-5 text-rose-500" />
               </span>
               <div className="min-w-0 flex-1">
-                <h2 className="font-bold text-foreground transition group-hover:text-rose-500">{v.title}</h2>
+                <h2 className="text-[15px] font-bold leading-snug text-foreground transition group-hover:text-rose-500 sm:text-base">{v.title}</h2>
                 {v.description ? <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">{v.description}</p> : null}
                 <div className="mt-2 flex items-center gap-3 font-mono text-[11px] text-muted-foreground/90">
                   <span>{v.kind === "embed" ? "嵌入" : "文件"}</span>

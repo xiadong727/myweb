@@ -456,13 +456,7 @@
             {
               "id": "vid-reel",
               "title": "作品集 / Showreel",
-              "children": [
-                {
-                  "id": "vid-reel-yueqi",
-                  "title": "39种常见乐器",
-                  "slug": "videos/39zhongchangjianyueqi"
-                }
-              ]
+              "children": []
             }
           ]
         }

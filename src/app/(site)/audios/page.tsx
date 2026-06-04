@@ -28,7 +28,7 @@ export default function AudiosIndexPage() {
                 <Headphones className="h-5 w-5 text-purple-500" />
               </span>
               <div className="min-w-0 flex-1">
-                <h2 className="font-bold text-foreground transition group-hover:text-purple-500">{a.title}</h2>
+                <h2 className="text-[15px] font-bold leading-snug text-foreground transition group-hover:text-purple-500 sm:text-base">{a.title}</h2>
                 {a.description ? <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">{a.description}</p> : null}
                 <div className="mt-2 flex items-center gap-3 font-mono text-[11px] text-muted-foreground/90">
                   {a.date ? <span>{a.date}</span> : null}

@@ -62,14 +62,16 @@ export default async function DomainPage({ params }: Props) {
                     <li key={it.slug}>
                       <Link
                         href={`${s.base}/${it.slug}`}
-                        className={`group flex items-center gap-4 rounded-2xl border border-primary/10 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md sm:p-5 ${i % 2 === 0 ? "bg-primary/[0.06]" : "bg-primary/[0.02]"}`}
+                        className={`group flex items-start gap-4 rounded-2xl border border-primary/10 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md sm:p-5 ${i % 2 === 0 ? "bg-primary/[0.06]" : "bg-primary/[0.02]"}`}
                       >
-                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+                        <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
                           <s.icon className={`h-5 w-5 ${s.color}`} />
                         </span>
-                        <span className="min-w-0 flex-1 truncate font-bold text-foreground transition group-hover:text-primary">{it.title}</span>
-                        {it.date ? <time className="shrink-0 font-mono text-[11px] text-muted-foreground/90">{it.date}</time> : null}
-                        <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/40 transition group-hover:translate-x-0.5 group-hover:text-primary" />
+                        <div className="min-w-0 flex-1">
+                          <h3 className="text-[15px] font-bold leading-snug text-foreground transition group-hover:text-primary sm:text-base">{it.title}</h3>
+                          {it.date ? <div className="mt-1.5 font-mono text-[11px] text-muted-foreground/90">{it.date}</div> : null}
+                        </div>
+                        <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground/40 transition group-hover:translate-x-0.5 group-hover:text-primary" />
                       </Link>
                     </li>
                   ))}

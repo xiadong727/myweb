@@ -22,16 +22,18 @@ function WorkItem({ e, i }: { e: EpisodeEntry; i: number }) {
     <li>
       <Link
         href={`${ui.base}/${e.slug}`}
-        className={`group flex items-center gap-3 rounded-2xl border border-primary/10 p-3.5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md sm:gap-4 sm:p-4 ${i % 2 === 0 ? "bg-primary/[0.06]" : "bg-primary/[0.02]"}`}
+        className={`group flex items-start gap-4 rounded-2xl border border-primary/10 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md sm:p-5 ${i % 2 === 0 ? "bg-primary/[0.06]" : "bg-primary/[0.02]"}`}
       >
-        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${ui.chip}`}>
-          <ui.icon className={`h-[18px] w-[18px] ${ui.color}`} />
+        <span className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${ui.chip}`}>
+          <ui.icon className={`h-5 w-5 ${ui.color}`} />
         </span>
-        <span className="min-w-0 flex-1 truncate font-bold text-foreground transition group-hover:text-primary">
-          {e.title}
-        </span>
-        {e.date ? <time className="shrink-0 font-mono text-[11px] text-muted-foreground/90">{e.date}</time> : null}
-        <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/40 transition group-hover:translate-x-0.5 group-hover:text-primary" />
+        <div className="min-w-0 flex-1">
+          <h3 className="text-[15px] font-bold leading-snug text-foreground transition group-hover:text-primary sm:text-base">
+            {e.title}
+          </h3>
+          {e.date ? <div className="mt-1.5 font-mono text-[11px] text-muted-foreground/90">{e.date}</div> : null}
+        </div>
+        <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground/40 transition group-hover:translate-x-0.5 group-hover:text-primary" />
       </Link>
     </li>
   );

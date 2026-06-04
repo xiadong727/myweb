@@ -36,7 +36,7 @@ export default function ImagesIndexPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
             </div>
             <div className="p-4">
-              <h2 className="font-bold text-foreground transition group-hover:text-emerald-500">{g.title}</h2>
+              <h2 className="text-[15px] font-bold leading-snug text-foreground transition group-hover:text-emerald-500 sm:text-base">{g.title}</h2>
               <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{g.description}</p>
               <div className="mt-2 flex items-center gap-3 font-mono text-[11px] text-muted-foreground/90">
                 {g.date ? <span>{g.date}</span> : null}
