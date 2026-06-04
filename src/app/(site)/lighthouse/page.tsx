@@ -41,7 +41,7 @@ export default function LighthousePage() {
   const { domains, recent, publishedTotal, openedDomains } = getLighthouseOverview();
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:py-12">
+    <main className="mx-auto max-w-4xl px-4 pb-10 pt-3 sm:px-6 lg:pb-12 lg:pt-4">
       {/* 标题 + 概览 */}
       <header className="overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-primary/[0.04] to-transparent p-7 sm:p-10">
         <h1 className="flex items-center gap-2.5 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
