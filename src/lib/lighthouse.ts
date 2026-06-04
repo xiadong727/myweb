@@ -79,9 +79,9 @@ export function getLighthouseDomainStats(): DomainStat[] {
   });
 }
 
-/** 主线已更新的总期数 */
+/** 主线已更新的总作品数（= 各领域文章+图片+视频+音频之和） */
 export function getLighthouseTotalEpisodes(): number {
-  return getArticleSummaries().filter((a) => a.domain && DOMAIN_CODES.has(a.domain)).length;
+  return getLighthouseDomainStats().reduce((sum, d) => sum + d.count, 0);
 }
 
 /** 汇总「与光同行」总览页所需数据：按领域分组 + 最近更新 + 总进度 */
