@@ -188,11 +188,11 @@ export default function HomePage() {
               </div>
               {b.items.length ? (
                 <ul className="mt-2 space-y-1">
-                  {b.items.map((it, idx) => (
+                  {b.items.map((it) => (
                     <li key={it.slug}>
                       <Link
                         href={`${b.base}/${it.slug}`}
-                        className={`flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-foreground/80 transition hover:bg-primary/15 hover:text-primary ${idx % 2 === 0 ? "bg-primary/[0.06]" : "bg-transparent"}`}
+                        className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-foreground/80 transition hover:bg-primary/15 hover:text-primary"
                       >
                         <b.icon className={`h-3.5 w-3.5 shrink-0 ${b.color}`} />
                         <span className="min-w-0 flex-1 truncate">{it.title}</span>

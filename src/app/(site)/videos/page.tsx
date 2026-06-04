@@ -18,11 +18,11 @@ export default function VideosIndexPage() {
         <p className="mt-1.5 text-sm text-muted-foreground">共 {videos.length} 部 · 按发布时间排列</p>
       </header>
       <ul className="mt-8 space-y-3">
-        {videos.map((v) => (
+        {videos.map((v, i) => (
           <li key={v.slug}>
             <Link
               href={`/videos/${v.slug}`}
-              className="group flex items-start gap-4 rounded-2xl border border-border bg-card p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-rose-500/30 hover:shadow-md sm:p-5"
+              className={`group flex items-start gap-4 rounded-2xl border border-primary/10 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-rose-500/30 hover:shadow-md sm:p-5 ${i % 2 === 0 ? "bg-primary/[0.06]" : "bg-primary/[0.02]"}`}
             >
               <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-500/10">
                 <Video className="h-5 w-5 text-rose-500" />

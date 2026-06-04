@@ -18,11 +18,11 @@ export default function AudiosIndexPage() {
         <p className="mt-1.5 text-sm text-muted-foreground">共 {audios.length} 期 · 按发布时间排列</p>
       </header>
       <ul className="mt-8 space-y-3">
-        {audios.map((a) => (
+        {audios.map((a, i) => (
           <li key={a.slug}>
             <Link
               href={`/audios/${a.slug}`}
-              className="group flex items-start gap-4 rounded-2xl border border-border bg-card p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-purple-500/30 hover:shadow-md sm:p-5"
+              className={`group flex items-start gap-4 rounded-2xl border border-primary/10 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-purple-500/30 hover:shadow-md sm:p-5 ${i % 2 === 0 ? "bg-primary/[0.06]" : "bg-primary/[0.02]"}`}
             >
               <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-purple-500/10">
                 <Headphones className="h-5 w-5 text-purple-500" />

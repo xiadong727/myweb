@@ -19,11 +19,11 @@ export default function ImagesIndexPage() {
         <p className="mt-1.5 text-sm text-muted-foreground">共 {galleries.length} 组 · 按发布时间排列</p>
       </header>
       <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {galleries.map((g) => (
+        {galleries.map((g, i) => (
           <Link
             key={g.slug}
             href={`/images/${g.slug}`}
-            className="group overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all hover:-translate-y-0.5 hover:border-emerald-500/30 hover:shadow-md"
+            className={`group overflow-hidden rounded-2xl border border-primary/10 shadow-sm transition-all hover:-translate-y-0.5 hover:border-emerald-500/30 hover:shadow-md ${i % 2 === 0 ? "bg-primary/[0.06]" : "bg-primary/[0.02]"}`}
           >
             <div className="relative aspect-[16/10] w-full overflow-hidden">
               <Image
