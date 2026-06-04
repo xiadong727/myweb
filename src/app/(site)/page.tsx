@@ -176,22 +176,26 @@ export default function HomePage() {
         </h2>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {recentBlocks.map((b) => (
-            <div key={b.base} className="flex flex-col rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.10] to-primary/[0.02] p-4 shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm">
+            <div key={b.base} className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.10] to-primary/[0.02] p-4 shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm">
               <div className="flex items-center justify-between border-b border-primary/15 pb-2.5">
                 <h3 className="flex items-center gap-1.5 text-sm font-bold text-foreground">
                   <b.icon className={`h-4 w-4 ${b.color}`} />
                   {b.label}
                 </h3>
-                <Link href={b.base} className="inline-flex items-center gap-0.5 text-xs font-medium text-primary hover:opacity-80">
+                <Link href={b.base} className="inline-flex shrink-0 items-center gap-0.5 text-xs font-medium text-primary hover:opacity-80">
                   全部 <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
               {b.items.length ? (
-                <ul className="mt-2 space-y-0.5">
-                  {b.items.map((it) => (
+                <ul className="mt-2 space-y-1">
+                  {b.items.map((it, idx) => (
                     <li key={it.slug}>
-                      <Link href={`${b.base}/${it.slug}`} className="block truncate rounded-lg px-1.5 py-1.5 text-sm text-foreground/80 transition hover:bg-primary/10 hover:text-primary">
-                        {it.title}
+                      <Link
+                        href={`${b.base}/${it.slug}`}
+                        className={`flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-foreground/80 transition hover:bg-primary/15 hover:text-primary ${idx % 2 === 0 ? "bg-primary/[0.06]" : "bg-transparent"}`}
+                      >
+                        <b.icon className={`h-3.5 w-3.5 shrink-0 ${b.color}`} />
+                        <span className="min-w-0 flex-1 truncate">{it.title}</span>
                       </Link>
                     </li>
                   ))}
