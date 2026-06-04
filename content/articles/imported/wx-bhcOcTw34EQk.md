@@ -2,6 +2,7 @@
 title: 如何获取财富？
 domain: L08
 episode: 1
+date: '2026-06-03'
 ---
 # 如何获取财富？
 

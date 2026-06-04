@@ -25,17 +25,16 @@ export default function HomePage() {
   const domainStats = getLighthouseDomainStats();
   const totalEpisodes = getLighthouseTotalEpisodes();
 
-  // 各类型「最新更新」：文章按日期倒序；图片/视频/音频按加入顺序倒序（最新在前）
+  // 各类型「最新更新」：文章按日期倒序（无日期排后）；图片/视频/音频按加入顺序倒序（最新在前）
   const latestArticles = [...summaries]
-    .filter((a) => a.date)
-    .sort((a, b) => ((a.date as string) < (b.date as string) ? 1 : -1))
+    .sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? 1 : -1))
     .slice(0, 5)
     .map((a) => ({ slug: a.slug, title: a.title }));
   const recentBlocks: { label: string; base: string; icon: LucideIcon; color: string; items: { slug: string; title: string }[] }[] = [
     { label: "文章", base: "/articles", icon: FileText, color: "text-blue-500", items: latestArticles },
-    { label: "图片", base: "/images", icon: ImageIcon, color: "text-emerald-500", items: [...galleries].reverse().slice(0, 5).map((g) => ({ slug: g.slug, title: g.title })) },
-    { label: "视频", base: "/videos", icon: Video, color: "text-rose-500", items: [...videos].reverse().slice(0, 5).map((v) => ({ slug: v.slug, title: v.title })) },
-    { label: "音频", base: "/audios", icon: Headphones, color: "text-purple-500", items: [...audios].reverse().slice(0, 5).map((a) => ({ slug: a.slug, title: a.title })) },
+    { label: "图片", base: "/images", icon: ImageIcon, color: "text-emerald-500", items: [...galleries].sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? 1 : -1)).slice(0, 5).map((g) => ({ slug: g.slug, title: g.title })) },
+    { label: "视频", base: "/videos", icon: Video, color: "text-rose-500", items: [...videos].sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? 1 : -1)).slice(0, 5).map((v) => ({ slug: v.slug, title: v.title })) },
+    { label: "音频", base: "/audios", icon: Headphones, color: "text-purple-500", items: [...audios].sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? 1 : -1)).slice(0, 5).map((a) => ({ slug: a.slug, title: a.title })) },
   ];
 
   return (
@@ -177,8 +176,8 @@ export default function HomePage() {
         </h2>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {recentBlocks.map((b) => (
-            <div key={b.base} className="flex flex-col rounded-2xl border border-border bg-card p-4 shadow-sm">
-              <div className="flex items-center justify-between border-b border-border/60 pb-2.5">
+            <div key={b.base} className="flex flex-col rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.10] to-primary/[0.02] p-4 shadow-lg shadow-primary/10 ring-1 ring-inset ring-white/40 backdrop-blur-sm">
+              <div className="flex items-center justify-between border-b border-primary/15 pb-2.5">
                 <h3 className="flex items-center gap-1.5 text-sm font-bold text-foreground">
                   <b.icon className={`h-4 w-4 ${b.color}`} />
                   {b.label}
@@ -191,7 +190,7 @@ export default function HomePage() {
                 <ul className="mt-2 space-y-0.5">
                   {b.items.map((it) => (
                     <li key={it.slug}>
-                      <Link href={`${b.base}/${it.slug}`} className="block truncate rounded px-1.5 py-1.5 text-sm text-muted-foreground transition hover:bg-primary/5 hover:text-primary">
+                      <Link href={`${b.base}/${it.slug}`} className="block truncate rounded-lg px-1.5 py-1.5 text-sm text-foreground/80 transition hover:bg-primary/10 hover:text-primary">
                         {it.title}
                       </Link>
                     </li>

@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 export default function VideosIndexPage() {
-  const videos = [...getAllVideos()].reverse(); // 最新加入的在前
+  const videos = [...getAllVideos()].sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? 1 : -1)); // 发布时间倒序
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
@@ -24,6 +24,7 @@ export default function VideosIndexPage() {
               <p className="mt-1 text-sm text-muted-foreground">{v.description}</p>
               <div className="mt-2 flex items-center gap-3 font-mono text-[11px] text-muted-foreground/90">
                 <span>{v.kind === "embed" ? "嵌入" : "文件"}</span>
+                {v.date ? <span>{v.date}</span> : null}
                 <MetricsInline type="videos" slug={v.slug} />
               </div>
             </Link>

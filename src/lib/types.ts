@@ -39,6 +39,8 @@ export type GalleryItem = {
   episode?: string;
   /** 草稿：为 true 时线上隐藏，仅本地预览 */
   draft?: boolean;
+  /** 发布日期 YYYY-MM-DD（可选；列表按它倒序） */
+  date?: string;
 };
 
 export type VideoItem = {
@@ -54,6 +56,8 @@ export type VideoItem = {
   episode?: string;
   /** 草稿：为 true 时线上隐藏，仅本地预览 */
   draft?: boolean;
+  /** 发布日期 YYYY-MM-DD（可选；列表按它倒序） */
+  date?: string;
 };
 
 export type AudioItem = {
@@ -66,6 +70,8 @@ export type AudioItem = {
   episode?: string;
   /** 草稿：为 true 时线上隐藏，仅本地预览 */
   draft?: boolean;
+  /** 发布日期 YYYY-MM-DD（可选；列表按它倒序） */
+  date?: string;
 };
 
 export type ArticleMeta = {

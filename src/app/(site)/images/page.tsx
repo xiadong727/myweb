@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 export default function ImagesIndexPage() {
-  const galleries = [...getAllGalleries()].reverse(); // 最新加入的在前
+  const galleries = [...getAllGalleries()].sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? 1 : -1)); // 发布时间倒序
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
@@ -34,7 +34,8 @@ export default function ImagesIndexPage() {
             <div className="p-4">
               <h2 className="font-semibold text-foreground">{g.title}</h2>
               <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{g.description}</p>
-              <div className="mt-2">
+              <div className="mt-2 flex items-center gap-3 font-mono text-[11px] text-muted-foreground/90">
+                {g.date ? <span>{g.date}</span> : null}
                 <MetricsInline type="images" slug={g.slug} />
               </div>
             </div>

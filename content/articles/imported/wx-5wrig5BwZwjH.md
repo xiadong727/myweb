@@ -3,6 +3,7 @@ title: 何为智慧？
 domain: L01
 episode: 5
 quote: 人，只能看见自己认知以内的东西。
+date: '2026-06-02'
 ---
 # 何为智慧？
 

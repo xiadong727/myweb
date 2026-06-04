@@ -7,7 +7,7 @@ export const metadata = {
 };
 
 export default function AudiosIndexPage() {
-  const audios = [...getAllAudios()].reverse(); // 最新加入的在前
+  const audios = [...getAllAudios()].sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? 1 : -1)); // 发布时间倒序
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
@@ -22,7 +22,8 @@ export default function AudiosIndexPage() {
             >
               <div className="font-medium text-foreground">{a.title}</div>
               <p className="mt-1 text-sm text-muted-foreground">{a.description}</p>
-              <div className="mt-2">
+              <div className="mt-2 flex items-center gap-3 font-mono text-[11px] text-muted-foreground/90">
+                {a.date ? <span>{a.date}</span> : null}
                 <MetricsInline type="audios" slug={a.slug} />
               </div>
             </Link>

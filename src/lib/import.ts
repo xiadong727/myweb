@@ -54,6 +54,12 @@ export async function importWeChat(url: string, navParentId: string) {
   const res = await fetch(clean, { headers: { "User-Agent": UA } });
   if (!res.ok) throw new Error(`抓取失败（HTTP ${res.status}）`);
   const html = await res.text();
+  // 尝试解析公众号发布时间（多种模板写法），取不到则用今天
+  let date: string | undefined;
+  const ts = html.match(/var\s+(?:ct|oriCreateTime|createTime)\s*=\s*["'](\d{10})["']/);
+  if (ts) date = new Date(Number(ts[1]) * 1000).toISOString().slice(0, 10);
+  if (!date) { const d = html.match(/(?:oriCreateTime|publish_time)["'\s:=>]+(\d{4}-\d{2}-\d{2})/); if (d) date = d[1]; }
+  if (!date) date = new Date().toISOString().slice(0, 10);
   const root = parse(html);
   const title =
     root.querySelector('meta[property="og:title"]')?.getAttribute("content")?.trim() ||
@@ -75,7 +81,7 @@ export async function importWeChat(url: string, navParentId: string) {
   }
   const body = htmlToMarkdown(content);
   const slug = `imported/wx-${sid}`;
-  const r = createArticle({ slug, title, excerpt: "", body, draft: true, navParentId, navTitle: title });
+  const r = createArticle({ slug, title, date, excerpt: "", body, draft: true, navParentId, navTitle: title });
   return { ok: true, slug: r.slug, title };
 }
 
@@ -90,9 +96,10 @@ export async function importBilibili(input: string, navParentId: string) {
   const res = await fetch(`https://api.bilibili.com/x/web-interface/view?bvid=${bv}`, { headers: { "User-Agent": UA, Referer: "https://www.bilibili.com/" } });
   const json = await res.json();
   if (json.code !== 0 || !json.data) throw new Error(`B站接口返回错误：${json.message || json.code}`);
-  const { title, desc, pic } = json.data as { title: string; desc: string; pic: string };
+  const { title, desc, pic, pubdate } = json.data as { title: string; desc: string; pic: string; pubdate?: number };
   let poster: string | undefined;
   if (pic) { const local = await downloadImage(pic, "https://www.bilibili.com/", `bili-${bv}`); if (local) poster = local; }
+  const date = pubdate ? new Date(pubdate * 1000).toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10);
   const slug = `imported/bili-${bv}`;
   const item = {
     slug, title, description: (desc || "").slice(0, 200),
@@ -100,6 +107,7 @@ export async function importBilibili(input: string, navParentId: string) {
     embedUrl: `https://player.bilibili.com/player.html?bvid=${bv}&page=1&high_quality=1&danmaku=0`,
     originalUrl: `https://www.bilibili.com/video/${bv}`,
     ...(poster ? { poster } : {}),
+    date,
     draft: true,
   };
   const r = createMedia({ section: "videos", item, navParentId, navTitle: title });
