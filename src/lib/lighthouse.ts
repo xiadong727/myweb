@@ -16,8 +16,6 @@ import {
 // 客户端组件请直接从 "@/lib/lighthouse-shared" 引入，避免打包进 fs 依赖。
 export * from "./lighthouse-shared";
 
-const DOMAIN_CODES = new Set(LIGHTHOUSE_DOMAINS.map((d) => d.code));
-
 export type DomainWork = { slug: string; title: string; date: string | null };
 export type DomainWorks = {
   articles: DomainWork[];
@@ -58,9 +56,9 @@ export function getDomainWorks(code: string, maps: DomainMaps = buildDomainMaps(
     .filter((a) => a.domain === code)
     .sort((a, b) => (a.episode ?? 0) - (b.episode ?? 0))
     .map((a) => ({ slug: a.slug, title: a.title, date: a.date ?? null }));
-  const images = getAllGalleries().filter((g) => has(g.episode, g.slug, maps.images)).map((g) => ({ slug: g.slug, title: g.title, date: null }));
-  const videos = getAllVideos().filter((v) => has(v.episode, v.slug, maps.videos)).map((v) => ({ slug: v.slug, title: v.title, date: null }));
-  const audios = getAllAudios().filter((a) => has(a.episode, a.slug, maps.audios)).map((a) => ({ slug: a.slug, title: a.title, date: null }));
+  const images = getAllGalleries().filter((g) => has(g.episode, g.slug, maps.images)).map((g) => ({ slug: g.slug, title: g.title, date: g.date ?? null }));
+  const videos = getAllVideos().filter((v) => has(v.episode, v.slug, maps.videos)).map((v) => ({ slug: v.slug, title: v.title, date: v.date ?? null }));
+  const audios = getAllAudios().filter((a) => has(a.episode, a.slug, maps.audios)).map((a) => ({ slug: a.slug, title: a.title, date: a.date ?? null }));
   return { articles, images, videos, audios };
 }
 
@@ -84,43 +82,29 @@ export function getLighthouseTotalEpisodes(): number {
   return getLighthouseDomainStats().reduce((sum, d) => sum + d.count, 0);
 }
 
-/** 汇总「与光同行」总览页所需数据：按领域分组 + 最近更新 + 总进度 */
+/** 汇总「与光同行」总览页所需数据：按领域分组 + 最近更新 + 总进度（含全部作品类别） */
 export function getLighthouseOverview(recentLimit = 5): LighthouseOverview {
-  const articles = getArticleSummaries().filter(
-    (a) => a.domain && DOMAIN_CODES.has(a.domain),
-  );
+  const maps = buildDomainMaps();
+  const SECTIONS: SectionKey[] = ["articles", "images", "videos", "audios"];
 
   const domains: DomainGroup[] = LIGHTHOUSE_DOMAINS.map((d) => {
-    const episodes: EpisodeEntry[] = articles
-      .filter((a) => a.domain === d.code)
-      .map((a) => ({
-        episode: a.episode ?? null,
-        slug: a.slug,
-        title: a.title,
-        date: a.date ?? null,
-      }))
-      .sort((a, b) => (a.episode ?? 0) - (b.episode ?? 0));
+    const w = getDomainWorks(d.code, maps);
+    const episodes: EpisodeEntry[] = SECTIONS.flatMap((section) =>
+      w[section].map((it) => ({ episode: null, slug: it.slug, title: it.title, date: it.date, section })),
+    );
     return { code: d.code, name: d.name, count: episodes.length, episodes };
   });
 
-  const nameByCode = new Map(LIGHTHOUSE_DOMAINS.map((d) => [d.code, d.name]));
-  const recent = articles
-    .filter((a) => a.date)
+  const recent = domains
+    .flatMap((d) => d.episodes.map((e) => ({ ...e, code: d.code, name: d.name })))
+    .filter((e) => e.date)
     .sort((a, b) => ((a.date as string) < (b.date as string) ? 1 : -1))
-    .slice(0, recentLimit)
-    .map((a) => ({
-      episode: a.episode ?? null,
-      slug: a.slug,
-      title: a.title,
-      date: a.date ?? null,
-      code: a.domain as string,
-      name: nameByCode.get(a.domain as string) ?? "",
-    }));
+    .slice(0, recentLimit);
 
   return {
     domains,
     recent,
-    publishedTotal: articles.length,
+    publishedTotal: domains.reduce((sum, d) => sum + d.count, 0),
     openedDomains: domains.filter((d) => d.count > 0).length,
   };
 }

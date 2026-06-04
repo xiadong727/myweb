@@ -1,12 +1,41 @@
 import Link from "next/link";
-import { Compass, Sparkles, ChevronRight } from "lucide-react";
-import { getLighthouseOverview, LIGHTHOUSE_DOMAIN_COUNT, type DomainGroup } from "@/lib/lighthouse";
-import { MetricsInline } from "@/components/metrics-inline";
+import { Compass, Sparkles, FileText, Image as ImageIcon, Video, Headphones, ChevronRight, type LucideIcon } from "lucide-react";
+import { getLighthouseOverview, LIGHTHOUSE_DOMAIN_COUNT, type DomainGroup, type EpisodeEntry } from "@/lib/lighthouse";
+import type { SectionKey } from "@/lib/types";
 
 export const metadata = {
   title: "与光同行",
   description: "把人类智慧拆成一个个领域，一期一期慢慢走 — 主线总览。",
 };
+
+const SECTION_UI: Record<SectionKey, { base: string; icon: LucideIcon; color: string; chip: string }> = {
+  articles: { base: "/articles", icon: FileText, color: "text-blue-500", chip: "bg-blue-500/10" },
+  images: { base: "/images", icon: ImageIcon, color: "text-emerald-500", chip: "bg-emerald-500/10" },
+  videos: { base: "/videos", icon: Video, color: "text-rose-500", chip: "bg-rose-500/10" },
+  audios: { base: "/audios", icon: Headphones, color: "text-purple-500", chip: "bg-purple-500/10" },
+};
+
+/** 单条作品卡片：彩色类别图标 + 加粗标题 + 日期 + 箭头，隔行暖色底，与全部列表风格一致 */
+function WorkItem({ e, i }: { e: EpisodeEntry; i: number }) {
+  const ui = SECTION_UI[e.section];
+  return (
+    <li>
+      <Link
+        href={`${ui.base}/${e.slug}`}
+        className={`group flex items-center gap-3 rounded-2xl border border-primary/10 p-3.5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md sm:gap-4 sm:p-4 ${i % 2 === 0 ? "bg-primary/[0.06]" : "bg-primary/[0.02]"}`}
+      >
+        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${ui.chip}`}>
+          <ui.icon className={`h-[18px] w-[18px] ${ui.color}`} />
+        </span>
+        <span className="min-w-0 flex-1 truncate font-bold text-foreground transition group-hover:text-primary">
+          {e.title}
+        </span>
+        {e.date ? <time className="shrink-0 font-mono text-[11px] text-muted-foreground/90">{e.date}</time> : null}
+        <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/40 transition group-hover:translate-x-0.5 group-hover:text-primary" />
+      </Link>
+    </li>
+  );
+}
 
 export default function LighthousePage() {
   const { domains, recent, publishedTotal, openedDomains } = getLighthouseOverview();
@@ -26,7 +55,7 @@ export default function LighthousePage() {
         <div className="mt-7 flex flex-wrap gap-x-8 gap-y-3">
           <div>
             <div className="text-3xl font-bold text-primary">{publishedTotal}</div>
-            <div className="mt-0.5 text-xs text-muted-foreground">已发布期数</div>
+            <div className="mt-0.5 text-xs text-muted-foreground">已发布作品</div>
           </div>
           <div>
             <div className="text-3xl font-bold text-foreground">
@@ -45,26 +74,9 @@ export default function LighthousePage() {
             <Sparkles className="h-5 w-5 text-primary" />
             最近更新
           </h2>
-          <ul className="mt-4 divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
-            {recent.map((e) => (
-              <li key={e.slug}>
-                <Link
-                  href={`/articles/${e.slug}`}
-                  className="group flex items-center gap-3 px-4 py-3 transition hover:bg-primary/5 sm:px-5"
-                >
-                  <span className="shrink-0 rounded-md bg-primary/10 px-2 py-0.5 font-mono text-[11px] font-medium text-primary">
-                    {e.code}
-                  </span>
-                  <span className="min-w-0 flex-1 truncate font-medium text-foreground transition group-hover:text-primary">
-                    {e.title}
-                  </span>
-                  <MetricsInline type="articles" slug={e.slug} />
-                  {e.date ? (
-                    <time className="shrink-0 font-mono text-[11px] text-muted-foreground/80">{e.date}</time>
-                  ) : null}
-                  <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/40 transition group-hover:translate-x-0.5 group-hover:text-primary" />
-                </Link>
-              </li>
+          <ul className="mt-4 space-y-3">
+            {recent.map((e, i) => (
+              <WorkItem key={`${e.section}-${e.slug}`} e={e} i={i} />
             ))}
           </ul>
         </section>
@@ -73,7 +85,7 @@ export default function LighthousePage() {
       {/* 按领域浏览 */}
       <section className="mt-10">
         <h2 className="text-lg font-bold tracking-tight text-foreground">按领域浏览</h2>
-        <p className="mt-1 text-sm text-muted-foreground">每个领域下按期号排列已发布的内容。</p>
+        <p className="mt-1 text-sm text-muted-foreground">每个领域下汇集已发布的全部作品。</p>
         <div className="mt-5 space-y-4">
           {domains.map((d) => (
             <DomainSection key={d.code} domain={d} />
@@ -87,15 +99,17 @@ export default function LighthousePage() {
 function DomainSection({ domain: d }: { domain: DomainGroup }) {
   const has = d.count > 0;
   return (
-    <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-      <header className="flex items-center justify-between gap-3 border-b border-border/60 px-5 py-3.5">
+    <section className="overflow-hidden rounded-2xl border border-primary/15 bg-primary/[0.03] shadow-sm">
+      <header className="flex items-center justify-between gap-3 border-b border-primary/10 px-5 py-3.5">
         <div className="flex items-baseline gap-2.5">
           <span className="font-mono text-xs text-muted-foreground">{d.code}</span>
-          <h3 className="text-base font-bold text-foreground">{d.name}</h3>
+          <Link href={`/lighthouse/${d.code}`} className="text-base font-bold text-foreground transition hover:text-primary">
+            {d.name}
+          </Link>
         </div>
         {has ? (
           <span className="shrink-0 text-sm text-muted-foreground">
-            已发布 <span className="font-semibold text-primary">{d.count}</span> 期
+            共 <span className="font-semibold text-primary">{d.count}</span> 个作品
           </span>
         ) : (
           <span className="shrink-0 text-sm text-muted-foreground/50">敬请期待</span>
@@ -103,23 +117,9 @@ function DomainSection({ domain: d }: { domain: DomainGroup }) {
       </header>
 
       {has ? (
-        <ul className="divide-y divide-border/50">
-          {d.episodes.map((e) => (
-            <li key={e.slug}>
-              <Link
-                href={`/articles/${e.slug}`}
-                className="group flex items-center gap-3 px-5 py-3 transition hover:bg-primary/5"
-              >
-                <span className="min-w-0 flex-1 truncate font-medium text-foreground transition group-hover:text-primary">
-                  {e.title}
-                </span>
-                <MetricsInline type="articles" slug={e.slug} />
-                {e.date ? (
-                  <time className="shrink-0 font-mono text-[11px] text-muted-foreground/80">{e.date}</time>
-                ) : null}
-                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/40 transition group-hover:translate-x-0.5 group-hover:text-primary" />
-              </Link>
-            </li>
+        <ul className="space-y-2.5 p-3 sm:p-4">
+          {d.episodes.map((e, i) => (
+            <WorkItem key={`${e.section}-${e.slug}`} e={e} i={i} />
           ))}
         </ul>
       ) : (

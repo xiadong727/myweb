@@ -1,5 +1,6 @@
 // 客户端安全：本文件不得 import 任何使用 fs/path 的服务端模块（如 articles.ts）。
 // 静态常量与类型放这里，服务端数据函数放 lighthouse.ts。
+import type { SectionKey } from "./types";
 
 /** 与光同行各领域（L01–L10），顺序即展示顺序 */
 export const LIGHTHOUSE_DOMAINS: { code: string; name: string }[] = [
@@ -32,6 +33,8 @@ export type EpisodeEntry = {
   slug: string;
   title: string;
   date: string | null;
+  /** 作品类别（文章/图片/视频/音频），用于图标与链接 */
+  section: SectionKey;
 };
 
 /** 一个领域及其已发布的所有期 */
