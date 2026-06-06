@@ -76,8 +76,8 @@ export default function HomePage() {
             </p>
             {/* 点缀：成长印记小标签 */}
             <div className="mt-5">
-              <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-card/70 px-4 py-2 text-sm font-medium text-foreground/80 shadow-sm backdrop-blur-sm">
-                <Leaf className="h-4 w-4 shrink-0 text-primary" />
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/[0.07] px-4 py-2 text-sm font-medium text-foreground/70">
+                <Leaf className="h-4 w-4 shrink-0 text-primary/80" />
                 每一次记录，都是成长的印记
               </span>
             </div>

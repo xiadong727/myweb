@@ -15,6 +15,12 @@ import {
 } from "@/lib/sidebar";
 
 const order: SectionKey[] = ["articles", "images", "videos", "audios"];
+const sectionSubtitle: Record<SectionKey, string> = {
+  articles: "记录思考",
+  images: "定格美好",
+  videos: "分享生活",
+  audios: "聆听世界",
+};
 
 function readSidebarCollapsed(): boolean {
   if (typeof window === "undefined") return false;
@@ -63,6 +69,7 @@ function NavigationBlock({
               >
                 {section.label}
               </Link>
+              <span className="shrink-0 text-[11px] font-normal tracking-normal text-muted-foreground/55">{sectionSubtitle[key]}</span>
               <span className="h-px flex-1 bg-gradient-to-r from-primary/50 to-transparent" />
             </div>
             <TreeNav section={key} nodes={section.nodes} />
