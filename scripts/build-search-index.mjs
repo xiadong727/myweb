@@ -80,11 +80,22 @@ for (const a of audios) {
   });
 }
 
+// \u4e2d\u6587\u4e8c\u5143\u5206\u8bcd\uff08bigram\uff09\uff1a\u8fde\u7eed\u6c49\u5b57\u5207\u6210\u76f8\u90bb\u4e24\u5b57\u4e00\u7ec4\uff0c\u907f\u514d\u6309\u5355\u5b57\u5339\u914d\u628a\u65e0\u5173\u5185\u5bb9\u53ec\u56de\u3002
+// \u62c9\u4e01\u5b57\u6bcd/\u6570\u5b57\u6309\u6574\u8bcd\u5904\u7406\u3002\u26a0\ufe0f \u5fc5\u987b\u4e0e src/components/global-search.tsx \u4e2d\u7684 tokenize \u5b8c\u5168\u4e00\u81f4\u3002
 const tokenize = (string) => {
-  return string
-    .toLowerCase()
-    .split(/[\s\-_]+|(?=[\u4e00-\u9fa5])|(?<=[\u4e00-\u9fa5])/)
-    .filter((s) => s.trim());
+  const tokens = [];
+  const re = /[\u4e00-\u9fff]+|[a-z0-9]+/gi;
+  let m;
+  while ((m = re.exec(string.toLowerCase())) !== null) {
+    const seg = m[0];
+    if (/[\u4e00-\u9fff]/.test(seg)) {
+      if (seg.length === 1) tokens.push(seg);
+      else for (let i = 0; i < seg.length - 1; i++) tokens.push(seg.slice(i, i + 2));
+    } else {
+      tokens.push(seg);
+    }
+  }
+  return tokens;
 };
 
 const miniSearch = new MiniSearch({

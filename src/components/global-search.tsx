@@ -14,11 +14,21 @@ const typeLabel: Record<string, string> = {
   audio: "音频",
 };
 
+// \u4e2d\u6587\u4e8c\u5143\u5206\u8bcd\uff08bigram\uff09\u3002\u26a0\ufe0f \u5fc5\u987b\u4e0e scripts/build-search-index.mjs \u4e2d\u7684 tokenize \u5b8c\u5168\u4e00\u81f4\u3002
 const tokenize = (string: string) => {
-  return string
-    .toLowerCase()
-    .split(/[\s\-_]+|(?=[\u4e00-\u9fa5])|(?<=[\u4e00-\u9fa5])/)
-    .filter((s) => s.trim());
+  const tokens: string[] = [];
+  const re = /[\u4e00-\u9fff]+|[a-z0-9]+/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(string.toLowerCase())) !== null) {
+    const seg = m[0];
+    if (/[\u4e00-\u9fff]/.test(seg)) {
+      if (seg.length === 1) tokens.push(seg);
+      else for (let i = 0; i < seg.length - 1; i++) tokens.push(seg.slice(i, i + 2));
+    } else {
+      tokens.push(seg);
+    }
+  }
+  return tokens;
 };
 
 export function GlobalSearch() {
@@ -71,7 +81,7 @@ export function GlobalSearch() {
   const results: Hit[] = useMemo(() => {
     if (!searchEngine || !q.trim()) return [];
     return searchEngine
-      .search(q, { prefix: true, fuzzy: 0.2, combineWith: "AND" })
+      .search(q, { prefix: true, combineWith: "AND" })
       .slice(0, 12)
       .map((r) => {
         const s = searchEngine.getStoredFields(r.id);
