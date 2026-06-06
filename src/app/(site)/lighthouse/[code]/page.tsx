@@ -32,7 +32,7 @@ export default async function DomainPage({ params }: Props) {
   const total = works.articles.length + works.images.length + works.videos.length + works.audios.length;
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:py-12">
+    <main className="mx-auto max-w-3xl px-4 pb-10 pt-3 sm:px-6 lg:pb-12 lg:pt-4">
       <header className="overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-primary/[0.04] to-transparent p-7 sm:p-9">
         <p className="font-mono text-xs text-muted-foreground">{domain.code} · 与光同行</p>
         <h1 className="mt-1 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">{domain.name}</h1>
@@ -64,7 +64,7 @@ export default async function DomainPage({ params }: Props) {
                         href={`${s.base}/${it.slug}`}
                         className={`group flex items-start gap-4 rounded-2xl border border-primary/10 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md sm:p-5 ${i % 2 === 0 ? "bg-primary/[0.06]" : "bg-primary/[0.02]"}`}
                       >
-                        <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10">
+                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center">
                           <s.icon className={`h-5 w-5 ${s.color}`} />
                         </span>
                         <div className="min-w-0 flex-1">
