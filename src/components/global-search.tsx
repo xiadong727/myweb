@@ -31,6 +31,42 @@ const tokenize = (string: string) => {
   return tokens;
 };
 
+/** 在标题里高亮命中的查询词（用分词后的词/二元组做字符级掩码，自动处理重叠） */
+function highlightTitle(title: string, terms: string[]) {
+  if (!terms.length || !title) return title;
+  const lower = title.toLowerCase();
+  const mask = new Array(title.length).fill(false);
+  for (const t of terms) {
+    if (!t) continue;
+    let from = 0;
+    let idx = lower.indexOf(t, from);
+    while (idx !== -1) {
+      for (let i = idx; i < idx + t.length; i++) mask[i] = true;
+      from = idx + 1;
+      idx = lower.indexOf(t, from);
+    }
+  }
+  const nodes: React.ReactNode[] = [];
+  let i = 0;
+  while (i < title.length) {
+    const on = mask[i];
+    let j = i;
+    while (j < title.length && mask[j] === on) j++;
+    const chunk = title.slice(i, j);
+    nodes.push(
+      on ? (
+        <mark key={i} className="rounded bg-primary/20 px-0.5 font-semibold text-primary">
+          {chunk}
+        </mark>
+      ) : (
+        <span key={i}>{chunk}</span>
+      ),
+    );
+    i = j;
+  }
+  return nodes;
+}
+
 export function GlobalSearch() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -81,7 +117,7 @@ export function GlobalSearch() {
   const results: Hit[] = useMemo(() => {
     if (!searchEngine || !q.trim()) return [];
     return searchEngine
-      .search(q, { prefix: true, combineWith: "AND" })
+      .search(q, { prefix: true, combineWith: "AND", boost: { title: 3 } })
       .slice(0, 12)
       .map((r) => {
         const s = searchEngine.getStoredFields(r.id);
@@ -165,7 +201,7 @@ export function GlobalSearch() {
                       <span className="mt-0.5 shrink-0 rounded border border-border bg-muted px-1.5 py-0.5 text-[10px] uppercase tracking-wider text-primary">
                         {typeLabel[r.type] ?? r.type}
                       </span>
-                      <span className="text-foreground">{r.title}</span>
+                      <span className="text-foreground">{highlightTitle(r.title, tokenize(q))}</span>
                     </button>
                   </li>
                 ))
