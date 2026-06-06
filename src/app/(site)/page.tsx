@@ -6,6 +6,7 @@ import { getAllGalleries } from "@/lib/galleries";
 import { getAllVideos } from "@/lib/videos";
 import { getAllAudios } from "@/lib/audios";
 import { getLighthouseDomainStats, getLighthouseTotalEpisodes } from "@/lib/lighthouse";
+import { getArticleCategories } from "@/lib/categories";
 import { StatsPanel } from "@/components/stats-panel";
 
 const ABOUT_SLUG = "imported/wx-uP0_Qj_2eDOn";
@@ -24,6 +25,7 @@ export default function HomePage() {
   const totalWorks = articleCount + imageCount + videoCount + audioCount;
   const domainStats = getLighthouseDomainStats();
   const totalEpisodes = getLighthouseTotalEpisodes();
+  const categories = getArticleCategories();
 
   // 各类型「最新更新」：文章按日期倒序（无日期排后）；图片/视频/音频按加入顺序倒序（最新在前）
   const latestArticles = [...summaries]
