@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles, Compass, FileText, Image as ImageIcon, Video, Headphones, type LucideIcon } from "lucide-react";
+import { ArrowRight, Sparkles, Compass, FolderOpen, FileText, Image as ImageIcon, Video, Headphones, type LucideIcon } from "lucide-react";
 import { getNavigation } from "@/lib/navigation";
 import { getArticleSummaries } from "@/lib/articles";
 import { getAllGalleries } from "@/lib/galleries";
@@ -169,6 +169,59 @@ export default function HomePage() {
           })}
         </div>
       </section>
+
+      {/* 更多专栏：非主线的文章分类 */}
+      {categories.length ? (
+        <section className="mt-12">
+          <h2 className="flex items-center gap-2 text-xl font-bold tracking-tight text-foreground">
+            <FolderOpen className="h-5 w-5 text-primary" />
+            更多专栏
+          </h2>
+          <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+            {categories.map((c, i) => {
+              const has = c.count > 0;
+              const idx = String(i + 1).padStart(2, "0");
+              const inner = (
+                <>
+                  <span
+                    className={`pointer-events-none absolute -right-1 bottom-0 select-none font-mono text-6xl font-bold leading-none ${
+                      has ? "text-primary/10" : "text-foreground/[0.035]"
+                    }`}
+                  >
+                    {idx}
+                  </span>
+                  <div className="relative flex items-center gap-2">
+                    <FolderOpen className={`h-4 w-4 ${has ? "text-primary" : "text-muted-foreground/45"}`} />
+                    {has ? (
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                        {c.count} 篇
+                      </span>
+                    ) : (
+                      <span className="text-[10px] text-muted-foreground/45">敬请期待</span>
+                    )}
+                  </div>
+                  <p className={`relative mt-2 text-base font-semibold ${has ? "text-foreground" : "text-muted-foreground/70"}`}>
+                    {c.title}
+                  </p>
+                </>
+              );
+              return has ? (
+                <Link
+                  key={c.id}
+                  href={`/topics/${c.id}`}
+                  className="group relative overflow-hidden rounded-xl border border-primary/30 bg-gradient-to-br from-primary/[0.07] to-transparent px-3.5 py-3 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md"
+                >
+                  {inner}
+                </Link>
+              ) : (
+                <div key={c.id} className="relative overflow-hidden rounded-xl border border-border/60 bg-muted/15 px-3.5 py-3">
+                  {inner}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
 
       {/* 最新更新：按 文章 / 图片 / 视频 / 音频 分四块 */}
       <section className="mt-14">
