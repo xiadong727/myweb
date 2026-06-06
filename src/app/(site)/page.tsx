@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles, Compass, FolderOpen, FileText, Image as ImageIcon, Video, Headphones, type LucideIcon } from "lucide-react";
+import { ArrowRight, Sparkles, Compass, FolderOpen, Leaf, FileText, Image as ImageIcon, Video, Headphones, type LucideIcon } from "lucide-react";
 import { getNavigation } from "@/lib/navigation";
 import { getArticleSummaries } from "@/lib/articles";
 import { getAllGalleries } from "@/lib/galleries";
@@ -62,17 +62,25 @@ export default function HomePage() {
           {/* 左栏：品牌 */}
           <div>
             <h1
-              className="text-5xl font-extrabold tracking-tight text-foreground sm:text-6xl"
+              className="flex items-start text-5xl font-extrabold tracking-tight text-foreground sm:text-6xl"
               style={{
                 textShadow:
                   "0 1px 0 rgba(255,255,255,0.6), 0 2px 4px rgba(0,0,0,0.08), 0 8px 30px rgba(251,146,60,0.45)",
               }}
             >
               {nav.site.title}
+              <Sparkles className="ml-2 mt-1 h-6 w-6 shrink-0 text-primary sm:h-7 sm:w-7" style={{ filter: "drop-shadow(0 2px 6px rgba(249,115,22,0.5))" }} />
             </h1>
             <p className="mt-7 text-base leading-relaxed text-muted-foreground sm:mt-8 sm:text-lg">
               {nav.site.tagline}
             </p>
+            {/* 点缀：成长印记小标签 */}
+            <div className="mt-5">
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-card/70 px-4 py-2 text-sm font-medium text-foreground/80 shadow-sm backdrop-blur-sm">
+                <Leaf className="h-4 w-4 shrink-0 text-primary" />
+                每一次记录，都是成长的印记
+              </span>
+            </div>
           </div>
 
           {/* 右栏：数据面板（暖光立体 + 同步翻滚） */}
