@@ -31,7 +31,7 @@ function NavTree({
 }) {
   const indent = depth * 14;
   return (
-    <ul className="space-y-0.5">
+    <ul className="space-y-1">
       {nodes.map((n) => {
         if (isNavGroup(n)) {
           const open = expanded.has(n.id);
@@ -78,17 +78,22 @@ function NavTree({
           <li key={n.id}>
             <Link
               href={href}
-              className={`relative block rounded-md py-1.5 pr-2 text-[13px] leading-snug transition-all duration-300 ${
+              className={`group/leaf relative flex items-start gap-2 rounded-md py-1.5 pr-2 text-[13px] leading-snug transition-all duration-300 ${
                 active
                   ? "bg-[var(--nav-active-bg)] font-medium text-primary"
                   : "text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
-              style={{ paddingLeft: indent + 28 }}
+              style={{ paddingLeft: indent + 16 }}
             >
               {active && (
                 <span className="absolute left-0 top-1/2 h-3.5 w-1 -translate-y-1/2 rounded-r-full bg-primary shadow-[0_0_8px_var(--color-primary)]" />
               )}
-              {n.title}
+              <span
+                className={`mt-[6px] h-1.5 w-1.5 shrink-0 rounded-full transition-colors ${
+                  active ? "bg-primary" : "bg-muted-foreground/35 group-hover/leaf:bg-primary/60"
+                }`}
+              />
+              <span className="min-w-0 flex-1 break-words">{n.title}</span>
             </Link>
           </li>
         );
