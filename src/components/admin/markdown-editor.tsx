@@ -3,8 +3,16 @@
 import { useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Bold, Italic, Heading2, Heading3, List, ListOrdered, Quote, Link2, Code, Image as ImageIcon, FolderOpen } from "lucide-react";
+import rehypeRaw from "rehype-raw";
+import { Bold, Italic, Heading2, Heading3, List, ListOrdered, Quote, Link2, Code, Image as ImageIcon, FolderOpen, Palette, Type } from "lucide-react";
 import { ImagePicker } from "./image-picker";
+
+// 文字颜色 / 字号 预设（插入内联 <span style>，正文已开启 rehype-raw 渲染）
+const TEXT_COLORS: [string, string][] = [
+  ["朱红", "#e11d48"], ["橙", "#ea580c"], ["金", "#d97706"],
+  ["绿", "#16a34a"], ["蓝", "#2563eb"], ["紫", "#7c3aed"], ["灰", "#6b7280"],
+];
+const TEXT_SIZES: [string, string][] = [["小", "0.85em"], ["大", "1.25em"], ["特大", "1.6em"]];
 
 type Props = {
   value: string;
@@ -30,6 +38,7 @@ export function MarkdownEditor({ value, onChange, onUpload }: Props) {
   const [mode, setMode] = useState<"split" | "write" | "preview">("split");
   const [uploading, setUploading] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [palette, setPalette] = useState<null | "color" | "size">(null);
 
   function setSel(start: number, end: number) {
     requestAnimationFrame(() => {
@@ -96,6 +105,43 @@ export function MarkdownEditor({ value, onChange, onUpload }: Props) {
         <ToolBtn title="链接" onClick={() => wrap("[", "](https://)", "链接文字")}><Link2 className="h-4 w-4" /></ToolBtn>
         <ToolBtn title="行内代码" onClick={() => wrap("`", "`", "代码")}><Code className="h-4 w-4" /></ToolBtn>
         <span className="mx-1 h-4 w-px bg-border" />
+        {/* 文字颜色 */}
+        <div className="relative">
+          <ToolBtn title="文字颜色" onClick={() => setPalette((p) => (p === "color" ? null : "color"))}><Palette className="h-4 w-4" /></ToolBtn>
+          {palette === "color" ? (
+            <div className="absolute left-0 top-full z-20 mt-1 flex gap-1.5 rounded-lg border border-border bg-card p-2 shadow-lg">
+              {TEXT_COLORS.map(([name, hex]) => (
+                <button
+                  key={hex}
+                  type="button"
+                  title={name}
+                  onClick={() => { wrap(`<span style="color:${hex}">`, "</span>", "彩色文字"); setPalette(null); }}
+                  className="h-5 w-5 rounded-full ring-1 ring-inset ring-black/10 transition hover:scale-110"
+                  style={{ background: hex }}
+                />
+              ))}
+            </div>
+          ) : null}
+        </div>
+        {/* 字号 */}
+        <div className="relative">
+          <ToolBtn title="字号" onClick={() => setPalette((p) => (p === "size" ? null : "size"))}><Type className="h-4 w-4" /></ToolBtn>
+          {palette === "size" ? (
+            <div className="absolute left-0 top-full z-20 mt-1 flex gap-1 rounded-lg border border-border bg-card p-1.5 shadow-lg">
+              {TEXT_SIZES.map(([name, em]) => (
+                <button
+                  key={em}
+                  type="button"
+                  onClick={() => { wrap(`<span style="font-size:${em}">`, "</span>", "文字"); setPalette(null); }}
+                  className="whitespace-nowrap rounded px-2 py-1 text-xs text-foreground transition hover:bg-primary/10 hover:text-primary"
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </div>
+        <span className="mx-1 h-4 w-px bg-border" />
         <ToolBtn title="插入图片（上传）" onClick={() => fileRef.current?.click()}>
           <ImageIcon className={`h-4 w-4 ${uploading ? "animate-pulse text-primary" : ""}`} />
         </ToolBtn>
@@ -129,7 +175,7 @@ export function MarkdownEditor({ value, onChange, onUpload }: Props) {
         {mode !== "write" && (
           <div className={`h-80 overflow-auto p-3 ${mode === "split" ? "border-l border-border" : ""} ${previewProse}`}>
             {value.trim() ? (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{value}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{value}</ReactMarkdown>
             ) : (
               <p className="text-muted-foreground">预览区——左边写，这里实时显示排版效果。</p>
             )}

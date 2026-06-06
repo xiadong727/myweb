@@ -1,6 +1,7 @@
 import type { ImgHTMLAttributes } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import { resolveArticleMarkdownAssetUrl } from "@/lib/article-assets";
 import { makeSlugger } from "@/lib/toc";
 import { getArticleStyle, bodyTextStyleOf, paragraphStyleOf } from "@/lib/article-style";
@@ -46,7 +47,7 @@ export function ArticleBody({
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
-      rehypePlugins={[rehypeHeadingIds]}
+      rehypePlugins={[rehypeRaw, rehypeHeadingIds]}
       components={{
         h1: (props) => (
           <h1 className="mt-12 text-[1.75rem] sm:text-[2rem] lg:text-[2.25rem] font-bold leading-[1.3] tracking-tight text-foreground first:mt-0" {...props} />
