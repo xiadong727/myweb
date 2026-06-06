@@ -115,13 +115,14 @@ function flattenGroups(nodes: NavNode[], depth: number, out: CategoryOption[]) {
     if (isNavGroup(n)) { out.push({ id: n.id, label: `${"　".repeat(depth)}${n.title}` }); flattenGroups(n.children, depth + 1, out); }
   }
 }
-function listArticles(): { slug: string; title: string; domain?: string; episode?: number }[] {
-  const out: { slug: string; title: string; domain?: string; episode?: number }[] = [];
+function listArticles(): { slug: string; title: string; domain?: string; episode?: number; createdMs: number }[] {
+  const out: { slug: string; title: string; domain?: string; episode?: number; createdMs: number }[] = [];
   const walk = (dir: string, prefix: string[]) => {
     if (!fs.existsSync(dir)) return;
     for (const name of fs.readdirSync(dir)) {
       const full = path.join(dir, name);
-      if (fs.statSync(full).isDirectory()) walk(full, [...prefix, name]);
+      const st = fs.statSync(full);
+      if (st.isDirectory()) walk(full, [...prefix, name]);
       else if (name.endsWith(".md")) {
         const slug = [...prefix, name.replace(/\.md$/, "")].join("/");
         const { data } = matter(fs.readFileSync(full, "utf8"));
@@ -130,12 +131,15 @@ function listArticles(): { slug: string; title: string; domain?: string; episode
           title: (data.title as string) || slug,
           domain: (data.domain as string) || undefined,
           episode: data.episode != null ? Number(data.episode) : undefined,
+          // 创建时间（导入/新建顺序）：优先 birthtime，回退 mtime
+          createdMs: st.birthtimeMs || st.mtimeMs,
         });
       }
     }
   };
   walk(ARTICLES_DIR, []);
-  return out.sort((a, b) => a.slug.localeCompare(b.slug));
+  // 最近导入/新建在前
+  return out.sort((a, b) => b.createdMs - a.createdMs);
 }
 
 export async function getAdminOptions() {
@@ -148,9 +152,10 @@ export async function getAdminOptions() {
   });
 
   const articlesRaw = listArticles();
-  const imagesRaw = readArr<{ slug: string; title: string }>(MEDIA_FILE.images).map((x) => ({ slug: x.slug, title: x.title }));
-  const videosRaw = readArr<{ slug: string; title: string }>(MEDIA_FILE.videos).map((x) => ({ slug: x.slug, title: x.title }));
-  const audiosRaw = readArr<{ slug: string; title: string }>(MEDIA_FILE.audios).map((x) => ({ slug: x.slug, title: x.title }));
+  // 媒体在 JSON 数组里按新增顺序追加，倒序即「最近导入/新建在前」
+  const imagesRaw = readArr<{ slug: string; title: string }>(MEDIA_FILE.images).map((x) => ({ slug: x.slug, title: x.title })).reverse();
+  const videosRaw = readArr<{ slug: string; title: string }>(MEDIA_FILE.videos).map((x) => ({ slug: x.slug, title: x.title })).reverse();
+  const audiosRaw = readArr<{ slug: string; title: string }>(MEDIA_FILE.audios).map((x) => ({ slug: x.slug, title: x.title })).reverse();
 
   // 读取每条内容的浏览量/点赞（用于管理列表展示）
   const ids: string[] = [
