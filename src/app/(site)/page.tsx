@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Sparkles, Compass, FolderOpen, Leaf, FileText, Image as ImageIcon, Video, Headphones, type LucideIcon } from "lucide-react";
+import { ArrowRight, Sparkles, Compass, FolderOpen, FileText, Image as ImageIcon, Video, Headphones, type LucideIcon } from "lucide-react";
 import { getNavigation } from "@/lib/navigation";
 import { getArticleSummaries } from "@/lib/articles";
 import { getAllGalleries } from "@/lib/galleries";
@@ -74,11 +74,6 @@ export default function HomePage() {
             <p className="mt-7 text-base leading-relaxed text-muted-foreground sm:mt-8 sm:text-lg">
               {nav.site.tagline}
             </p>
-            {/* 点缀：成长印记（无框，自然融入背景） */}
-            <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground/70">
-              <Leaf className="h-4 w-4 shrink-0 text-primary/70" />
-              每一次记录，都是成长的印记
-            </div>
           </div>
 
           {/* 右栏：数据面板（暖光立体 + 同步翻滚） */}
