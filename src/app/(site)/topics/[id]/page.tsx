@@ -46,7 +46,7 @@ export default async function TopicPage({ params }: Props) {
             <li key={item.slug}>
               <Link
                 href={`/articles/${item.slug}`}
-                className={`group flex items-start gap-4 rounded-2xl border border-primary/10 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md sm:p-5 ${i % 2 === 0 ? "bg-primary/[0.06]" : "bg-primary/[0.02]"}`}
+                className={`group flex items-start gap-4 rounded-2xl border p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md sm:p-5 ${col.ring} ${i % 2 === 0 ? col.tintA : col.tintB}`}
               >
                 <span className={`mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${col.soft}`}>
                   <FileText className={`h-5 w-5 ${col.text}`} />
