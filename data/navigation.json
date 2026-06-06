@@ -54,6 +54,26 @@
               ]
             },
             {
+              "id": "lh-L03",
+              "title": "品格 (L03)",
+              "children": []
+            },
+            {
+              "id": "lh-L04",
+              "title": "历史 (L04)",
+              "children": []
+            },
+            {
+              "id": "lh-L05",
+              "title": "科学 (L05)",
+              "children": []
+            },
+            {
+              "id": "lh-L06",
+              "title": "艺术 (L06)",
+              "children": []
+            },
+            {
               "id": "lh-L07",
               "title": "人际 (L07)",
               "children": [
@@ -61,11 +81,6 @@
                   "id": "a-imported-wx-Q7C7Gq1BkH9N",
                   "title": "适度麻烦别人，才是最高级的处世智慧",
                   "slug": "imported/wx-Q7C7Gq1BkH9N"
-                },
-                {
-                  "id": "a-imported-wx-1MTW26Kw8jUQ",
-                  "title": "为什么我们和亲戚越来越生疏了？",
-                  "slug": "imported/wx-1MTW26Kw8jUQ"
                 }
               ]
             },
@@ -110,6 +125,11 @@
                   "slug": "imported/wx-g4s6_dNxsMaR"
                 }
               ]
+            },
+            {
+              "id": "lh-L10",
+              "title": "心灵 (L10)",
+              "children": []
             }
           ]
         },
@@ -170,6 +190,16 @@
           "title": "创业·搞钱",
           "children": [
             {
+              "id": "gerenchuangye",
+              "title": "个人创业",
+              "children": []
+            },
+            {
+              "id": "jingjishangye",
+              "title": "经济与商业",
+              "children": []
+            },
+            {
               "id": "a-imported-wx-APRM5Jk8SJfR",
               "title": "低风险创业和长期主义",
               "slug": "imported/wx-APRM5Jk8SJfR"
@@ -191,6 +221,22 @@
           "title": "工具·方法",
           "children": [
             {
+              "id": "aigongju",
+              "title": "AI工具",
+              "children": []
+            },
+            {
+              "id": "sheyingxiangji",
+              "title": "摄影摄像",
+              "children": [
+                {
+                  "id": "sheyingjichuzhishi",
+                  "title": "摄影基础知识",
+                  "children": []
+                }
+              ]
+            },
+            {
               "id": "zimeiti",
               "title": "自媒体",
               "children": [
@@ -202,11 +248,6 @@
               ]
             }
           ]
-        },
-        {
-          "id": "a-imported-wx-6TJMzL9Okm2P",
-          "title": "谈谈少儿编程",
-          "slug": "imported/wx-6TJMzL9Okm2P"
         }
       ]
     },
@@ -228,6 +269,11 @@
           "title": "作品学习",
           "children": [
             {
+              "id": "img-geo",
+              "title": "人文地理 / 旅行",
+              "children": []
+            },
+            {
               "id": "img-light",
               "title": "光影与季节",
               "children": [
@@ -237,6 +283,11 @@
                   "slug": "visual/color-study"
                 }
               ]
+            },
+            {
+              "id": "img-life",
+              "title": "生活记录",
+              "children": []
             },
             {
               "id": "img-stock",
@@ -261,6 +312,31 @@
           "title": "与光同行 · 每期视频",
           "children": [
             {
+              "id": "vid-lh-L01",
+              "title": "哲学 (L01)",
+              "children": []
+            },
+            {
+              "id": "vid-lh-L02",
+              "title": "思维 (L02)",
+              "children": []
+            },
+            {
+              "id": "vid-lh-L03",
+              "title": "品格 (L03)",
+              "children": []
+            },
+            {
+              "id": "vid-lh-L04",
+              "title": "历史 (L04)",
+              "children": []
+            },
+            {
+              "id": "vid-lh-L05",
+              "title": "科学 (L05)",
+              "children": []
+            },
+            {
               "id": "vid-lh-L06",
               "title": "艺术 (L06)",
               "children": [
@@ -277,6 +353,11 @@
               ]
             },
             {
+              "id": "vid-lh-L07",
+              "title": "人际 (L07)",
+              "children": []
+            },
+            {
               "id": "vid-lh-L08",
               "title": "财富 (L08)",
               "children": [
@@ -286,18 +367,55 @@
                   "slug": "imported/bili-BV1gsqvBCE23"
                 }
               ]
+            },
+            {
+              "id": "vid-lh-L09",
+              "title": "生活 (L09)",
+              "children": []
+            },
+            {
+              "id": "vid-lh-L10",
+              "title": "心灵 (L10)",
+              "children": []
             }
           ]
         },
         {
           "id": "vid-personal",
           "title": "个人作品",
-          "children": []
+          "children": [
+            {
+              "id": "cat-日常生活",
+              "title": "日常生活",
+              "children": []
+            }
+          ]
         },
         {
           "id": "vid-study",
           "title": "作品学习",
-          "children": []
+          "children": [
+            {
+              "id": "vid-doc",
+              "title": "纪录片",
+              "children": []
+            },
+            {
+              "id": "vid-short",
+              "title": "短片 / Vlog",
+              "children": []
+            },
+            {
+              "id": "vid-talks",
+              "title": "分享 · 演讲",
+              "children": []
+            },
+            {
+              "id": "vid-reel",
+              "title": "作品集 / Showreel",
+              "children": []
+            }
+          ]
         }
       ]
     },
@@ -307,7 +425,58 @@
         {
           "id": "aud-lighthouse",
           "title": "与光同行 · 每期音频",
-          "children": []
+          "children": [
+            {
+              "id": "aud-lh-L01",
+              "title": "哲学 (L01)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L02",
+              "title": "思维 (L02)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L03",
+              "title": "品格 (L03)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L04",
+              "title": "历史 (L04)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L05",
+              "title": "科学 (L05)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L06",
+              "title": "艺术 (L06)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L07",
+              "title": "人际 (L07)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L08",
+              "title": "财富 (L08)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L09",
+              "title": "生活 (L09)",
+              "children": []
+            },
+            {
+              "id": "aud-lh-L10",
+              "title": "心灵 (L10)",
+              "children": []
+            }
+          ]
         },
         {
           "id": "aud-personal",
@@ -328,6 +497,16 @@
                   "slug": "podcasts/ep1"
                 }
               ]
+            },
+            {
+              "id": "aud-audiobook",
+              "title": "有声书",
+              "children": []
+            },
+            {
+              "id": "aud-music",
+              "title": "音乐 / 环境音",
+              "children": []
             }
           ]
         }
