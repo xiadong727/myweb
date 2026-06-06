@@ -14,6 +14,18 @@ function sectionBase(key: SectionKey) {
   return "/videos";
 }
 
+/** 顶层分类圆点配色（按顶层分组顺序循环取色，与暖色主题协调） */
+const DOT_COLORS = [
+  "bg-orange-400",
+  "bg-emerald-400",
+  "bg-sky-400",
+  "bg-rose-400",
+  "bg-violet-400",
+  "bg-amber-400",
+  "bg-teal-400",
+  "bg-pink-400",
+];
+
 function NavTree({
   nodes,
   base,
@@ -21,6 +33,7 @@ function NavTree({
   expanded,
   toggle,
   depth,
+  color,
 }: {
   nodes: NavNode[];
   base: string;
@@ -28,11 +41,14 @@ function NavTree({
   expanded: Set<string>;
   toggle: (id: string) => void;
   depth: number;
+  color?: string;
 }) {
   const indent = depth * 14;
   return (
     <ul className="space-y-1">
-      {nodes.map((n) => {
+      {nodes.map((n, i) => {
+        // 顶层节点各自取一个颜色；其子孙继承顶层祖先的颜色
+        const nodeColor = depth === 0 ? DOT_COLORS[i % DOT_COLORS.length] : color;
         if (isNavGroup(n)) {
           const open = expanded.has(n.id);
           return (
@@ -58,6 +74,7 @@ function NavTree({
                       expanded={expanded}
                       toggle={toggle}
                       depth={depth + 1}
+                      color={nodeColor}
                     />
                   ) : (
                     <p
@@ -89,8 +106,8 @@ function NavTree({
                 <span className="absolute left-0 top-1/2 h-3.5 w-1 -translate-y-1/2 rounded-r-full bg-primary shadow-[0_0_8px_var(--color-primary)]" />
               )}
               <span
-                className={`mt-[6px] h-1.5 w-1.5 shrink-0 rounded-full transition-colors ${
-                  active ? "bg-primary" : "bg-muted-foreground/35 group-hover/leaf:bg-primary/60"
+                className={`mt-[6px] h-1.5 w-1.5 shrink-0 rounded-full transition-transform group-hover/leaf:scale-125 ${
+                  nodeColor ?? "bg-muted-foreground/40"
                 }`}
               />
               <span className="min-w-0 flex-1 break-words">{n.title}</span>
