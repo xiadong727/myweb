@@ -15,7 +15,7 @@ type Data = {
   sections: Record<SectionKey, Opt[]>;
   lists: Record<SectionKey, ListItem[]>;
   existingSlugs: Record<SectionKey, string[]>;
-  domains: Record<string, { folder: string; nextEpisode: number }>;
+  domains: Record<string, { folder: string; nextEpisode: number; used: { episode: number; slug: string; title: string }[] }>;
   navTree: Record<SectionKey, { label: string; nodes: unknown[] }>;
 };
 type View = "create" | "manage" | "menu" | "import" | "settings";
@@ -139,14 +139,31 @@ export default function AdminPage() {
 
   // —— 选领域后自动带出该领域的文件夹路径前缀 —— //
   function onDomainChange(domain: string) {
-    if (!domain || !data) { setA((s) => ({ ...s, domain })); return; }
+    markDirty();
+    if (!domain || !data) { setA((s) => ({ ...s, domain, episode: "" })); return; }
     const info = data.domains[domain];
-    setA((s) => ({ ...s, domain, slug: s.slug || `lighthouse/${info.folder}/` }));
+    setA((s) => ({
+      ...s,
+      domain,
+      slug: s.slug || `lighthouse/${info.folder}/`,
+      // 新建时自动带出该领域下一个空期号；编辑时保留原值
+      episode: editing ? s.episode : (s.episode || String(info.nextEpisode)),
+    }));
+  }
+
+  // 期号冲突检测：同领域内是否已有别的文章占用了该期号
+  function episodeConflict(): { episode: number; slug: string; title: string } | null {
+    if (!data || !a.domain || a.episode === "") return null;
+    const ep = Number(a.episode);
+    if (!Number.isFinite(ep)) return null;
+    return data.domains[a.domain]?.used.find((u) => u.episode === ep && u.slug !== editing) ?? null;
   }
 
   // —— 提交（新建/更新） —— //
   async function saveArticle() {
     if (dupSlug("articles", a.slug)) { setMsg({ ok: false, text: "该文件路径已存在，请换一个" }); return; }
+    const conflict = episodeConflict();
+    if (conflict) { setMsg({ ok: false, text: `⚠️ ${a.domain} 第 ${a.episode} 期已被「${conflict.title}」占用，请换一个期号（同领域期号不能重复）` }); return; }
     const navTitle = a.navTitle || a.title;
     const payload = { ...a, navTitle, tags: a.tags ? a.tags.split(/[,，]/).map((s) => s.trim()).filter(Boolean) : [] };
     const d = editing ? await api("/api/admin/article", "PUT", payload) : await api("/api/admin/article", "POST", payload);
@@ -367,6 +384,22 @@ export default function AdminPage() {
               <fieldset className="rounded-xl border border-primary/20 bg-primary/[0.03] p-4">
                 <legend className="px-2 text-sm font-semibold text-primary">与光同行主线（可选）</legend>
                 <Field label="领域" hint="选了领域，这篇就归入该领域"><select className={inputCls} value={a.domain} onChange={(e) => onDomainChange(e.target.value)}>{DOMAINS.map(([val, l]) => <option key={val} value={val}>{l}</option>)}</select></Field>
+                {a.domain ? (
+                  <div className="mt-3">
+                    <Field label="期号" hint={`同领域内不能重复 · 下一个空号：${data?.domains[a.domain]?.nextEpisode ?? 1}`}>
+                      <input className={inputCls} type="number" min={1} value={a.episode} onChange={(e) => { setA({ ...a, episode: e.target.value }); markDirty(); }} />
+                      {(() => {
+                        const c = episodeConflict();
+                        return c ? (
+                          <p className="mt-1.5 text-xs text-rose-500">
+                            ⚠️ 第 {a.episode} 期已被「{c.title}」占用。
+                            <button type="button" className="ml-1 underline hover:no-underline" onClick={() => { setA({ ...a, episode: String(data!.domains[a.domain].nextEpisode) }); markDirty(); }}>改用空号 {data?.domains[a.domain]?.nextEpisode}</button>
+                          </p>
+                        ) : null;
+                      })()}
+                    </Field>
+                  </div>
+                ) : null}
                 <div className="mt-3"><Field label="本期金句" hint="显示在文末金句卡；可换行（回车）写多行"><textarea className={`${inputCls} h-20`} value={a.quote} onChange={(e) => setA({ ...a, quote: e.target.value })} placeholder="一行一句，回车换行" /></Field></div>
               </fieldset>
               <div className="flex items-center justify-between">

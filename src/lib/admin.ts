@@ -115,8 +115,8 @@ function flattenGroups(nodes: NavNode[], depth: number, out: CategoryOption[]) {
     if (isNavGroup(n)) { out.push({ id: n.id, label: `${"　".repeat(depth)}${n.title}` }); flattenGroups(n.children, depth + 1, out); }
   }
 }
-function listArticles(): { slug: string; title: string }[] {
-  const out: { slug: string; title: string }[] = [];
+function listArticles(): { slug: string; title: string; domain?: string; episode?: number }[] {
+  const out: { slug: string; title: string; domain?: string; episode?: number }[] = [];
   const walk = (dir: string, prefix: string[]) => {
     if (!fs.existsSync(dir)) return;
     for (const name of fs.readdirSync(dir)) {
@@ -125,7 +125,12 @@ function listArticles(): { slug: string; title: string }[] {
       else if (name.endsWith(".md")) {
         const slug = [...prefix, name.replace(/\.md$/, "")].join("/");
         const { data } = matter(fs.readFileSync(full, "utf8"));
-        out.push({ slug, title: (data.title as string) || slug });
+        out.push({
+          slug,
+          title: (data.title as string) || slug,
+          domain: (data.domain as string) || undefined,
+          episode: data.episode != null ? Number(data.episode) : undefined,
+        });
       }
     }
   };
@@ -162,16 +167,16 @@ export async function getAdminOptions() {
   const videos = withM("videos", videosRaw);
   const audios = withM("audios", audiosRaw);
 
-  // 每个领域的下一期 + 文件夹
+  // 每个领域：已用期号（含归属文章）+ 下一个空号 + 文件夹
   const arts = listArticles();
-  const domains: Record<string, { folder: string; nextEpisode: number }> = {};
+  const domains: Record<string, { folder: string; nextEpisode: number; used: { episode: number; slug: string; title: string }[] }> = {};
   for (const [code, folder] of Object.entries(DOMAIN_FOLDER)) {
-    let max = 0;
-    for (const a of arts) {
-      const m = a.slug.match(new RegExp(`lighthouse/${folder}/ep(\\d+)`));
-      if (m) max = Math.max(max, Number(m[1]));
-    }
-    domains[code] = { folder, nextEpisode: max + 1 };
+    const used = arts
+      .filter((a) => a.domain === code && a.episode != null && Number.isFinite(a.episode))
+      .map((a) => ({ episode: a.episode as number, slug: a.slug, title: a.title }))
+      .sort((x, y) => x.episode - y.episode);
+    const max = used.reduce((m, u) => Math.max(m, u.episode), 0);
+    domains[code] = { folder, nextEpisode: max + 1, used };
   }
 
   return {
