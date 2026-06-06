@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import type { NavNode, SectionKey } from "@/lib/types";
 import { isNavGroup } from "@/lib/types";
+import { catColor } from "@/lib/category-color";
 
 function sectionBase(key: SectionKey) {
   if (key === "articles") return "/articles";
@@ -13,18 +14,6 @@ function sectionBase(key: SectionKey) {
   if (key === "audios") return "/audios";
   return "/videos";
 }
-
-/** 顶层分类圆点配色（按顶层分组顺序循环取色，与暖色主题协调） */
-const DOT_COLORS = [
-  "bg-orange-400",
-  "bg-emerald-400",
-  "bg-sky-400",
-  "bg-rose-400",
-  "bg-violet-400",
-  "bg-amber-400",
-  "bg-teal-400",
-  "bg-pink-400",
-];
 
 function NavTree({
   nodes,
@@ -48,7 +37,7 @@ function NavTree({
     <ul className="space-y-1">
       {nodes.map((n, i) => {
         // 顶层节点各自取一个颜色；其子孙继承顶层祖先的颜色
-        const nodeColor = depth === 0 ? DOT_COLORS[i % DOT_COLORS.length] : color;
+        const nodeColor = depth === 0 ? catColor(i).dot : color;
         if (isNavGroup(n)) {
           const open = expanded.has(n.id);
           return (

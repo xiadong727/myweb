@@ -14,20 +14,21 @@ function collectSlugs(nodes: NavNode[]): string[] {
   return out;
 }
 
-export type ArticleCategory = { id: string; title: string; slugs: string[]; count: number };
+export type ArticleCategory = { id: string; title: string; slugs: string[]; count: number; colorIndex: number };
 
 /** 文章导航里的「非主线」顶层分类（日常·随笔 / 亲子·教育 / …），含已发布文章数。
+ *  colorIndex = 该分组在「文章顶层节点」里的位置，与侧栏 TreeNav 取色索引一致，保证处处同色。
  *  生产环境下 getNavigation 已剪除草稿，getArticleSummaries 也已排除草稿，二者一致。 */
 export function getArticleCategories(): ArticleCategory[] {
   const nav = getNavigation();
   const published = new Set(getArticleSummaries().map((a) => a.slug));
-  return nav.trees.articles.nodes
-    .filter(isNavGroup)
-    .filter((g) => !EXCLUDE.has(g.id))
-    .map((g) => {
-      const slugs = collectSlugs(g.children).filter((s) => published.has(s));
-      return { id: g.id, title: g.title, slugs, count: slugs.length };
-    });
+  const out: ArticleCategory[] = [];
+  nav.trees.articles.nodes.forEach((n, idx) => {
+    if (!isNavGroup(n) || EXCLUDE.has(n.id)) return;
+    const slugs = collectSlugs(n.children).filter((s) => published.has(s));
+    out.push({ id: n.id, title: n.title, slugs, count: slugs.length, colorIndex: idx });
+  });
+  return out;
 }
 
 export function getCategoryById(id: string): ArticleCategory | null {
@@ -43,5 +44,5 @@ export function getCategoryArticles(id: string) {
     .map((s) => bySlug.get(s))
     .filter((a): a is NonNullable<typeof a> => Boolean(a))
     .sort((a, b) => ((a.date ?? "") < (b.date ?? "") ? 1 : -1));
-  return { id: cat.id, title: cat.title, count: articles.length, articles };
+  return { id: cat.id, title: cat.title, count: articles.length, colorIndex: cat.colorIndex, articles };
 }

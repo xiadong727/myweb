@@ -7,6 +7,7 @@ import { getAllVideos } from "@/lib/videos";
 import { getAllAudios } from "@/lib/audios";
 import { getLighthouseDomainStats, getLighthouseTotalEpisodes } from "@/lib/lighthouse";
 import { getArticleCategories } from "@/lib/categories";
+import { catColor } from "@/lib/category-color";
 import { StatsPanel } from "@/components/stats-panel";
 
 const ABOUT_SLUG = "imported/wx-uP0_Qj_2eDOn";
@@ -180,20 +181,21 @@ export default function HomePage() {
           <div className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
             {categories.map((c, i) => {
               const has = c.count > 0;
+              const col = catColor(c.colorIndex);
               const idx = String(i + 1).padStart(2, "0");
               const inner = (
                 <>
                   <span
                     className={`pointer-events-none absolute -right-1 bottom-0 select-none font-mono text-6xl font-bold leading-none ${
-                      has ? "text-primary/10" : "text-foreground/[0.035]"
+                      has ? `${col.text} opacity-10` : "text-foreground/[0.035]"
                     }`}
                   >
                     {idx}
                   </span>
                   <div className="relative flex items-center gap-2">
-                    <FolderOpen className={`h-4 w-4 ${has ? "text-primary" : "text-muted-foreground/45"}`} />
+                    <FolderOpen className={`h-4 w-4 ${has ? col.text : "text-muted-foreground/45"}`} />
                     {has ? (
-                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                      <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${col.soft} ${col.text}`}>
                         {c.count} 篇
                       </span>
                     ) : (
@@ -209,7 +211,7 @@ export default function HomePage() {
                 <Link
                   key={c.id}
                   href={`/topics/${c.id}`}
-                  className="group relative overflow-hidden rounded-xl border border-primary/30 bg-gradient-to-br from-primary/[0.07] to-transparent px-3.5 py-3 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md"
+                  className={`group relative overflow-hidden rounded-xl border ${col.ring} ${col.soft} px-3.5 py-3 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md`}
                 >
                   {inner}
                 </Link>
