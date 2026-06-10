@@ -53,3 +53,10 @@ export function estimateReadingMinutes(content: string): number {
   const en = (content.match(/[a-zA-Z0-9]+/g) ?? []).length;
   return Math.max(1, Math.round(cn / 400 + en / 200));
 }
+
+/** 全文字数：中文按字、英文按词，合计 */
+export function countWords(content: string): number {
+  const cn = (content.match(/[一-鿿]/g) ?? []).length;
+  const en = (content.match(/[a-zA-Z0-9]+/g) ?? []).length;
+  return cn + en;
+}

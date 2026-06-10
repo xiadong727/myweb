@@ -89,19 +89,30 @@ export function QuoteCard({ quote, source }: { quote: string; source?: string })
   };
 
   return (
-    <section className="mt-12 overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent p-5 sm:p-6">
-      <blockquote className="whitespace-pre-line text-[1.15rem] font-medium leading-relaxed text-foreground/90">
-        {quote}
+    <section className="relative mt-12 overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/[0.10] via-primary/[0.04] to-transparent p-6 shadow-sm ring-1 ring-inset ring-white/40 sm:p-9">
+      {/* 装饰：大引号水印 + 顶部细金线 */}
+      <span aria-hidden className="pointer-events-none absolute -top-8 left-3 select-none font-serif text-[8rem] leading-none text-primary/15 sm:text-[10rem]">“</span>
+      <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
+      <blockquote className="relative">
+        <p className="whitespace-pre-line text-xl font-semibold leading-loose tracking-wide text-foreground sm:text-2xl">
+          {quote}
+        </p>
         {source ? (
-          <footer className="mt-2 text-sm font-normal text-muted-foreground">— {source}</footer>
+          <footer className="mt-5 flex items-center gap-2.5 text-sm text-muted-foreground">
+            <span className="h-px w-7 bg-primary/50" />
+            <span className="tracking-wide">{source}</span>
+          </footer>
         ) : null}
       </blockquote>
-      <div className="mt-4 flex justify-end">
+
+      <div className="relative mt-7 flex items-center justify-between">
+        <span className="text-xs font-medium tracking-widest text-primary/60">拾光共长 · 与光同行</span>
         <button
           type="button"
           onClick={download}
           disabled={busy}
-          className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition hover:bg-primary/20 disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary shadow-sm transition hover:-translate-y-0.5 hover:bg-primary/20 hover:shadow disabled:opacity-60"
         >
           <Download className="h-4 w-4" />
           {busy ? "生成中…" : "保存金句卡"}

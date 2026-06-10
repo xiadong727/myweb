@@ -15,7 +15,7 @@ import { EpisodeNav } from "@/components/episode-nav";
 import { MetricsBar } from "@/components/metrics-bar";
 import { Comments } from "@/components/comments";
 import { episodeKeyFromArticle, getRelatedEpisodeLinks } from "@/lib/episode";
-import { extractToc, estimateReadingMinutes } from "@/lib/toc";
+import { extractToc, estimateReadingMinutes, countWords } from "@/lib/toc";
 import { DRAFTS_VISIBLE } from "@/lib/site";
 import { absoluteUrl, SITE_NAME } from "@/lib/site";
 
@@ -64,6 +64,7 @@ export default async function ArticlePage({ params }: Props) {
   });
   const toc = extractToc(content);
   const readingMinutes = estimateReadingMinutes(content);
+  const wordCount = countWords(content);
   const { prev, next, isEpisode } = getArticleNeighbors(path);
 
   const jsonLd = {
@@ -90,6 +91,7 @@ export default async function ArticlePage({ params }: Props) {
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-snug tracking-tight text-foreground">{title}</h1>
           <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-sm text-muted-foreground">
             {article.meta.date ? <span>{article.meta.date}</span> : null}
+            <span>全文 {wordCount.toLocaleString()} 字</span>
             <span>约 {readingMinutes} 分钟阅读</span>
           </div>
           {article.meta.tags?.length ? (
